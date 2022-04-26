@@ -264,6 +264,9 @@ public enum Operator {
         }
     },
     Encapsulate_Attribute {
+        //Attribute encapsulation is useful when you have an attribute that is affected by several different methods,
+        // each of which needs that attribute to be in a known state. To prevent programmers from changing the attribute
+        // in the 4GL code, you can make the attribute private so that programmers can only access it from the object's methods.
         public void apply(HashMap<String, CodeBlock> codeBlocks, Refactoring refactor, String currentTime, String lastHash) {
             System.out.println(refactor.getType());
         }

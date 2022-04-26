@@ -167,18 +167,25 @@ public class Refactorings {//这是一个commit的内容
     public List<Refactoring> filter(String types){
         List<Refactoring> res = new ArrayList<>();
         if(types.equals("first")){
-            res = refactorings.stream()
-                    .filter(refactoring -> firstLevelTypes.contains(refactoring.getType()))
-                    .collect(Collectors.toList());
+            for(Refactoring r: refactorings){
+                if(firstLevelTypes.contains(r.getType())){
+                    res.add(r);
+                }
+            }
+
         }else if(types.equals("second")){
-            res = refactorings.stream()
-                    .filter(refactoring -> secondLevelTypes.contains(refactoring.getType()))
-                    .collect(Collectors.toList());
+            for(Refactoring r: refactorings){
+                if(secondLevelTypes.contains(r.getType())){
+                    res.add(r);
+                }
+            }
         }
         else if(types.equals("third")){
-            res = refactorings.stream()
-                    .filter(refactoring -> thirdLevelTypes.contains(refactoring.getType()))
-                    .collect(Collectors.toList());
+            for(Refactoring r: refactorings){
+                if(thirdLevelTypes.contains(r.getType())){
+                    res.add(r);
+                }
+            }
         }else{
             return null;
         }
