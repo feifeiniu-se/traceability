@@ -8,6 +8,7 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.PackageDeclaration;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
+import java.security.Signature;
 import java.util.HashMap;
 import java.util.List;
 
@@ -17,14 +18,16 @@ public class PackageVisitor {
     private List<CodeBlock> codeBlocks;
     private List<CommitCodeChange> codeChange;
     private HashMap<String, CodeBlock> mappings;
+    private CommitCodeChange commitCodeChange;
 
-    private void packageVisitor(String filePath, String fileContent, List<CodeBlock> codeBlocks, List<CommitCodeChange> codeChange, HashMap<String, CodeBlock> mappings) {
+    public void packageVisitor(String filePath, String fileContent, List<CodeBlock> codeBlocks, List<CommitCodeChange> codeChange, HashMap<String, CodeBlock> mappings) {
         this.filePath = filePath;
         this.codeBlocks = codeBlocks;
         this.codeChange = codeChange;
         this.mappings = mappings;
+        this.commitCodeChange = codeChange.get(codeChange.size()-1); //获得当前commit的内容
         JavaParser javaParser=new JavaParser();
-        CompilationUnit cu = javaParser.parse(fileContent).getResult().get();
+        CompilationUnit cu = javaParser.parse(fileContent).getResult().get();//todo 这里会报错
         Visitor visitor = new Visitor();
         visitor.visit(cu, null);// 遍历完文件的AST树，初步获得信息
     }
@@ -32,37 +35,50 @@ public class PackageVisitor {
         @Override
         public void visit(PackageDeclaration md, Void arg){
             super.visit(md, arg);
+            String signature = md.getNameAsString();
+            if(!mappings.containsKey(signature)){
 
-            if(!mappings.containsKey(md.getNameAsString())){
-                //todo 如果包含的话 就先暂时不操作
                 //如果当前package是新的 就进行创建
                 CodeBlock codeBlock = new CodeBlock(codeBlocks.size()+1);
-                PackageTime packageTime = new PackageTime();
-
-
-            }
-
-            if (codeBlocks.containsKey(id)){
-                codeBlock = codeBlocks.get(id);
-                if(codeBlock.getHistory().containsKey(currentTime)){
-                    packageTime = (PackageTime) codeBlock.getHistory().get(currentTime);
-                }else{
-                    packageTime = new PackageTime();
-                    packageTime.setTime(currentTime);
-                }
+                mappings.put(signature, codeBlock);//更新mapping， codeblocks， commitcodechange
+                PackageTime packageTime = new PackageTime(signature, filePath, commitCodeChange, "ADD PACKAGE", codeBlock);
+                codeBlock.addHistory(packageTime);
+                codeBlocks.add(codeBlock);
+                codeChange.get(codeChange.size()-1).addCodeChange(packageTime);
             }else{
-                codeBlock = new CodeBlock();
-                packageTime = new PackageTime();
-                packageTime.setTime(currentTime);
+                CodeBlock codeBlock = mappings.get(signature);
+                //todo 如果包含的话 就更新filepathList
+                //如果是在同一个commit中，那就直接添加filelist，如果是不同的commit中，那就增加codeBlockTime
+                if(codeBlock.getLastHistory().getTime().getCommitID().equals(commitCodeChange.getCommitID())){
+                    codeBlock.getLastHistory().getFilePath().add(filePath);
+                }else{
+                    PackageTime pkg = new PackageTime(signature, filePath, commitCodeChange, "ADD FILE", codeBlock);
+                    codeBlock.addHistory(pkg);
+                    codeChange.get(codeChange.size()-1).addCodeChange(pkg);
+                }
             }
-            codeBlock.setCodeBlockID(id);
-            codeBlock.setType("Package");
 
-            packageTime.setSignature("package:"+md.getNameAsString());
-            packageTime.setFilePath(filePath);
-            packageTime.setOwner("root");
-            codeBlock.addHistory(packageTime);
-            codeBlocks.put(id, codeBlock);
+//            if (codeBlocks.containsKey(id)){
+//                codeBlock = codeBlocks.get(id);
+//                if(codeBlock.getHistory().containsKey(currentTime)){
+//                    packageTime = (PackageTime) codeBlock.getHistory().get(currentTime);
+//                }else{
+//                    packageTime = new PackageTime();
+//                    packageTime.setTime(currentTime);
+//                }
+//            }else{
+//                codeBlock = new CodeBlock();
+//                packageTime = new PackageTime();
+//                packageTime.setTime(currentTime);
+//            }
+//            codeBlock.setCodeBlockID(id);
+//            codeBlock.setType("Package");
+//
+//            packageTime.setSignature("package:"+md.getNameAsString());
+//            packageTime.setFilePath(filePath);
+//            packageTime.setOwner("root");
+//            codeBlock.addHistory(packageTime);
+//            codeBlocks.put(id, codeBlock);
         }
     }
 }

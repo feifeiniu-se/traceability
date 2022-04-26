@@ -193,7 +193,7 @@ public enum Operator {
         public void apply(HashMap<String, CodeBlock> codeBlocks, Refactoring refactor, String currentTime, String lastHash) {
 
             AttributeTime attributeTime = new AttributeTime();
-            attributeTime.setTime(currentTime);
+//            attributeTime.setTime(currentTime);
 
             System.out.println(refactor.getType());
         }

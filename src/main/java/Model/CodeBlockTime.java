@@ -8,8 +8,8 @@ import java.util.List;
 @Data
 public class CodeBlockTime {
     String signature;
-    String filePath = null;
-    String time;
+    List<String> filePath = new ArrayList<>();
+    CommitCodeChange time;
     CodeBlockTime pre;
     CodeBlockTime post;
     String refactorType;

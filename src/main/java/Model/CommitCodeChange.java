@@ -1,11 +1,12 @@
 package Model;
 
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
 
 public class CommitCodeChange {
     String commitID;
-    List<CodeBlockTime> codeChange;
+    List<CodeBlockTime> codeChange = new ArrayList<>();
     CommitCodeChange preCommit;
     CommitCodeChange postCommit;
 
@@ -21,6 +22,9 @@ public class CommitCodeChange {
     }
     public String getCommitID(){
         return commitID;
+    }
+    public void addCodeChange(CodeBlockTime cbt){
+        codeChange.add(cbt);
     }
 
     //    public String toString()

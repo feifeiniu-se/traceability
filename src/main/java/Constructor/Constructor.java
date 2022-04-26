@@ -92,13 +92,16 @@ public class Constructor {
 
     private void handleAddFile(HashMap<String, DiffFile> fileList) {
         List<Map.Entry<String, DiffFile>> addFile = fileList.entrySet().stream().filter(map -> "ADD".equals(map.getValue().getType())).collect(Collectors.toList());
+
         //todo
         if(!addFile.isEmpty()){
-            //firstly, package
+            //firstly, package level
             for(Map.Entry<String, DiffFile> map: fileList.entrySet()){
+                System.out.println(map.getValue());
                 String fileContent = map.getValue().getContent();
                 String filePath = map.getValue().getPath();
-                packageVisitor(filePath, fileContent, codeBlocks, codeChange, mappings);
+                PackageVisitor pkgVisitor = new PackageVisitor();
+                pkgVisitor.packageVisitor(filePath, fileContent, codeBlocks, codeChange, mappings);
 
             }
 
