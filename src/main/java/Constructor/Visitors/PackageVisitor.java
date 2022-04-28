@@ -1,5 +1,7 @@
-package Constructor;
+package Constructor.Visitors;
 
+import Constructor.Enums.CodeBlockType;
+import Constructor.Enums.Operator;
 import Model.CodeBlock;
 import Model.CommitCodeChange;
 import Model.PackageTime;
@@ -8,7 +10,6 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.PackageDeclaration;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
-import java.security.Signature;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class PackageVisitor {
         this.mappings = mappings;
         this.commitCodeChange = codeChange.get(codeChange.size()-1); //获得当前commit的内容
         JavaParser javaParser=new JavaParser();
-        CompilationUnit cu = javaParser.parse(fileContent).getResult().get();//todo 这里会报错
+        CompilationUnit cu = javaParser.parse(fileContent).getResult().get();
         Visitor visitor = new Visitor();
         visitor.visit(cu, null);// 遍历完文件的AST树，初步获得信息
     }
@@ -39,9 +40,9 @@ public class PackageVisitor {
             if(!mappings.containsKey(signature)){
 
                 //如果当前package是新的 就进行创建
-                CodeBlock codeBlock = new CodeBlock(codeBlocks.size()+1);
+                CodeBlock codeBlock = new CodeBlock(codeBlocks.size()+1, CodeBlockType.Package);
                 mappings.put(signature, codeBlock);//更新mapping， codeblocks， commitcodechange
-                PackageTime packageTime = new PackageTime(signature, filePath, commitCodeChange, "ADD PACKAGE", codeBlock);
+                PackageTime packageTime = new PackageTime(signature, filePath, commitCodeChange, Operator.ADD_Package, codeBlock);
                 codeBlock.addHistory(packageTime);
                 codeBlocks.add(codeBlock);
                 codeChange.get(codeChange.size()-1).addCodeChange(packageTime);
@@ -52,7 +53,7 @@ public class PackageVisitor {
                 if(codeBlock.getLastHistory().getTime().getCommitID().equals(commitCodeChange.getCommitID())){
                     codeBlock.getLastHistory().getFilePath().add(filePath);
                 }else{
-                    PackageTime pkg = new PackageTime(signature, filePath, commitCodeChange, "ADD FILE", codeBlock);
+                    PackageTime pkg = new PackageTime(signature, filePath, commitCodeChange, Operator.ADD_Class, codeBlock);
                     codeBlock.addHistory(pkg);
                     codeChange.get(codeChange.size()-1).addCodeChange(pkg);
                 }

@@ -1,5 +1,6 @@
 package Constructor;
 
+import Constructor.Enums.Operator;
 import Model.CodeBlock;
 import Project.RefactoringMiner.Refactoring;
 

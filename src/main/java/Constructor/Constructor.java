@@ -1,5 +1,9 @@
 package Constructor;
 
+import Constructor.Enums.FileType;
+import Constructor.Visitors.ClassVisitor;
+import Constructor.Visitors.MethodAAttributeVisitor;
+import Constructor.Visitors.PackageVisitor;
 import Project.RefactoringMiner.Refactoring;
 import Project.RefactoringMiner.Refactorings;
 import Project.Utils.CommitHashCode;
@@ -75,34 +79,61 @@ public class Constructor {
     }
 
     private void handleModifyFile(HashMap<String, DiffFile> fileList) {
-        List<Map.Entry<String, DiffFile>> modifyFile = fileList.entrySet().stream().filter(map -> "MODIFY".equals(map.getValue().getType())).collect(Collectors.toList());
+//        System.out.println(fileList.size());
+        Map<String, DiffFile> modifyFile = fileList.entrySet().stream()
+                .filter(p -> FileType.MODIFY.toString().equals(p.getValue().getType()))
+                .collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
+//        System.out.println(modifyFile.size());
         if(!modifyFile.isEmpty()){
+            for(Map.Entry<String, DiffFile> file: modifyFile.entrySet()){
+
+            }
             //todo
         }
 
     }
 
     private void handleDeleteFile(HashMap<String, DiffFile> fileList) {
-        List<Map.Entry<String, DiffFile>> deleteFile = fileList.entrySet().stream().filter(map -> "DELETE".equals(map.getValue().getType())).collect(Collectors.toList());
+        Map<String, DiffFile> deleteFile = fileList.entrySet().stream()
+                .filter(p -> FileType.DELETE.toString().equals(p.getValue().getType()))
+                .collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
         //todo
         if(!deleteFile.isEmpty()){
+            for(Map.Entry<String, DiffFile> file: deleteFile.entrySet()){
+
+            }
 
         }
     }
 
     private void handleAddFile(HashMap<String, DiffFile> fileList) {
-        List<Map.Entry<String, DiffFile>> addFile = fileList.entrySet().stream().filter(map -> "ADD".equals(map.getValue().getType())).collect(Collectors.toList());
+        Map<String, DiffFile> addFile = fileList.entrySet().stream()
+                .filter(p -> FileType.ADD.toString().equals(p.getValue().getType()))
+                .collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
 
         //todo
         if(!addFile.isEmpty()){
             //firstly, package level
-            for(Map.Entry<String, DiffFile> map: fileList.entrySet()){
-                System.out.println(map.getValue());
-                String fileContent = map.getValue().getContent();
-                String filePath = map.getValue().getPath();
+            for(Map.Entry<String, DiffFile> file: addFile.entrySet()){
+                String fileContent = file.getValue().getContent();
+                String filePath = file.getValue().getPath();
                 PackageVisitor pkgVisitor = new PackageVisitor();
                 pkgVisitor.packageVisitor(filePath, fileContent, codeBlocks, codeChange, mappings);
+            }
+            //secondly, class level
+            for(Map.Entry<String, DiffFile> file: addFile.entrySet()){
+                String fileContent = file.getValue().getContent();
+                String filePath = file.getValue().getPath();
+                ClassVisitor classVisitor = new ClassVisitor();
+                classVisitor.classVisitor(filePath, fileContent, codeBlocks, codeChange, mappings);
 
+            }
+            //thirdly, inner class, method, and attribute level
+            for(Map.Entry<String, DiffFile> file: addFile.entrySet()){
+                String fileContent = file.getValue().getContent();
+                String filePath = file.getValue().getPath();
+                MethodAAttributeVisitor third = new MethodAAttributeVisitor();//包含inner class, method, attribute
+                third.methodAAttributeVisitor(filePath, fileContent, codeBlocks, codeChange, mappings);
             }
 
         }
@@ -111,18 +142,29 @@ public class Constructor {
 
 
     private void handleDriveFile(HashMap<String, DiffFile> fileList) {
-        List<Map.Entry<String, DiffFile>> deriveFile = fileList.entrySet().stream().filter(map -> "DERIVE".equals(map.getValue().getType())).collect(Collectors.toList());
+        Map<String, DiffFile> deriveFile = fileList.entrySet().stream()
+                .filter(p -> FileType.DERIVE.toString().equals(p.getValue().getType()))
+                .collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
         //todo
         if(!deriveFile.isEmpty()){
+            for(Map.Entry<String, DiffFile> file: deriveFile.entrySet()){
+//                System.out.println(file.getValue().getType());
+//                System.out.println(file.getValue().getType().equals("ADD"));
+
+            }
 
         }
     }
 
     private void handleRenameFile(HashMap<String, DiffFile> fileList) {
-        List<Map.Entry<String, DiffFile>> renameFile = fileList.entrySet().stream().filter(map -> "RENAME".equals(map.getValue().getType())).collect(Collectors.toList());
+        Map<String, DiffFile> renameFile = fileList.entrySet().stream()
+                .filter(p -> FileType.RENAME.toString().equals(p.getValue().getType()))
+                .collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
         //todo
         if(!renameFile.isEmpty()){
+            for(Map.Entry<String, DiffFile> file: renameFile.entrySet()){
 
+            }
         }
     }
 

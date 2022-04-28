@@ -1,18 +1,38 @@
+import Constructor.Enums.CodeBlockType;
+import Constructor.Enums.Operator;
 import Model.CodeBlock;
+import Model.CommitCodeChange;
+import Model.PackageTime;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class test {
     public static void main(String[] args){
-        Map<String, CodeBlock> test = new HashMap<>();
-//        System.out.println(test.isEmpty());
-        CodeBlock a = new CodeBlock(1);
-        CodeBlock b = new CodeBlock(2);
-        test.put("tsst", b);
-        test.put("haha", a);
+//        Map<String, CodeBlock> test = new HashMap<>();
+////        System.out.println(test.isEmpty());
+//        CodeBlock a = new CodeBlock(1, CodeBlockType.Class);
+//        CodeBlock b = new CodeBlock(2, CodeBlockType.Method);
+//        test.put("tsst", b);
+//        test.put("haha", a);
 
+        PackageTime p = new PackageTime("test", "test", new CommitCodeChange("0"), Operator.ADD_Package, new CodeBlock(1, CodeBlockType.Package));
+        PackageTime p2 = new PackageTime(p.getSignature(), p.getFilePath().get(0), p.getTime(), p.getRefactorType(), p.getOwner());
+        p2.getFilePath().add("haha");
+        p.getFilePath().add("7");
+        List<CodeBlock> classes = new ArrayList<>();
+        classes.add(new CodeBlock(2, CodeBlockType.Class));
+        p.setClasses(classes);
+        p2.setClasses(new ArrayList<>(p.getClasses()));
+        p2.getClasses().add(new CodeBlock(4, CodeBlockType.Class));
+        System.out.println(p2.getFilePath());
+
+
+
+
+//        System.out.println(a.toString().get);
 //        test.put("ni", test.get("haha"));
 //        Collection<CodeBlock> values = test.values();
 //        System.out.println(values.size());

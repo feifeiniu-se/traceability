@@ -3,19 +3,21 @@ package Model;
 import java.util.ArrayList;
 import java.util.List;
 
+import Constructor.Enums.CodeBlockType;
+import Constructor.Enums.Status;
 import lombok.Data;
 
 @Data
 public class CodeBlock {
     Integer codeBlockID;
-    String type;//package, class, method, attribute
-    String status;//null delete 用来记录被删除的block
+    CodeBlockType type;//package, class, method, attribute
+    Status status;//null delete 用来记录被删除的block
     List<CodeBlockTime> history;
 
-    public CodeBlock(Integer id) {
+    public CodeBlock(Integer id, CodeBlockType tp) {
         this.codeBlockID = id;
-        type = "ADD";
-        status = null;
+        type = tp;
+        status = Status.ACTIVE;
         history = new ArrayList<>();
     }
 
@@ -35,5 +37,6 @@ public class CodeBlock {
     public CodeBlockTime getLastHistory() {
         return history.isEmpty()?null:history.get(history.size()-1);
     }
+
 
 }

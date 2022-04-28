@@ -5,11 +5,11 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.*;
 
+import Constructor.Enums.FileType;
 import Project.RefactoringMiner.Commits;
 import Project.RefactoringMiner.Refactorings;
 import Project.Utils.CommitHashCode;
 import Project.Utils.DiffFile;
-import Project.Utils.ReadJsonFiles;
 import com.google.gson.Gson;
 import lombok.Data;
 import org.apache.commons.io.IOUtils;
@@ -171,7 +171,7 @@ public class Project {
             // set all the files as add
             if(sourceCode.size()<1){return null;}// no new java file
             for(Map.Entry<String, String> entry: sourceCode.entrySet()){
-                res.put(entry.getKey(), new DiffFile("ADD", entry.getKey(), entry.getValue()));
+                res.put(entry.getKey(), new DiffFile(FileType.ADD.toString(), entry.getKey(), entry.getValue()));
             }
         }else{
             //get the list of diff between two commits

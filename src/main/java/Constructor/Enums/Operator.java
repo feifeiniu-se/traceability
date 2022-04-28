@@ -1,4 +1,4 @@
-package Constructor;
+package Constructor.Enums;
 
 
 import Model.AttributeTime;
@@ -10,6 +10,36 @@ import java.util.HashMap;
 import java.util.List;
 
 public enum Operator {
+    ADD_Package {
+        @Override
+        public void apply(HashMap<String, CodeBlock> codeBlocks, Refactoring refactor, String currentTime, String lastHash) {
+
+        }
+    },
+    ADD_Class {
+        @Override
+        public void apply(HashMap<String, CodeBlock> codeBlocks, Refactoring refactor, String currentTime, String lastHash) {
+
+        }
+    },
+    ADD_Method{
+        @Override
+        public void apply(HashMap<String, CodeBlock> codeBlocks, Refactoring refactor, String currentTime, String lastHash) {
+
+        }
+    },
+    ADD_Attribute{
+        @Override
+        public void apply(HashMap<String, CodeBlock> codeBlocks, Refactoring refactor, String currentTime, String lastHash) {
+
+        }
+    },
+    DELETE {
+        @Override
+        public void apply(HashMap<String, CodeBlock> codeBlocks, Refactoring refactor, String currentTime, String lastHash) {
+
+        }
+    },
 
     //TODO 为每一种refactoring添加commit的codeblocktime信息
     Rename_Package {
@@ -192,7 +222,7 @@ public enum Operator {
     Add_Parameter {
         public void apply(HashMap<String, CodeBlock> codeBlocks, Refactoring refactor, String currentTime, String lastHash) {
 
-            AttributeTime attributeTime = new AttributeTime();
+//            AttributeTime attributeTime = new AttributeTime();
 //            attributeTime.setTime(currentTime);
 
             System.out.println(refactor.getType());
