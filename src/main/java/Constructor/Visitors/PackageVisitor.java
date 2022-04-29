@@ -43,9 +43,7 @@ public class PackageVisitor {
                 CodeBlock codeBlock = new CodeBlock(codeBlocks.size()+1, CodeBlockType.Package);
                 mappings.put(signature, codeBlock);//更新mapping， codeblocks， commitcodechange
                 PackageTime packageTime = new PackageTime(signature, filePath, commitCodeChange, Operator.ADD_Package, codeBlock);
-                codeBlock.addHistory(packageTime);
                 codeBlocks.add(codeBlock);
-                codeChange.get(codeChange.size()-1).addCodeChange(packageTime);
             }else{
                 CodeBlock codeBlock = mappings.get(signature);
                 //todo 如果包含的话 就更新filepathList
@@ -54,8 +52,6 @@ public class PackageVisitor {
                     codeBlock.getLastHistory().getFilePath().add(filePath);
                 }else{
                     PackageTime pkg = new PackageTime(signature, filePath, commitCodeChange, Operator.ADD_Class, codeBlock);
-                    codeBlock.addHistory(pkg);
-                    codeChange.get(codeChange.size()-1).addCodeChange(pkg);
                 }
             }
 

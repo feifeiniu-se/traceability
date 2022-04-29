@@ -1,6 +1,6 @@
 package Constructor.Enums;
 
 public enum Status {
-    DELETE, ACTIVE;
+    DELETE, ACTIVE, DERIVED;
 
 }

@@ -171,7 +171,7 @@ public class Project {
             // set all the files as add
             if(sourceCode.size()<1){return null;}// no new java file
             for(Map.Entry<String, String> entry: sourceCode.entrySet()){
-                res.put(entry.getKey(), new DiffFile(FileType.ADD.toString(), entry.getKey(), entry.getValue()));
+                res.put(entry.getKey(), new DiffFile(FileType.ADD, entry.getKey(), entry.getValue()));
             }
         }else{
             //get the list of diff between two commits
@@ -187,7 +187,11 @@ public class Project {
                 if(diffs.size()<1){return null;}
 //                System.out.println("Found: " + diffs.size() + " differences");
                 for (DiffEntry diff : diffs) {
-                    res.put(diff.getNewPath(),new DiffFile(diff.getChangeType().name(), diff.getNewPath(), newCode.get(diff.getNewPath()), diff.getOldPath(), oldCode.get(diff.getOldPath())));
+                    if(diff.getChangeType().name().equals("DELETE")){
+                        res.put(diff.getOldPath(), new DiffFile(FileType.valueOf(diff.getChangeType().name()), diff.getNewPath(), newCode.get(diff.getNewPath()), diff.getOldPath(), oldCode.get(diff.getOldPath())));
+                    }else {
+                        res.put(diff.getNewPath(), new DiffFile(FileType.valueOf(diff.getChangeType().name()), diff.getNewPath(), newCode.get(diff.getNewPath()), diff.getOldPath(), oldCode.get(diff.getOldPath())));
+                    }
 //                    System.out.println("Diff: " + diff.getChangeType() + ": " +
 //                            (diff.getOldPath().equals(diff.getNewPath()) ? diff.getNewPath() : diff.getOldPath() + " -> " + diff.getNewPath()));
 //            System.out.println(diff);

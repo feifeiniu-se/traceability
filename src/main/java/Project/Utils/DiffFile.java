@@ -1,4 +1,5 @@
 package Project.Utils;
+import Constructor.Enums.FileType;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -7,7 +8,7 @@ import java.util.List;
 
 @Data
 public class DiffFile {
-    String type;// add, delete, rename, modify, derive
+    FileType type;// add, delete, rename, modify, derive
     String path;
     String content;
     String oldPath;
@@ -15,7 +16,7 @@ public class DiffFile {
     List<String> preFiles;
     List<String> postFiles;
 
-    public DiffFile(String type, String path, String content){
+    public DiffFile(FileType type, String path, String content){
         this.type = type;
         this.path = path;
         this.content = content;
@@ -24,7 +25,7 @@ public class DiffFile {
         preFiles = new ArrayList<>();
         postFiles = new ArrayList<>();
     }
-    public DiffFile(String type, String path, String content, String oldPath, String oldContent){
+    public DiffFile(FileType type, String path, String content, String oldPath, String oldContent){
         this.type = type;
         this.path = path;
         this.content = content;

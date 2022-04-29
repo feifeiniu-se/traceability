@@ -67,8 +67,6 @@ public class ClassVisitor {
                     PackageTime pkgTimeNew = new PackageTime(signature, filePath, commitCodeChange, Operator.ADD_Class, mappings.get(pkgName));
                     pkgTimeNew.setClasses(new ArrayList<>(pkgTime.getClasses()));
                     pkgTimeNew.getClasses().add(codeBlock);
-                    mappings.get(pkgName).addHistory(pkgTimeNew);
-                    codeChange.get(codeChange.size()-1).addCodeChange(pkgTimeNew);
                 }
                 codeBlock.addHistory(classTime);
                 codeBlocks.add(codeBlock);

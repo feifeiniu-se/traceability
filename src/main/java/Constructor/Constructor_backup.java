@@ -1,35 +1,30 @@
 package Constructor;
 
-import Constructor.Enums.CodeBlockType;
 import Constructor.Enums.FileType;
 import Constructor.Enums.Operator;
-import Constructor.Enums.Status;
 import Constructor.Visitors.ClassVisitor;
 import Constructor.Visitors.MethodAAttributeVisitor;
 import Constructor.Visitors.PackageVisitor;
-import Model.PackageTime;
-import Project.RefactoringMiner.Refactoring;
-import Project.RefactoringMiner.Refactorings;
-import Project.RefactoringMiner.SideLocation;
-import Project.Utils.CommitHashCode;
-import Project.Utils.DiffFile;
-import com.fasterxml.jackson.databind.JsonSerializable;
-import lombok.Data;
 import Model.CodeBlock;
 import Model.CommitCodeChange;
 import Project.Project;
+import Project.RefactoringMiner.Refactoring;
+import Project.RefactoringMiner.Refactorings;
+import Project.Utils.CommitHashCode;
+import Project.Utils.DiffFile;
+import lombok.Data;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Data
-public class Constructor {
+public class Constructor_backup {
     Project project;
     List<CodeBlock> codeBlocks = new ArrayList<>();
     List<CommitCodeChange> codeChange = new ArrayList<>();
     HashMap<String, CodeBlock> mappings = new HashMap<>();// mapping between signature and codeBlockID
 
-    public Constructor(Project p) {
+    public Constructor_backup(Project p) {
         project = p;
     }
 

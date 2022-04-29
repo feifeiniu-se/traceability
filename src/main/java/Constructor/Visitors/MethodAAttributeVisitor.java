@@ -33,7 +33,8 @@ public class MethodAAttributeVisitor {
             for(BodyDeclaration member : members) {
                 //分别判断属性 方法 内部类（假设内部类不会影响属性的类型）todo
                 if(member.isFieldDeclaration()){
-                    assert(member.asFieldDeclaration().getVariables().size()==1);
+//                    System.out.println(member.asFieldDeclaration().toString());
+//                    assert(member.asFieldDeclaration().getVariables().size()==1);//todo 有时可能是不止已有一个属性，需要进一步的处理
                     String attributeName = member.asFieldDeclaration().getElementType().toString()+"_"+member.asFieldDeclaration().getVariable(0).getNameAsString();
                     String signature = className+":"+attributeName;
                     String returenType = member.asFieldDeclaration().getElementType().toString();

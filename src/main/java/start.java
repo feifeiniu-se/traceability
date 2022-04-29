@@ -36,6 +36,8 @@ public class start {
         constructor.start();// start code analysis
         List<CodeBlock> codeBlocks = constructor.getCodeBlocks();
         List<CommitCodeChange> commits = constructor.getCodeChange();
+        System.out.println(codeBlocks.size());
+        System.out.println(commits.size());
 
 
     }
