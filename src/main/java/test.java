@@ -1,5 +1,7 @@
 import Constructor.Enums.CodeBlockType;
 import Constructor.Enums.Operator;
+import Constructor.Utils;
+import Model.ClassTime;
 import Model.CodeBlock;
 import Model.CommitCodeChange;
 import Model.PackageTime;
@@ -30,10 +32,13 @@ public class test {
 //        p2.setClasses(new ArrayList<>(p.getClasses()));
 //        p2.getClasses().add(new CodeBlock(4, CodeBlockType.Class));
 //        System.out.println(p2.getFilePath());
-        String x = cutString("Split Package org.jboss.messaging.util.newprioritylinkedlist to [org.jboss.messaging.newcore, org.jboss.messaging.newcore.impl]", "[", "]");
-        System.out.println(x);
-
-
+//        String x = codeElement2Name("org.jboss.messaging.newcore");
+        String x = "public getEnumeration() : Enumeration";
+//        Utils.codeElement2Name(x);
+        String t = "()";
+        String p = cutString(t, "(", ")");
+        String[] test = p.split(" ");
+        System.out.println(p.length());
 
 //        System.out.println(a.toString().get);
 //        test.put("ni", test.get("haha"));
@@ -47,5 +52,10 @@ public class test {
         Integer s = str.indexOf(start);
         Integer e = str.indexOf(end);
         return str.substring(s+1, e);
+    }
+
+    public static String codeElement2Name(String codeElement) {
+        String x = codeElement.substring(codeElement.lastIndexOf(".")-1);
+        return codeElement.replace(x, x.replace(".", ":"));
     }
 }

@@ -27,7 +27,7 @@ public class MethodAAttributeVisitor {
         for(TypeDeclaration type : cu.getTypes()) {
             // first give all this java doc member
             String className = type.getNameAsString();
-            CodeBlock classBlock = mappings.get(pkgName+":"+className);//todo 理论上说应该是能检测到的
+            CodeBlock classBlock = mappings.get(pkgName+"."+className);//todo 理论上说应该是能检测到的
             List<BodyDeclaration> members = type.getMembers();
             // check all member content 有可能是类 方法 属性等
             for(BodyDeclaration member : members) {

@@ -52,7 +52,7 @@ public class ClassVisitor {
                 System.out.println("inner class: "+name);
                 return;//todo 如何处理inner class
             }//如果是inner class就返回
-            String signature = pkgName+":"+md.getNameAsString();
+            String signature = pkgName+"."+md.getNameAsString();
             if(!mappings.containsKey(signature)){
                 //如果当前类是新的 就新建
                 //更新mapping， codeblocks， commitcodechang,以及添加pkt的classes属性

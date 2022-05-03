@@ -41,7 +41,19 @@ public class PackageTime extends CodeBlockTime{
         own.addHistory(this);
         commitTime.addCodeChange(this);
     }
-//    public static List<CodeBlock> getClasses(){
-//        return classes;
-//    }
+
+    public PackageTime(PackageTime pkg, CommitCodeChange cmt, Operator tp) {//move class
+        signature = pkg.getSignature();
+        filePath = new ArrayList<>(pkg.getFilePath());
+        time = cmt;
+        refactorType = tp;
+        deriver = pkg.getDeriver();
+        derivee = pkg.getDerivee();
+        parentCodeBlock = pkg.getParentCodeBlock();
+        owner = pkg.getOwner();
+        classes = pkg.getClasses();
+        owner.addHistory(this);
+        cmt.addCodeChange(this);
+    }
+
 }

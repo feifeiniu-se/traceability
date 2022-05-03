@@ -7,6 +7,7 @@ import Constructor.Enums.Status;
 import Constructor.Visitors.ClassVisitor;
 import Constructor.Visitors.MethodAAttributeVisitor;
 import Constructor.Visitors.PackageVisitor;
+import Model.ClassTime;
 import Model.PackageTime;
 import Project.RefactoringMiner.Refactoring;
 import Project.RefactoringMiner.Refactorings;
@@ -18,9 +19,12 @@ import lombok.Data;
 import Model.CodeBlock;
 import Model.CommitCodeChange;
 import Project.Project;
+import org.slf4j.impl.Log4jLoggerAdapter;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static Constructor.Utils.codeElement2Name;
 
 @Data
 public class Constructor {
@@ -191,111 +195,64 @@ public class Constructor {
         for(Refactoring r: firstLevel){
             Handler handler = new Handler();
             handler.handle(codeBlocks, mappings, r, fileList, commitTime, Operator.valueOf(r.getType().replace(" ", "_")));
-//            if(Operator.valueOf(r.getType().replace(" ", "_")).equals(Operator.Move_Package)||Operator.valueOf(r.getType().replace(" ", "_")).equals(Operator.Rename_Package)){
-//                String[] des = r.getDescription().split(" ");
-//                String leftP = des[2];
-//                String  rightP = des[4];
-//                //package signature 变更
-//                assert(mappings.containsKey(leftP));
-//                CodeBlock packageBlock = mappings.get(leftP);
-//                PackageTime pkgTime = new PackageTime(rightP, commitTime, Operator.valueOf(r.getType().replace(" ", "_")), packageBlock);
-//                mappings.put(rightP, packageBlock);
-//                //
-//                assert r.getLeftSideLocations().size()==r.getRightSideLocations().size();
-//                for(int i=0; i<r.getLeftSideLocations().size(); i++){
-//                    assert(fileList.containsKey(r.getLeftSideLocations().get(i).getFilePath()));
-//                    assert(fileList.containsKey(r.getRightSideLocations().get(i).getFilePath()));
-//                    DiffFile left = fileList.get(r.getLeftSideLocations().get(i).getFilePath());
-//                    DiffFile right = fileList.get(r.getRightSideLocations().get(i).getFilePath());
-//                    DiffFile renameFile = new DiffFile(FileType.RENAME, right.getPath(), right.getContent(), left.getOldPath(), left.getOldContent());
-//                    fileList.put(right.getPath(), renameFile);
-//                    fileList.put(left.getOldPath(), renameFile);//更新文件名的变更
-//                    pkgTime.getFilePath().add(right.getPath());
-//                    // todo 只修改了package的名字 有待修改classBlock, 或者在其他地方修改
-//
-//                }
-
-//            }else if(Operator.valueOf(r.getType().replace(" ", "_")).equals(Operator.Split_Package)){
-//                String[] newPkgNames = Utils.cutString(r.getDescription(), "[", "]").replace(" ", "").split(",");
-//                String oldPkgName = r.getDescription().split(" ")[2];
-//                assert mappings.containsKey(oldPkgName);
-//                CodeBlock oldPkgBlock = mappings.get(oldPkgName);
-//                PackageTime newPkgTime4Old = new PackageTime(oldPkgName, commitTime, Operator.Split_Package, oldPkgBlock);
-//                oldPkgBlock.setStatus(Status.DERIVED);
-//
-//                //TODO 先假设两个新包名字不一样，直接新增两个新的包
-//                assert !newPkgNames[0].equals(newPkgNames[1]);
-//                for(String pkgName: newPkgNames){
-//                    CodeBlock pkgBlockNew = new CodeBlock(codeBlocks.size()+1, CodeBlockType.Package);
-//                    PackageTime pkgTime = new PackageTime(pkgName, commitTime, Operator.Split_Package, newPkgTime4Old, pkgBlockNew);
-//                    mappings.put(pkgName, pkgBlockNew);
-//                }
-//                //遍历左右两边的文件 构建文件rename关系，以及更新packageTime中的文件list
-//                assert(r.getLeftSideLocations().size()==r.getRightSideLocations().size());
-//                for(int i=0; i<r.getLeftSideLocations().size(); i++){
-//                    assert(fileList.containsKey(r.getLeftSideLocations().get(i).getFilePath()));
-//                    assert(fileList.containsKey(r.getRightSideLocations().get(i).getFilePath()));
-//                    DiffFile left = fileList.get(r.getLeftSideLocations().get(i).getFilePath());
-//                    DiffFile right = fileList.get(r.getRightSideLocations().get(i).getFilePath());
-//                    DiffFile renameFile = new DiffFile(FileType.RENAME, right.getPath(), right.getContent(), left.getOldPath(), left.getOldContent());
-//                    fileList.put(right.getPath(), renameFile);
-//                    fileList.put(left.getOldPath(), renameFile);//更新文件名的变更
-//                    mappings.get(findPackageName(newPkgNames, right.getPath())).getLastHistory().getFilePath().add(right.getPath());
-//                }
-
-//            }else if(Operator.valueOf(r.getType().replace(" ", "_")).equals(Operator.Merge_Package)){
-//                String[] oldPkgNames = Utils.cutString(r.getDescription(), "[", "]").replace(" ", "").split(",");
-//                String[] desc = r.getDescription().split(" ");
-//                String newPkgName = desc[desc.length-1];
-//                CodeBlock newPkgBlock = new CodeBlock(codeBlocks.size()+1, CodeBlockType.Package);
-//                PackageTime newPkgTime = new PackageTime(newPkgName, commitTime, Operator.Merge_Package, newPkgBlock);
-//                mappings.put(newPkgName, newPkgBlock);
-//
-//                for(String pkgName: oldPkgNames){
-//                    assert mappings.containsKey(pkgName);
-//                    CodeBlock oldBlock = mappings.get(pkgName);
-//                    PackageTime newPkgTime4Old = new PackageTime(pkgName, commitTime, Operator.Merge_Package, newPkgTime, oldBlock);
-//                    oldBlock.setStatus(Status.DERIVED);
-//                }
-//
-//                assert(r.getLeftSideLocations().size()==r.getRightSideLocations().size());
-//                for(int i=0; i<r.getLeftSideLocations().size(); i++){
-//                    assert(fileList.containsKey(r.getLeftSideLocations().get(i).getFilePath()));
-//                    assert(fileList.containsKey(r.getRightSideLocations().get(i).getFilePath()));
-//                    DiffFile left = fileList.get(r.getLeftSideLocations().get(i).getFilePath());
-//                    DiffFile right = fileList.get(r.getRightSideLocations().get(i).getFilePath());
-//                    DiffFile renameFile = new DiffFile(FileType.RENAME, right.getPath(), right.getContent(), left.getOldPath(), left.getOldContent());
-//                    fileList.put(right.getPath(), renameFile);
-//                    fileList.put(left.getOldPath(), renameFile);//更新文件名的变更
-//                    newPkgTime.getFilePath().add(right.getPath());
-//                }
-//            }
-
         }
 
     }
 
-
     private void handlingSecond(HashMap<String, DiffFile> fileList, List<Refactoring> secondLevel, CommitCodeChange commitTime, Set<DiffFile> filePairs){
-//        "Extract Superclass",
-//        "Extract Interface",
-//        "Move Class",
-//        "Rename Class",
-//        "Move and Rename Class",
-//        "Extract Class",
-//        "Extract Subclass",
-//        "Change Type Declaration Kind",
-//        "Collapse Hierarchy",
-//        "Merge Class"
-//        for(Refactoring r: secondLevel){
-//
-//        }
-        System.out.println("2: " + commitTime.getCommitID());
-    }
-    private void handlingThird(HashMap<String, DiffFile> fileList, List<Refactoring> thirdLevel, CommitCodeChange commitTime, Set<DiffFile> filePairs){
-        //todo
-        System.out.println("3: " + commitTime.getCommitID());
+//        "Move Class",//done
+//        "Rename Class",//done
+//        "Move and Rename Class",//done
+//        "Merge Class"//done
+//        "Extract Superclass",/done
+//        "Extract Interface",//done
+//        "Extract Class",//done
+//        "Extract Subclass",//done
+//        "Change Type Declaration Kind",//todo have to check if neccessary
+//        "Collapse Hierarchy",//done
 
+        for(Refactoring r: secondLevel){
+            Handler handler = new Handler();
+            handler.handle(codeBlocks, mappings, r, fileList, commitTime, Operator.valueOf(r.getType().replace(" ", "_")));
+        }
+    }
+
+
+    private void handlingThird(HashMap<String, DiffFile> fileList, List<Refactoring> thirdLevel, CommitCodeChange commitTime, Set<DiffFile> filePairs){
+//        "Extract Method",
+//        "Inline Method",
+//        "Rename Method",//done
+//        "Move Method",
+//        "Pull Up Method",
+//        "Push Down Method",
+//        "Extract and Move Method",
+//        "Move and Rename Method",
+//        "Move and Inline Method",
+//        "Merge Parameter",
+//        "Split Parameter",
+//        "Add Parameter",
+//        "Remove Parameter",
+//        "Reorder Parameter",
+//        "Change Parameter Type",
+//        "Parameterize Attribute",
+//        "Parameterize Variable",
+//        "Change Return Type",
+//        "Rename Attribute",
+//        "Move and Rename Attribute",
+//        "Merge Attribute",
+//        "Split Attribute",
+//        "Change Attribute Type",
+//        "Extract Attribute",
+//        "Encapsulate Attribute",
+//        "Replace Attribute with Variable",
+//        "Inline Attribute"
+//        "Pull Up Attribute",
+//        "Push Down Attribute",
+
+        for(Refactoring r: thirdLevel){
+            Handler handler = new Handler();
+            handler.handle(codeBlocks, mappings, r, fileList, commitTime, Operator.valueOf(r.getType().replace(" ", "_")));
+        }
     }
 
 
