@@ -1,5 +1,5 @@
 package Constructor.Enums;
 
 public enum CodeBlockType {
-    Package, Class, Method, InnerClass, Attribute;
+    Package, Class, Method, Attribute;
 }

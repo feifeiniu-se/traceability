@@ -4,20 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Constructor.Enums.CodeBlockType;
-import Constructor.Enums.Status;
 import lombok.Data;
 
 @Data
 public class CodeBlock {
     Integer codeBlockID;
     CodeBlockType type;//package, class, method, attribute
-    Status status;//null delete 用来记录被删除的block
     List<CodeBlockTime> history;
 
     public CodeBlock(Integer id, CodeBlockType tp) {
         this.codeBlockID = id;
         type = tp;
-        status = Status.ACTIVE;
         history = new ArrayList<>();
     }
 

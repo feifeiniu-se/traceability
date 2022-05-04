@@ -21,7 +21,7 @@ public class Utils {
     }
 
 
-    public static HashMap<String, String> codeElement2Name(String codeElement) {
+    public static HashMap<String, String> codeElement2Method(String codeElement) {
         HashMap<String, String> res = new HashMap<>();
         String returnType = codeElement.substring(codeElement.lastIndexOf(":")+1).replace(" ", "");
         res.put("RT", returnType);
