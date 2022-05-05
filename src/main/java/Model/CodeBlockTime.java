@@ -4,11 +4,12 @@ import Constructor.Enums.Operator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public abstract class CodeBlockTime {
+public abstract class CodeBlockTime implements Cloneable, Serializable {
     String name;
     CommitCodeChange time;
     CodeBlockTime pre = null;
@@ -26,7 +27,18 @@ public abstract class CodeBlockTime {
     abstract List<CodeBlock> getAttributes();
     abstract List<CodeBlock> getParameterRetureType();
     abstract List<String> getParameters();
-    public abstract CodeBlockTime deepCopy() throws JsonProcessingException;
+    @Override
+    public Object clone() {
+        CodeBlockTime codeBlockTime = null;
+        try {
+            codeBlockTime = (CodeBlockTime) super.clone();
+            codeBlockTime.setDeriver(new ArrayList<>(deriver));
+            codeBlockTime.setDerivee(new ArrayList<>(derivee));
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return codeBlockTime;
+    }
 
 
 }

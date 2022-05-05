@@ -15,8 +15,7 @@ public class DiffFile {
     String content;
     String oldPath;
     String oldContent;
-    Set<String> deriveFrom = new HashSet<String>();
-    Set<String> deriveTo = new HashSet<String>();
+
 
     public DiffFile(FileType type, String path, String content){//仅用于项目初始状态 全部都是add
         this.type = type;

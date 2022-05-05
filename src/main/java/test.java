@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 public class test {
     public static void main(String[] args){
 //        Map<String, CodeBlock> test = new HashMap<>();
@@ -33,12 +34,9 @@ public class test {
 //        p2.getClasses().add(new CodeBlock(4, CodeBlockType.Class));
 //        System.out.println(p2.getFilePath());
 //        String x = codeElement2Name("org.jboss.messaging.newcore");
-        String x = "public getEnumeration() : Enumeration";
+        String x = "package MessageConsumerImpl(destination Destination, messageSelector String, noLocal boolean)";
 //        Utils.codeElement2Name(x);
-        String t = "()";
-        String p = cutString(t, "(", ")");
-        String[] test = p.split(" ");
-        System.out.println(p.length());
+        System.out.println(x.lastIndexOf(":"));
 
 //        System.out.println(a.toString().get);
 //        test.put("ni", test.get("haha"));

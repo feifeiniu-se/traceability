@@ -18,9 +18,15 @@ import java.util.List;
 
 public class MethodAAttributeVisitor {
     public List<String> commonTypes = new ArrayList<>(Arrays.asList("boolean", "char", "byte", "short", "int", "long", "float", "double", "String"));
+    List<CodeBlock> codeBlocks;
+    HashMap<String, CodeBlock> mappings;
+    CommitCodeChange commitTime;
 
     public void methodAAttributeVisitor(String fileContent, List<CodeBlock> codeBlocks, List<CommitCodeChange> codeChange, HashMap<String, CodeBlock> mappings) {
-        CommitCodeChange commitCodeChange = codeChange.get(codeChange.size()-1); //获得当前commit的内容
+        this.codeBlocks = codeBlocks;
+        this.mappings = mappings;
+        this.commitTime = codeChange.get(codeChange.size()-1);
+
         JavaParser javaParser=new JavaParser();
         CompilationUnit cu = javaParser.parse(fileContent).getResult().get();
         String pkgName = cu.getPackageDeclaration().get().getNameAsString();
@@ -33,10 +39,10 @@ public class MethodAAttributeVisitor {
             CodeBlock classBlock = mappings.get(signature_class);
             List<BodyDeclaration> members = type.getMembers();
             // check all member content： class, method, attribute
-            classVisit(members, signature_class, mappings, codeBlocks, commitCodeChange, classBlock);
+            classVisit(members, signature_class, classBlock);
         }
     }
-    public void classVisit(List<BodyDeclaration> members, String signature, HashMap<String, CodeBlock> mappings, List<CodeBlock> codeBlocks, CommitCodeChange commitCodeChange, CodeBlock classBlock){
+    public void classVisit(List<BodyDeclaration> members, String signature, CodeBlock classBlock){
         for(BodyDeclaration member : members) {
             //分别判断属性 方法 内部类（假设内部类不会影响属性的类型）todo
             if(member.isFieldDeclaration()){
@@ -53,7 +59,7 @@ public class MethodAAttributeVisitor {
                     CodeBlock codeBlock = new CodeBlock(codeBlocks.size()-1, CodeBlockType.Attribute);
                     mappings.put(signature_attribute, codeBlock);
                     codeBlocks.add(codeBlock);
-                    AttributeTime attriTime = new AttributeTime(attributeName, commitCodeChange, Operator.Add_Attribute, codeBlock, classBlock);
+                    AttributeTime attriTime = new AttributeTime(attributeName, commitTime, Operator.Add_Attribute, codeBlock, classBlock);
                 }
             }
             if(member.isMethodDeclaration()||member.isConstructorDeclaration()){//method
@@ -74,7 +80,7 @@ public class MethodAAttributeVisitor {
                     CodeBlock codeBlock = new CodeBlock(codeBlocks.size()-1, CodeBlockType.Method);
                     mappings.put(signature_method, codeBlock);
                     codeBlocks.add(codeBlock);
-                    MethodTime methodTime = new MethodTime(methodName, commitCodeChange, Operator.Add_Method, codeBlock, classBlock, parameters);
+                    MethodTime methodTime = new MethodTime(methodName, commitTime, Operator.Add_Method, codeBlock, classBlock, parameters);
                 }
             }
 
@@ -82,13 +88,13 @@ public class MethodAAttributeVisitor {
             if(member.isClassOrInterfaceDeclaration()) {
                 //todo add inner class
                 // get inner class method
-                System.out.println("Inner class: "+member.asClassOrInterfaceDeclaration().getMethods().toString());
+//                System.out.println("Inner class: "+member.asClassOrInterfaceDeclaration().getMethods().toString());
                 String innerClassName = member.asClassOrInterfaceDeclaration().getNameAsString();
                 String signature_inner_class = signature+"." + innerClassName;
                 CodeBlock innerClassBlock;
                 if(!mappings.containsKey(signature_inner_class)){
                     innerClassBlock = new CodeBlock(codeBlocks.size()+1, CodeBlockType.Class);
-                    ClassTime classTime = new ClassTime(innerClassName, commitCodeChange, Operator.Add_Class, innerClassBlock, classBlock);
+                    ClassTime classTime = new ClassTime(innerClassName, commitTime, Operator.Add_Class, innerClassBlock, classBlock);
                     mappings.put(signature_inner_class, innerClassBlock);
                     codeBlocks.add(innerClassBlock);
                 }else{
@@ -99,7 +105,7 @@ public class MethodAAttributeVisitor {
                 for(int i=0; i<innerMember.size(); i++){
                     innerMembers.add(innerMember.get(i));
                 }
-                classVisit(innerMembers, signature_inner_class, mappings, codeBlocks, commitCodeChange, innerClassBlock);
+                classVisit(innerMembers, signature_inner_class, innerClassBlock);
             }
         }
     }

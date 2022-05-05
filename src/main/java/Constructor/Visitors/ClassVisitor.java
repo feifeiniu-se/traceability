@@ -50,8 +50,8 @@ public class ClassVisitor {
             super.visit(md, arg);
             if (md.isInnerClass() == true) {
                 String name = md.getNameAsString();
-                System.out.println("inner class: " + name);
-                return;//todo 如何处理inner class
+//                System.out.println("inner class: " + name);
+                return;//done 如何处理inner class
             }//如果是inner class就返回
             String name = md.getNameAsString();
             String signature = pkgName + "." + name;

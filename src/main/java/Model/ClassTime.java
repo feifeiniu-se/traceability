@@ -41,27 +41,19 @@ public class ClassTime extends CodeBlockTime {
         own.addHistory(this);
         cmt.addCodeChange(this);
         if (parent.getType().equals(CodeBlockType.Class)) {//if the parent is a class
-            try{
-                ClassTime parentTime = (ClassTime) parent.getLastHistory().deepCopy();
-                parentTime.setTime(cmt);
-                parentTime.setRefactorType(Operator.Add_Class);
-                parentTime.getClasses().add(own);
-                parent.addHistory(parentTime);
-                cmt.addCodeChange(parentTime);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
+            ClassTime parentTime = (ClassTime) parent.getLastHistory().clone();
+            parentTime.setTime(cmt);
+            parentTime.setRefactorType(Operator.Add_Class);
+            parentTime.getClasses().add(own);
+            parent.addHistory(parentTime);
+            cmt.addCodeChange(parentTime);
         } else if (parent.getType().equals(CodeBlockType.Package)) {// if the parent is a package
-            try{
-                PackageTime parentTime = (PackageTime) parent.getLastHistory().deepCopy();
-                parentTime.setTime(cmt);
-                parentTime.setRefactorType(Operator.Add_Class);
-                parentTime.getClasses().add(own);
-                parent.addHistory(parentTime);
-                cmt.addCodeChange(parentTime);
-            }catch (JsonProcessingException e){
-                e.printStackTrace();
-            }
+            PackageTime parentTime = (PackageTime)parent.getLastHistory().clone();
+            parentTime.setTime(cmt);
+            parentTime.setRefactorType(Operator.Add_Class);
+            parentTime.getClasses().add(own);
+            parent.addHistory(parentTime);
+            cmt.addCodeChange(parentTime);
         }else{
             System.out.println("Wrong: classTime");
         }
@@ -107,9 +99,18 @@ public class ClassTime extends CodeBlockTime {
     }
 
     @Override
-    public CodeBlockTime deepCopy() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        ClassTime res = objectMapper.readValue(objectMapper.writeValueAsString(this), ClassTime.class);
-        return res;
+    public Object clone() {
+        ClassTime classTime = null;
+        classTime = (ClassTime) super.clone();
+        classTime.setClasses(new ArrayList<>(classes));
+        classTime.setMethods(new ArrayList<>(methods));
+        classTime.setAttributes(new ArrayList<>(attributes));
+        return classTime;
     }
+//    @Override
+//    public CodeBlockTime deepCopy() throws JsonProcessingException {
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        ClassTime res = objectMapper.readValue(objectMapper.writeValueAsString(this), ClassTime.class);
+//        return res;
+//    }
 }

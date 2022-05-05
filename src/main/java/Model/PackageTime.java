@@ -4,11 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class PackageTime extends CodeBlockTime{
+public class PackageTime extends CodeBlockTime implements Cloneable, Serializable {
     List<CodeBlock> classes = new ArrayList<>();
 
     public PackageTime(String name, CommitCodeChange commitTime, Operator type, CodeBlock own){// add new package
@@ -19,12 +20,19 @@ public class PackageTime extends CodeBlockTime{
         own.addHistory(this);
         commitTime.addCodeChange(this);
     }
-
-    public PackageTime deepCopy() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        PackageTime res = objectMapper.readValue(objectMapper.writeValueAsString(this), PackageTime.class);
-        return res;
+    @Override
+    public Object clone() {
+        PackageTime packageTime = null;
+        packageTime = (PackageTime) super.clone();
+        packageTime.setClasses(new ArrayList<>(classes));
+        return packageTime;
     }
+
+//    public PackageTime deepCopy() throws JsonProcessingException {
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        PackageTime res = objectMapper.readValue(objectMapper.writeValueAsString(this), PackageTime.class);
+//        return res;
+//    }
 
 //    public PackageTime(String name, CommitCodeChange commitTime, Operator type, CodeBlockTime oldCodeBlockTime, CodeBlock own){
 //        this.name = name;

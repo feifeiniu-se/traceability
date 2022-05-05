@@ -23,10 +23,12 @@ public class CodeBlock {
         if(this.getLastHistory()==null){//如果history是空
             history.add(cbt);
             cbt.setPre(null);
+            cbt.setOwner(this);
         }else{//如果不是空
             this.getLastHistory().setPost(cbt);
             cbt.setPre(this.getLastHistory());
             history.add(cbt);
+            cbt.setOwner(this);
         }
         //获取最后一个history，更新pre post
     }

@@ -1,5 +1,6 @@
 package Constructor;
 
+import Constructor.Enums.FileType;
 import Constructor.Enums.Operator;
 import Constructor.Visitors.ClassVisitor;
 import Constructor.Visitors.MethodAAttributeVisitor;
@@ -8,12 +9,15 @@ import Project.RefactoringMiner.Refactoring;
 import Project.RefactoringMiner.Refactorings;
 import Project.Utils.CommitHashCode;
 import Project.Utils.DiffFile;
+import Project.Utils.FileContent;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import Model.CodeBlock;
 import Model.CommitCodeChange;
 import Project.Project;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Data
@@ -31,6 +35,8 @@ public class Constructor {
     public void start(){
         List<CommitHashCode> commitList = project.getCommitList();
         for(CommitHashCode hashCode: commitList){
+            System.out.println(codeBlocks.size());
+            System.out.println(mappings.size());
             //对每一次commit新建一个commitTime 用于存储本次的变更，如果没有变更，则为空，并且更新pre， post
             CommitCodeChange commitTime = new CommitCodeChange(hashCode.getHashCode());
             if(codeChange.size()>0){
@@ -41,8 +47,11 @@ public class Constructor {
             }
             codeChange.add(commitTime);
 
-            HashMap<String, DiffFile> fileList =  project.getDiffList(hashCode);
-            if(fileList==null){continue;}//no file changes during this commit
+            HashMap<String, DiffFile> fileList1 =  project.getDiffList(hashCode);
+            if(fileList1==null){continue;}//no file changes during this commit
+            Map<String, DiffFile> fileList = fileList1.entrySet().stream()
+                    .filter(p -> FileType.ADD.equals(p.getValue().getType())|| FileType.MODIFY.equals(p.getValue().getType()))
+                    .collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
 
             //firstly, go through all refactorings; and then all changed files
             Refactorings refact = project.getRefactorings().get(hashCode.getHashCode());
@@ -53,11 +62,36 @@ public class Constructor {
                     if (!firstLevel.isEmpty()) {
                         handlingPackage(firstLevel, commitTime);
                     }
+                }
+            }
+            if(!fileList.isEmpty()) {
+                //firstly, package level
+                for (Map.Entry<String, DiffFile> file : fileList.entrySet()) {
+                    String fileContent = file.getValue().getContent();
+                    PackageVisitor pkgVisitor = new PackageVisitor();
+                    pkgVisitor.packageVisitor(fileContent, codeBlocks, codeChange, mappings);
+                }
+            }
+
+            if (refact != null) {//if refactoring is not null, separate them into three levels: package, class, method&attribute
+                if (!refact.getRefactorings().isEmpty()) {
                     // class level
                     List<Refactoring> secondLevel = refact.filter("second");
                     if (!secondLevel.isEmpty()) {
                         handlingMethod(secondLevel, commitTime);
                     }
+                }
+            }
+            if(!fileList.isEmpty()) {
+                //secondly, class level
+                for (Map.Entry<String, DiffFile> file : fileList.entrySet()) {
+                    String fileContent = file.getValue().getContent();
+                    ClassVisitor classVisitor = new ClassVisitor();
+                    classVisitor.classVisitor(fileContent, codeBlocks, codeChange, mappings);
+                }
+            }
+            if (refact != null) {//if refactoring is not null, separate them into three levels: package, class, method&attribute
+                if (!refact.getRefactorings().isEmpty()) {
                     //method & attribute level
                     List<Refactoring> thirdLevel = refact.filter("third");
                     if (!thirdLevel.isEmpty()) {
@@ -65,14 +99,27 @@ public class Constructor {
                     }
                 }
             }
+            if(!fileList.isEmpty()){
+                //thirdly, inner class, method, and attribute level
+                for(Map.Entry<String, DiffFile> file: fileList.entrySet()){
+                    String fileContent = file.getValue().getContent();
+                    MethodAAttributeVisitor third = new MethodAAttributeVisitor();//包含inner class, method, attribute
+                    third.methodAAttributeVisitor(fileContent, codeBlocks, codeChange, mappings);
+                }
+            }
+
+
             //after refactorings, go through all the changed files
-            handlingFiles(fileList);
+//            handlingFiles(fileList);
 
         }
     }
 
-    private void handlingFiles(HashMap<String, DiffFile> fileList) {
-        //todo
+    private void handlingFiles(HashMap<String, DiffFile> fileList1) {
+        Map<String, DiffFile> fileList = fileList1.entrySet().stream()
+                .filter(p -> FileType.ADD.equals(p.getValue().getType())|| FileType.MODIFY.equals(p.getValue().getType()))
+                .collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
+
         if(!fileList.isEmpty()){
             //firstly, package level
             for(Map.Entry<String, DiffFile> file: fileList.entrySet()){
@@ -83,7 +130,6 @@ public class Constructor {
             //secondly, class level
             for(Map.Entry<String, DiffFile> file: fileList.entrySet()){
                 String fileContent = file.getValue().getContent();
-                String filePath = file.getValue().getPath();
                 ClassVisitor classVisitor = new ClassVisitor();
                 classVisitor.classVisitor(fileContent, codeBlocks, codeChange, mappings);
 
@@ -91,10 +137,10 @@ public class Constructor {
             //thirdly, inner class, method, and attribute level
             for(Map.Entry<String, DiffFile> file: fileList.entrySet()){
                 String fileContent = file.getValue().getContent();
-                String filePath = file.getValue().getPath();
                 MethodAAttributeVisitor third = new MethodAAttributeVisitor();//包含inner class, method, attribute
                 third.methodAAttributeVisitor(fileContent, codeBlocks, codeChange, mappings);
             }
+//            System.out.println(mappings.size());
 
         }
     }
@@ -115,16 +161,16 @@ public class Constructor {
 
     //class level
     private void handlingMethod(List<Refactoring> secondLevel, CommitCodeChange commitTime){
-//        "Move Class",//done
-//        "Rename Class",//done
-//        "Move and Rename Class",//done
-//        "Merge Class"//done
-//        "Extract Superclass",/done
-//        "Extract Interface",//done
-//        "Extract Class",//done
-//        "Extract Subclass",//done
+//        "Move Class",//
+//        "Rename Class",//
+//        "Move and Rename Class",//
+//        "Merge Class"//
+//        "Extract Superclass",/
+//        "Extract Interface",//
+//        "Extract Class",//
+//        "Extract Subclass",//
 //        "Change Type Declaration Kind",//todo have to check if neccessary
-//        "Collapse Hierarchy",//done
+//        "Collapse Hierarchy",//
 
         for(Refactoring r: secondLevel){
             Handler handler = new Handler();

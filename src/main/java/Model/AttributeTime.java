@@ -17,16 +17,12 @@ public class AttributeTime extends CodeBlockTime{
         cmt.addCodeChange(this);
         own.addHistory(this);
 
-        try {
-            ClassTime parentTime = (ClassTime) parent.getLastHistory().deepCopy();
-            parentTime.setTime(cmt);
-            parentTime.setRefactorType(Operator.Add_Attribute);
-            parentTime.getAttributes().add(own);
-            parent.addHistory(parentTime);
-            cmt.addCodeChange(parentTime);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+        ClassTime parentTime = (ClassTime) parent.getLastHistory().clone();
+        parentTime.setTime(cmt);
+        parentTime.setRefactorType(Operator.Add_Attribute);
+        parentTime.getAttributes().add(own);
+        parent.addHistory(parentTime);
+        cmt.addCodeChange(parentTime);
     }
 
     @Override
@@ -64,8 +60,8 @@ public class AttributeTime extends CodeBlockTime{
         return null;
     }
 
-    @Override
-    public CodeBlockTime deepCopy() throws JsonProcessingException {
-        return null;
-    }
+//    @Override
+//    public CodeBlockTime deepCopy() throws JsonProcessingException {
+//        return null;
+//    }
 }

@@ -25,17 +25,13 @@ public class MethodTime extends CodeBlockTime{
         parameters = params;
         cmt.addCodeChange(this);
         own.addHistory(this);
-        try{
-            ClassTime parentTime = (ClassTime) parent.getLastHistory().deepCopy();
-            parentTime.setTime(cmt);
-            parentTime.setRefactorType(Operator.Add_Method);
-            parentTime.getMethods().add(own);
-            parent.addHistory(parentTime);
-            cmt.addCodeChange(parentTime);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
 
+        ClassTime parentTime = (ClassTime) parent.getLastHistory().clone();
+        parentTime.setTime(cmt);
+        parentTime.setRefactorType(Operator.Add_Method);
+        parentTime.getMethods().add(own);
+        parent.addHistory(parentTime);
+        cmt.addCodeChange(parentTime);
     }
 
 
@@ -47,6 +43,16 @@ public class MethodTime extends CodeBlockTime{
 //        parentCodeBlock = methodTimeOld.parentCodeBlock;
 //    }
 
+    @Override
+    public Object clone() {
+        MethodTime methodTime = null;
+        methodTime = (MethodTime) super.clone();
+        methodTime.setCallers(new ArrayList<>(callers));
+        methodTime.setCallees(new ArrayList<>(callees));
+        methodTime.setParameterType(new ArrayList<>(parameterType));
+//        System.out.println("Method");
+        return methodTime;
+    }
     @Override
     List<String> getFilePath() {
         return null;
@@ -78,9 +84,12 @@ public class MethodTime extends CodeBlockTime{
     }
 
     @Override
-    public CodeBlockTime deepCopy() throws JsonProcessingException {
-        return null;
-    }
+    List<String> getParameters(){return null;};
+
+//    @Override
+//    public CodeBlockTime deepCopy() throws JsonProcessingException {
+//        return null;
+//    }
 
 
     //TODO 目前写成parameter List<String>形式 之后再改吧 留意java常用类型

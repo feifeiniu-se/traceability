@@ -1,16 +1,12 @@
 package Constructor.Enums;
 
 
-import Constructor.Utils;
 import Model.*;
 import Project.RefactoringMiner.Refactoring;
 import Project.RefactoringMiner.SideLocation;
-import Project.Utils.DiffFile;
 
 import java.util.HashMap;
 import java.util.List;
-
-import static Constructor.Utils.codeElement2Method;
 
 public enum Operator {
     Add_Package {
@@ -88,21 +84,21 @@ public enum Operator {
         //文件重命名
         public void apply(List<CodeBlock> codeBlocks, HashMap<String, CodeBlock> mappings, Refactoring r, CommitCodeChange commitTime, String name) {
             //use mappings to find codeblock, create packagetime, update mapping package, its classes, etc.
-            String[] des = r.getDescription().split(" ");
-            String leftP = des[2];
-            String rightP = des[4];
-            //package signature 变更
-            assert (mappings.containsKey(leftP));
-            CodeBlock packageBlock = mappings.get(leftP);
-            PackageTime pkgTime = new PackageTime(rightP, commitTime, Operator.Move_Package, packageBlock);
-            if (pkgTime.getOwner() != null) {
-                //create packagetimes for owner
-            }
-            mappings.put(rightP, packageBlock);
-            //
-            for (CodeBlock classBlock : pkgTime.getClasses()) {
-                classBlock.updateMapping(leftP, rightP);
-            }
+//            String[] des = r.getDescription().split(" ");
+//            String leftP = des[2];
+//            String rightP = des[4];
+//            //package signature 变更
+//            assert (mappings.containsKey(leftP));
+//            CodeBlock packageBlock = mappings.get(leftP);
+//            PackageTime pkgTime = new PackageTime(rightP, commitTime, Operator.Move_Package, packageBlock);
+//            if (pkgTime.getOwner() != null) {
+//                //create packagetimes for owner
+//            }
+//            mappings.put(rightP, packageBlock);
+//            //
+//            for (CodeBlock classBlock : pkgTime.getClasses()) {
+//                classBlock.updateMapping(leftP, rightP);
+//            }
 
         }
     },
@@ -110,36 +106,36 @@ public enum Operator {
         //文件重命名
         //TODO create new package, create new packageTime, classTime, methodTime, attributeTime to update the filePath, go through all the file for class level update
         public void apply(List<CodeBlock> codeBlocks, HashMap<String, CodeBlock> mappings, Refactoring r, CommitCodeChange commitTime, String name) {
-            String[] newPkgNames = Utils.cutString(r.getDescription(), "[", "]").replace(" ", "").split(",");
-            String oldPkgName = r.getDescription().split(" ")[2];
-            assert mappings.containsKey(oldPkgName);
-            CodeBlock oldPkgBlock = mappings.get(oldPkgName);
-            PackageTime newPkgTime4Old = new PackageTime(oldPkgName, commitTime, Operator.Split_Package, oldPkgBlock);
-
-            //TODO 先假设两个新包名字不一样，直接新增两个新的包
-            assert !newPkgNames[0].equals(newPkgNames[1]);
-            for (String pkgName : newPkgNames) {
-                CodeBlock pkgBlockNew = new CodeBlock(codeBlocks.size() + 1, CodeBlockType.Package);
-                PackageTime pkgTime = new PackageTime(pkgName, commitTime, Operator.Split_Package, newPkgTime4Old, pkgBlockNew);
-                mappings.put(pkgName, pkgBlockNew);
-            }
+//            String[] newPkgNames = Utils.cutString(r.getDescription(), "[", "]").replace(" ", "").split(",");
+//            String oldPkgName = r.getDescription().split(" ")[2];
+//            assert mappings.containsKey(oldPkgName);
+//            CodeBlock oldPkgBlock = mappings.get(oldPkgName);
+//            PackageTime newPkgTime4Old = new PackageTime(oldPkgName, commitTime, Operator.Split_Package, oldPkgBlock);
+//
+//            //TODO 先假设两个新包名字不一样，直接新增两个新的包
+//            assert !newPkgNames[0].equals(newPkgNames[1]);
+//            for (String pkgName : newPkgNames) {
+//                CodeBlock pkgBlockNew = new CodeBlock(codeBlocks.size() + 1, CodeBlockType.Package);
+//                PackageTime pkgTime = new PackageTime(pkgName, commitTime, Operator.Split_Package, newPkgTime4Old, pkgBlockNew);
+//                mappings.put(pkgName, pkgBlockNew);
+//            }
         }
     },
     Merge_Package {
         //文件重命名
         public void apply(List<CodeBlock> codeBlocks, HashMap<String, CodeBlock> mappings, Refactoring r, CommitCodeChange commitTime, String name) {
-            String[] oldPkgNames = Utils.cutString(r.getDescription(), "[", "]").replace(" ", "").split(",");
-            String[] desc = r.getDescription().split(" ");
-            String newPkgName = desc[desc.length - 1];
-            CodeBlock newPkgBlock = new CodeBlock(codeBlocks.size() + 1, CodeBlockType.Package);
-            PackageTime newPkgTime = new PackageTime(newPkgName, commitTime, Operator.Merge_Package, newPkgBlock);
-            mappings.put(newPkgName, newPkgBlock);
-
-            for (String pkgName : oldPkgNames) {
-                assert mappings.containsKey(pkgName);
-                CodeBlock oldBlock = mappings.get(pkgName);
-                PackageTime newPkgTime4Old = new PackageTime(pkgName, commitTime, Operator.Merge_Package, newPkgTime, oldBlock);
-            }
+//            String[] oldPkgNames = Utils.cutString(r.getDescription(), "[", "]").replace(" ", "").split(",");
+//            String[] desc = r.getDescription().split(" ");
+//            String newPkgName = desc[desc.length - 1];
+//            CodeBlock newPkgBlock = new CodeBlock(codeBlocks.size() + 1, CodeBlockType.Package);
+//            PackageTime newPkgTime = new PackageTime(newPkgName, commitTime, Operator.Merge_Package, newPkgBlock);
+//            mappings.put(newPkgName, newPkgBlock);
+//
+//            for (String pkgName : oldPkgNames) {
+//                assert mappings.containsKey(pkgName);
+//                CodeBlock oldBlock = mappings.get(pkgName);
+//                PackageTime newPkgTime4Old = new PackageTime(pkgName, commitTime, Operator.Merge_Package, newPkgTime, oldBlock);
+//            }
 
 
         }
@@ -157,32 +153,32 @@ public enum Operator {
     Collapse_Hierarchy {//较为复杂的 将一个具体的类的内容移到接口类中进行实现
 
         public void apply(List<CodeBlock> codeBlocks, HashMap<String, CodeBlock> mappings, Refactoring r, CommitCodeChange commitTime, String name) {
-            String oldName = r.getDescription().split(" ")[2];
-            String newName = r.getDescription().split(" ")[4];
-            assert mappings.containsKey(oldName);
-            assert mappings.containsKey(newName);
-            ClassTime oldClassNew = new ClassTime((ClassTime) mappings.get(oldName).getLastHistory(), commitTime, Operator.Collapse_Hierarchy);
-            ClassTime newClassNew = new ClassTime((ClassTime) mappings.get(newName).getLastHistory(), commitTime, Operator.Collapse_Hierarchy);
-            oldClassNew.getDerivee().add(newClassNew);
-            newClassNew.getDeriver().add(oldClassNew);
-            assert r.getLeftSideLocations().size() == r.getRightSideLocations().size();
-            assert r.getLeftSideLocations().size() == 1;
+//            String oldName = r.getDescription().split(" ")[2];
+//            String newName = r.getDescription().split(" ")[4];
+//            assert mappings.containsKey(oldName);
+//            assert mappings.containsKey(newName);
+//            ClassTime oldClassNew = new ClassTime((ClassTime) mappings.get(oldName).getLastHistory(), commitTime, Operator.Collapse_Hierarchy);
+//            ClassTime newClassNew = new ClassTime((ClassTime) mappings.get(newName).getLastHistory(), commitTime, Operator.Collapse_Hierarchy);
+//            oldClassNew.getDerivee().add(newClassNew);
+//            newClassNew.getDeriver().add(oldClassNew);
+//            assert r.getLeftSideLocations().size() == r.getRightSideLocations().size();
+//            assert r.getLeftSideLocations().size() == 1;
         }
     },
     Extract_Superclass {
         //add a new class, the last filepath on the rightfilepath is the new superclass
         //derive
         public void apply(List<CodeBlock> codeBlocks, HashMap<String, CodeBlock> mappings, Refactoring r, CommitCodeChange commitTime, String name) {
-            String[] oldNames = Utils.cutString(r.getDescription(), "[", "]").replace(" ", "").split(",");
-            String newName = r.getDescription().split(" ")[2];
-            CodeBlock codeBlock = new CodeBlock(codeBlocks.size() + 1, CodeBlockType.Class);
-            ClassTime classTime = new ClassTime(newName, commitTime, Operator.Extract_Superclass, codeBlock);
-            mappings.put(newName, codeBlock);
-
-            List<SideLocation> left = r.getLeftSideLocations();
-            List<SideLocation> right = r.getRightSideLocations();
-            assert left.size() == right.size() + 1;
-            assert left.size() == oldNames.length;
+//            String[] oldNames = Utils.cutString(r.getDescription(), "[", "]").replace(" ", "").split(",");
+//            String newName = r.getDescription().split(" ")[2];
+//            CodeBlock codeBlock = new CodeBlock(codeBlocks.size() + 1, CodeBlockType.Class);
+//            ClassTime classTime = new ClassTime(newName, commitTime, Operator.Extract_Superclass, codeBlock);
+//            mappings.put(newName, codeBlock);
+//
+//            List<SideLocation> left = r.getLeftSideLocations();
+//            List<SideLocation> right = r.getRightSideLocations();
+//            assert left.size() == right.size() + 1;
+//            assert left.size() == oldNames.length;
 
         }
     },
@@ -190,149 +186,149 @@ public enum Operator {
         //TODO ***
         //文件重命名 这个有点特殊
         public void apply(List<CodeBlock> codeBlocks, HashMap<String, CodeBlock> mappings, Refactoring r, CommitCodeChange commitTime, String name) {
-            String newName = r.getDescription().split(" ")[2];
-            String[] oldName = Utils.cutString(r.getDescription(), "[", "]").replace(" ", "").split(",");
-            assert !mappings.containsKey(newName);
-            CodeBlock codeBlock = new CodeBlock(codeBlocks.size() + 1, CodeBlockType.Class);
-            ClassTime classTime = new ClassTime(newName, commitTime, Operator.Extract_Interface, codeBlock);
-            mappings.put(newName, codeBlock);
-
-            List<SideLocation> left = r.getLeftSideLocations();
-            List<SideLocation> right = r.getRightSideLocations();
-            String rightFileName = right.get(right.size() - 1).getFilePath();
-            assert fileList.containsKey(rightFileName);
-            DiffFile rightFile = fileList.get(rightFileName);
-            assert left.size() == right.size() - 1;
-            assert left.size() == oldName.length;
-            if (right.get(right.size() - 2).getFilePath().contains(newName.substring(newName.lastIndexOf(".") + 1))) {
-                //不是内部类
-                for (int i = 0; i < left.size(); i++) {
-                    assert mappings.containsKey(oldName[i]);
-                    ClassTime originalClassTimeOld = (ClassTime) mappings.get(oldName[i]).getLastHistory();
-                    ClassTime originalClassTimeNew = new ClassTime(originalClassTimeOld, commitTime, Operator.Extract_Interface);
-                    originalClassTimeNew.getDerivee().add(classTime);
-                    classTime.getDeriver().add(originalClassTimeNew);//更新deriver和derivee信息
-                    //更新文件继承信息
-
-                }
-            } else {
-                System.out.println("Inner class:");
-            }
+//            String newName = r.getDescription().split(" ")[2];
+//            String[] oldName = Utils.cutString(r.getDescription(), "[", "]").replace(" ", "").split(",");
+//            assert !mappings.containsKey(newName);
+//            CodeBlock codeBlock = new CodeBlock(codeBlocks.size() + 1, CodeBlockType.Class);
+//            ClassTime classTime = new ClassTime(newName, commitTime, Operator.Extract_Interface, codeBlock);
+//            mappings.put(newName, codeBlock);
+//
+//            List<SideLocation> left = r.getLeftSideLocations();
+//            List<SideLocation> right = r.getRightSideLocations();
+//            String rightFileName = right.get(right.size() - 1).getFilePath();
+//            assert fileList.containsKey(rightFileName);
+//            DiffFile rightFile = fileList.get(rightFileName);
+//            assert left.size() == right.size() - 1;
+//            assert left.size() == oldName.length;
+//            if (right.get(right.size() - 2).getFilePath().contains(newName.substring(newName.lastIndexOf(".") + 1))) {
+//                //不是内部类
+//                for (int i = 0; i < left.size(); i++) {
+//                    assert mappings.containsKey(oldName[i]);
+//                    ClassTime originalClassTimeOld = (ClassTime) mappings.get(oldName[i]).getLastHistory();
+//                    ClassTime originalClassTimeNew = new ClassTime(originalClassTimeOld, commitTime, Operator.Extract_Interface);
+//                    originalClassTimeNew.getDerivee().add(classTime);
+//                    classTime.getDeriver().add(originalClassTimeNew);//更新deriver和derivee信息
+//                    //更新文件继承信息
+//
+//                }
+//            } else {
+//                System.out.println("Inner class:");
+//            }
         }
     },
     Extract_Class {
         //将原来代码中的一些方法抽出来，放到新建的类中。新建一个类，将一些方法从旧的类中移到新的类中
         //derive modify
         public void apply(List<CodeBlock> codeBlocks, HashMap<String, CodeBlock> mappings, Refactoring r, CommitCodeChange commitTime, String name) {
-            assert r.getDescription().split(" ").length == 6;
-            String newClassName = r.getDescription().split(" ")[2];
-            String oldClassName = r.getDescription().split(" ")[5];
-
-            List<SideLocation> left = r.getLeftSideLocations();
-            List<SideLocation> right = r.getRightSideLocations();
-            assert left.size() == 1;
-            if (left.get(0).getFilePath().contains(oldClassName.substring(oldClassName.lastIndexOf(".") + 1)) && right.get(1).getFilePath().contains(newClassName.substring(newClassName.lastIndexOf(".") + 1))) {
-                //如果不是内部类
-                CodeBlock codeBlock = new CodeBlock(codeBlocks.size() + 1, CodeBlockType.Class);
-                ClassTime classTime = new ClassTime(newClassName, commitTime, Operator.Extract_Class, codeBlock);
-                mappings.put(newClassName, codeBlock);
-
-                assert mappings.containsKey(oldClassName);
-                ClassTime oldClassTime = (ClassTime) mappings.get(oldClassName).getLastHistory();
-                ClassTime oldClassTimeNew = new ClassTime(oldClassTime, commitTime, Operator.Extract_Class);
-                oldClassTimeNew.getDerivee().add(classTime);
-                classTime.getDeriver().add(oldClassTimeNew);//添加deriver关系
-                //todo 把right中剩下的所有的方法移到newClass中
-
-                for (int i = 2; i < right.size(); i++) {
-//                    assert mappings.containsKey(oldClassName.substring(oldClassName.lastIndexOf(".")+1)+":")
-
-                }
-            } else {
-                System.out.println("Inner class: extract class");
-            }
-//            //TODO 左边第一个是原始类，右边第一个是原始类，第二个是新的类，剩下的是移动的方法
-////            TODO move methods from A to B
+//            assert r.getDescription().split(" ").length == 6;
+//            String newClassName = r.getDescription().split(" ")[2];
+//            String oldClassName = r.getDescription().split(" ")[5];
+//
+//            List<SideLocation> left = r.getLeftSideLocations();
+//            List<SideLocation> right = r.getRightSideLocations();
+//            assert left.size() == 1;
+//            if (left.get(0).getFilePath().contains(oldClassName.substring(oldClassName.lastIndexOf(".") + 1)) && right.get(1).getFilePath().contains(newClassName.substring(newClassName.lastIndexOf(".") + 1))) {
+//                //如果不是内部类
+//                CodeBlock codeBlock = new CodeBlock(codeBlocks.size() + 1, CodeBlockType.Class);
+//                ClassTime classTime = new ClassTime(newClassName, commitTime, Operator.Extract_Class, codeBlock);
+//                mappings.put(newClassName, codeBlock);
+//
+//                assert mappings.containsKey(oldClassName);
+//                ClassTime oldClassTime = (ClassTime) mappings.get(oldClassName).getLastHistory();
+//                ClassTime oldClassTimeNew = new ClassTime(oldClassTime, commitTime, Operator.Extract_Class);
+//                oldClassTimeNew.getDerivee().add(classTime);
+//                classTime.getDeriver().add(oldClassTimeNew);//添加deriver关系
+//                //todo 把right中剩下的所有的方法移到newClass中
+//
+//                for (int i = 2; i < right.size(); i++) {
+////                    assert mappings.containsKey(oldClassName.substring(oldClassName.lastIndexOf(".")+1)+":")
+//
+//                }
+//            } else {
+//                System.out.println("Inner class: extract class");
+//            }
+////            //TODO 左边第一个是原始类，右边第一个是原始类，第二个是新的类，剩下的是移动的方法
+//////            TODO move methods from A to B
         }
     },
     Extract_Subclass {
         //derive class 跟extract class几乎差不多
         public void apply(List<CodeBlock> codeBlocks, HashMap<String, CodeBlock> mappings, Refactoring r, CommitCodeChange commitTime, String name) {
-            assert r.getDescription().split(" ").length == 6;
-            String newClassName = r.getDescription().split(" ")[2];
-            String oldClassName = r.getDescription().split(" ")[5];
-
-            List<SideLocation> left = r.getLeftSideLocations();
-            List<SideLocation> right = r.getRightSideLocations();
-            assert left.size() == 1;
-            if (left.get(0).getFilePath().contains(oldClassName.substring(oldClassName.lastIndexOf(".") + 1)) && right.get(1).getFilePath().contains(newClassName.substring(newClassName.lastIndexOf(".") + 1))) {
-                //如果不是内部类
-                CodeBlock codeBlock = new CodeBlock(codeBlocks.size() + 1, CodeBlockType.Class);
-                ClassTime classTime = new ClassTime(newClassName, commitTime, Operator.Extract_Class, codeBlock);
-                mappings.put(newClassName, codeBlock);
-
-                assert mappings.containsKey(oldClassName);
-                ClassTime oldClassTime = (ClassTime) mappings.get(oldClassName).getLastHistory();
-                ClassTime oldClassTimeNew = new ClassTime(oldClassTime, commitTime, Operator.Extract_Class);
-                oldClassTimeNew.getDerivee().add(classTime);
-                classTime.getDeriver().add(oldClassTimeNew);//添加deriver关系
-                //todo 把right中剩下的所有的方法移到newClass中
-
-                for (int i = 2; i < right.size(); i++) {
-//                    assert mappings.containsKey(oldClassName.substring(oldClassName.lastIndexOf(".")+1)+":")
-
-                }
-            } else {
-                System.out.println("Inner class: extract subclass");
-            }
+//            assert r.getDescription().split(" ").length == 6;
+//            String newClassName = r.getDescription().split(" ")[2];
+//            String oldClassName = r.getDescription().split(" ")[5];
+//
+//            List<SideLocation> left = r.getLeftSideLocations();
+//            List<SideLocation> right = r.getRightSideLocations();
+//            assert left.size() == 1;
+//            if (left.get(0).getFilePath().contains(oldClassName.substring(oldClassName.lastIndexOf(".") + 1)) && right.get(1).getFilePath().contains(newClassName.substring(newClassName.lastIndexOf(".") + 1))) {
+//                //如果不是内部类
+//                CodeBlock codeBlock = new CodeBlock(codeBlocks.size() + 1, CodeBlockType.Class);
+//                ClassTime classTime = new ClassTime(newClassName, commitTime, Operator.Extract_Class, codeBlock);
+//                mappings.put(newClassName, codeBlock);
+//
+//                assert mappings.containsKey(oldClassName);
+//                ClassTime oldClassTime = (ClassTime) mappings.get(oldClassName).getLastHistory();
+//                ClassTime oldClassTimeNew = new ClassTime(oldClassTime, commitTime, Operator.Extract_Class);
+//                oldClassTimeNew.getDerivee().add(classTime);
+//                classTime.getDeriver().add(oldClassTimeNew);//添加deriver关系
+//                //todo 把right中剩下的所有的方法移到newClass中
+//
+//                for (int i = 2; i < right.size(); i++) {
+////                    assert mappings.containsKey(oldClassName.substring(oldClassName.lastIndexOf(".")+1)+":")
+//
+//                }
+//            } else {
+//                System.out.println("Inner class: extract subclass");
+//            }
         }
     },
     Merge_Class {
         //derive
         public void apply(List<CodeBlock> codeBlocks, HashMap<String, CodeBlock> mappings, Refactoring r, CommitCodeChange commitTime, String name) {
-            String[] oldClasses = Utils.cutString(r.getDescription(), "[", "]").replace(" ", "").split(",");
-            String[] desc = r.getDescription().split(" ");
-            String newClassName = desc[desc.length - 1];
-            CodeBlock newClassBlock = new CodeBlock(codeBlocks.size() + 1, CodeBlockType.Class);
-            ClassTime newClassTime = new ClassTime(newClassName, commitTime, Operator.Merge_Class, newClassBlock);
-            mappings.put(newClassName, newClassBlock);
+//            String[] oldClasses = Utils.cutString(r.getDescription(), "[", "]").replace(" ", "").split(",");
+//            String[] desc = r.getDescription().split(" ");
+//            String newClassName = desc[desc.length - 1];
+//            CodeBlock newClassBlock = new CodeBlock(codeBlocks.size() + 1, CodeBlockType.Class);
+//            ClassTime newClassTime = new ClassTime(newClassName, commitTime, Operator.Merge_Class, newClassBlock);
+//            mappings.put(newClassName, newClassBlock);
+//
+//            assert r.getRightSideLocations().size() == 1;
+//            if (!r.getRightSideLocations().get(0).getFilePath().contains(newClassName.substring(newClassName.lastIndexOf(".") + 1))) {
+//                //新增的类是内部类 todo
+//                System.out.println("Inner class: ");
+//                return;
+//            }
+//
+//            String pkgName = newClassName.substring(0, newClassName.lastIndexOf("."));
+//            assert mappings.containsKey(pkgName);//如果不存在包的话 就需要新建
+//            newClassTime.setParentCodeBlock(mappings.get(pkgName));
+//            PackageTime newPkgTime = new PackageTime(pkgName, commitTime, Operator.Merge_Class, mappings.get(pkgName));
+//            newPkgTime.getClasses().add(newClassBlock);
+//
+//            List<SideLocation> left = r.getLeftSideLocations();
 
-            assert r.getRightSideLocations().size() == 1;
-            if (!r.getRightSideLocations().get(0).getFilePath().contains(newClassName.substring(newClassName.lastIndexOf(".") + 1))) {
-                //新增的类是内部类 todo
-                System.out.println("Inner class: ");
-                return;
-            }
-
-            String pkgName = newClassName.substring(0, newClassName.lastIndexOf("."));
-            assert mappings.containsKey(pkgName);//如果不存在包的话 就需要新建
-            newClassTime.setParentCodeBlock(mappings.get(pkgName));
-            PackageTime newPkgTime = new PackageTime(pkgName, commitTime, Operator.Merge_Class, mappings.get(pkgName));
-            newPkgTime.getClasses().add(newClassBlock);
-
-            List<SideLocation> left = r.getLeftSideLocations();
-
-            assert oldClasses.length == left.size();
-            for (int i = 0; i < left.size(); i++) {
-                String oldName = oldClasses[i];
-                String oldFilePath = left.get(i).getFilePath();
-                if (!oldFilePath.contains(oldName.substring(oldName.lastIndexOf(".") + 1))) {
-                    System.out.println("inner class: to deal with");
-                    return;
-                }
-                assert mappings.containsKey(oldName);
-                CodeBlock oldBlock = mappings.get(oldName);
-                ClassTime oldTimeOld = (ClassTime) oldBlock.getLastHistory();
-                ClassTime oldTimeNew = new ClassTime(oldTimeOld, commitTime, Operator.Merge_Class);
-                oldTimeNew.getDerivee().add(newClassTime);
-                newClassTime.getDeriver().add(oldTimeNew);
-                newClassTime.getClasses().addAll(oldTimeOld.getClasses());
-                newClassTime.getMethods().addAll(oldTimeOld.getMethods());
-                newClassTime.getAttributes().addAll(oldTimeOld.getAttributes());
-                //把旧类中所包含的所有的类 方法 属性 全都移到新的类中
-
-
-            }
+//            assert oldClasses.length == left.size();
+//            for (int i = 0; i < left.size(); i++) {
+//                String oldName = oldClasses[i];
+//                String oldFilePath = left.get(i).getFilePath();
+//                if (!oldFilePath.contains(oldName.substring(oldName.lastIndexOf(".") + 1))) {
+//                    System.out.println("inner class: to deal with");
+//                    return;
+//                }
+//                assert mappings.containsKey(oldName);
+//                CodeBlock oldBlock = mappings.get(oldName);
+//                ClassTime oldTimeOld = (ClassTime) oldBlock.getLastHistory();
+//                ClassTime oldTimeNew = new ClassTime(oldTimeOld, commitTime, Operator.Merge_Class);
+//                oldTimeNew.getDerivee().add(newClassTime);
+//                newClassTime.getDeriver().add(oldTimeNew);
+//                newClassTime.getClasses().addAll(oldTimeOld.getClasses());
+//                newClassTime.getMethods().addAll(oldTimeOld.getMethods());
+//                newClassTime.getAttributes().addAll(oldTimeOld.getAttributes());
+//                //把旧类中所包含的所有的类 方法 属性 全都移到新的类中
+//
+//
+//            }
 
         }
     },
@@ -341,77 +337,77 @@ public enum Operator {
         public void apply(List<CodeBlock> codeBlocks, HashMap<String, CodeBlock> mappings, Refactoring r, CommitCodeChange commitTime, String name) {
             //todo 需要注意如果是内部类的重命名和移动 7c65d01596100a0962d7e9e0b4a55dce461ff54e
             //todo 内部类的内部类 28ef8c9fc78433add3ee0a08f9f38569cd130958
-            String[] desc = r.getDescription().split(" ");
-            assert desc.length == 6;
-            String oldClass = desc[2];
-            String newClass = desc[5];
-            assert mappings.containsKey(oldClass);
-            CodeBlock oldClassBlock = mappings.get(oldClass);
+//            String[] desc = r.getDescription().split(" ");
+//            assert desc.length == 6;
+//            String oldClass = desc[2];
+//            String newClass = desc[5];
+//            assert mappings.containsKey(oldClass);
+//            CodeBlock oldClassBlock = mappings.get(oldClass);
+//
+//
+//            List<SideLocation> left = r.getLeftSideLocations();
+//            List<SideLocation> right = r.getRightSideLocations();
+//            assert left.size() == right.size();
+//            assert left.size() == 1;
 
-
-            List<SideLocation> left = r.getLeftSideLocations();
-            List<SideLocation> right = r.getRightSideLocations();
-            assert left.size() == right.size();
-            assert left.size() == 1;
-
-            if (left.get(0).getFilePath().contains(oldClass.substring(oldClass.lastIndexOf(".") + 1)) && right.get(0).getFilePath().contains(newClass.substring(newClass.lastIndexOf(".") + 1))) {
-                //如果类名在文件路径中出现，就表明不是内部类
-                assert !(left.get(0).getFilePath().equals(right.get(0).getFilePath()));
-                //todo 需要将旧的time中的parents关系复制过来，或者在遍历的时候获得
-//                PackageTime pkgTimeOld =(PackageTime) oldClassBlock.getLastHistory().getParentCodeBlock().getLastHistory();//原父亲的codeBlock
-//                PackageTime pkgTimeNew = new PackageTime(pkgTimeOld, commitTime, Operator.Move_Class);
-//                pkgTimeNew.getClasses().remove(oldClassBlock);
-//                pkgTimeNew.getFilePath().remove(left.get(0).getFilePath());//从旧的父节点中删除
-
-                String newParent = newClass.substring(0, newClass.lastIndexOf("."));//新的父节点
-                if (!mappings.containsKey(newParent)) {//如果不存在包 就新建
-                    CodeBlock pkgBlock = new CodeBlock(codeBlocks.size() + 1, CodeBlockType.Package);
-                    mappings.put(newParent, pkgBlock);
-                    PackageTime pkgTime = new PackageTime(newParent, commitTime, Operator.Add_Package, pkgBlock);
-                }
-                assert mappings.containsKey(newParent);
-                PackageTime newPkgTime = new PackageTime((PackageTime) mappings.get(newParent).getLastHistory(), commitTime, Operator.Move_Class);
-                newPkgTime.getClasses().add(oldClassBlock);
-
-                ClassTime classTime = new ClassTime(newClass, commitTime, Operator.Move_Class, oldClassBlock, newPkgTime.getOwner());
-                mappings.put(newClass, mappings.get(oldClass));
-
-                //todo 暂时没改变method的签名 留到最后遍历文件时处理
-            } else {
-                //todo 内部类的处理，不是文件的重命名，但是要对比两个新旧文件的内容 filePairs.put(leftFile, rightFile)
-                System.out.println("Inner class remains to be processed...");
-            }
+//            if (left.get(0).getFilePath().contains(oldClass.substring(oldClass.lastIndexOf(".") + 1)) && right.get(0).getFilePath().contains(newClass.substring(newClass.lastIndexOf(".") + 1))) {
+//                //如果类名在文件路径中出现，就表明不是内部类
+//                assert !(left.get(0).getFilePath().equals(right.get(0).getFilePath()));
+//                //todo 需要将旧的time中的parents关系复制过来，或者在遍历的时候获得
+////                PackageTime pkgTimeOld =(PackageTime) oldClassBlock.getLastHistory().getParentCodeBlock().getLastHistory();//原父亲的codeBlock
+////                PackageTime pkgTimeNew = new PackageTime(pkgTimeOld, commitTime, Operator.Move_Class);
+////                pkgTimeNew.getClasses().remove(oldClassBlock);
+////                pkgTimeNew.getFilePath().remove(left.get(0).getFilePath());//从旧的父节点中删除
+//
+//                String newParent = newClass.substring(0, newClass.lastIndexOf("."));//新的父节点
+//                if (!mappings.containsKey(newParent)) {//如果不存在包 就新建
+//                    CodeBlock pkgBlock = new CodeBlock(codeBlocks.size() + 1, CodeBlockType.Package);
+//                    mappings.put(newParent, pkgBlock);
+//                    PackageTime pkgTime = new PackageTime(newParent, commitTime, Operator.Add_Package, pkgBlock);
+//                }
+//                assert mappings.containsKey(newParent);
+//                PackageTime newPkgTime = new PackageTime((PackageTime) mappings.get(newParent).getLastHistory(), commitTime, Operator.Move_Class);
+//                newPkgTime.getClasses().add(oldClassBlock);
+//
+//                ClassTime classTime = new ClassTime(newClass, commitTime, Operator.Move_Class, oldClassBlock, newPkgTime.getOwner());
+//                mappings.put(newClass, mappings.get(oldClass));
+//
+//                //todo 暂时没改变method的签名 留到最后遍历文件时处理
+//            } else {
+//                //todo 内部类的处理，不是文件的重命名，但是要对比两个新旧文件的内容 filePairs.put(leftFile, rightFile)
+//                System.out.println("Inner class remains to be processed...");
+//            }
         }
     },
     Rename_Class {
         // 创建文件对应关系，然后对应修改classBlockTime，packageBlockTime的内容，然后在最后统一更新method和attribute的内容。
         public void apply(List<CodeBlock> codeBlocks, HashMap<String, CodeBlock> mappings, Refactoring r, CommitCodeChange commitTime, String name) {
             //todo 需要注意如果是内部类的重命名和移动 7c65d01596100a0962d7e9e0b4a55dce461ff54e
-            String[] desc = r.getDescription().split(" ");
-            assert desc.length == 6;
-            String oldClass = desc[2];
-            String newClass = desc[5];
-
-            if (r.getLeftSideLocations().get(0).getFilePath().contains(oldClass.substring(oldClass.lastIndexOf(".") + 1)) && r.getRightSideLocations().get(0).getFilePath().contains(newClass.substring(newClass.lastIndexOf(".") + 1))) {
-                assert mappings.containsKey(oldClass);
-                CodeBlock oldClassBlosk = mappings.get(oldClass);
-                ClassTime classTime = new ClassTime(newClass, commitTime, Operator.Rename_Class, oldClassBlosk, oldClassBlosk.getLastHistory().getParentCodeBlock());
-                mappings.put(newClass, mappings.get(oldClass));
-
-                List<SideLocation> left = r.getLeftSideLocations();
-                List<SideLocation> right = r.getRightSideLocations();
-                assert left.size() == right.size();
-                assert left.size() == 1;
-//                Collections.replaceAll(classTime.getParentCodeBlock().getLastHistory().getFilePath(), left.get(0).getFilePath(), right.get(0).getFilePath());//直接替换pkgBlock的文件list的内容
-
-
-                //如果类名在文件路径中出现，就表明不是内部类
-                assert !(left.get(0).getFilePath().equals(right.get(0).getFilePath()));
-                //todo 暂时没改变method的签名 留到最后遍历文件时处理
-            } else {
-                //todo 内部类的处理，不是文件的重命名，但是要对比两个新旧文件的内容 filePairs.put(leftFile, rightFile)
-                System.out.println("Inner class remains to be processed...");
-            }
+//            String[] desc = r.getDescription().split(" ");
+//            assert desc.length == 6;
+//            String oldClass = desc[2];
+//            String newClass = desc[5];
+//
+//            if (r.getLeftSideLocations().get(0).getFilePath().contains(oldClass.substring(oldClass.lastIndexOf(".") + 1)) && r.getRightSideLocations().get(0).getFilePath().contains(newClass.substring(newClass.lastIndexOf(".") + 1))) {
+//                assert mappings.containsKey(oldClass);
+//                CodeBlock oldClassBlosk = mappings.get(oldClass);
+//                ClassTime classTime = new ClassTime(newClass, commitTime, Operator.Rename_Class, oldClassBlosk, oldClassBlosk.getLastHistory().getParentCodeBlock());
+//                mappings.put(newClass, mappings.get(oldClass));
+//
+//                List<SideLocation> left = r.getLeftSideLocations();
+//                List<SideLocation> right = r.getRightSideLocations();
+//                assert left.size() == right.size();
+//                assert left.size() == 1;
+////                Collections.replaceAll(classTime.getParentCodeBlock().getLastHistory().getFilePath(), left.get(0).getFilePath(), right.get(0).getFilePath());//直接替换pkgBlock的文件list的内容
+//
+//
+//                //如果类名在文件路径中出现，就表明不是内部类
+//                assert !(left.get(0).getFilePath().equals(right.get(0).getFilePath()));
+//                //todo 暂时没改变method的签名 留到最后遍历文件时处理
+//            } else {
+//                //todo 内部类的处理，不是文件的重命名，但是要对比两个新旧文件的内容 filePairs.put(leftFile, rightFile)
+//                System.out.println("Inner class remains to be processed...");
+//            }
 
 
         }
@@ -419,43 +415,43 @@ public enum Operator {
     Move_And_Rename_Class {
         public void apply(List<CodeBlock> codeBlocks, HashMap<String, CodeBlock> mappings, Refactoring r, CommitCodeChange commitTime, String name) {
             //todo 需要注意如果是内部类的重命名和移动 13a0d1228e15b2386635f4a7df1d814e7a3fe145
-            String[] desc = r.getDescription().split(" ");
-            assert desc.length == 10;
-            String oldClass = desc[4];
-            String newClass = desc[9];
-            List<SideLocation> left = r.getLeftSideLocations();
-            List<SideLocation> right = r.getRightSideLocations();
-            assert left.size() == right.size();
-            assert left.size() == 1;
+//            String[] desc = r.getDescription().split(" ");
+//            assert desc.length == 10;
+//            String oldClass = desc[4];
+//            String newClass = desc[9];
+//            List<SideLocation> left = r.getLeftSideLocations();
+//            List<SideLocation> right = r.getRightSideLocations();
+//            assert left.size() == right.size();
+//            assert left.size() == 1;
+//
+//            assert mappings.containsKey(oldClass);
+//            CodeBlock oldClassBlock = mappings.get(oldClass);
+//
+//            if (left.get(0).getFilePath().contains(oldClass.substring(oldClass.lastIndexOf(".") + 1)) && right.get(0).getFilePath().contains(newClass.substring(newClass.lastIndexOf(".") + 1))) {
+//                //如果类名在文件路径中出现，就表明不是内部类
+//                assert !(left.get(0).getFilePath().equals(right.get(0).getFilePath()));
+//                PackageTime pkgTimeOld = (PackageTime) oldClassBlock.getLastHistory().getParentCodeBlock().getLastHistory();//原父亲的codeBlock
+//                PackageTime pkgTimeNew = new PackageTime(pkgTimeOld, commitTime, Operator.Move_And_Rename_Class);
+//                pkgTimeNew.getClasses().remove(oldClassBlock);
 
-            assert mappings.containsKey(oldClass);
-            CodeBlock oldClassBlock = mappings.get(oldClass);
-
-            if (left.get(0).getFilePath().contains(oldClass.substring(oldClass.lastIndexOf(".") + 1)) && right.get(0).getFilePath().contains(newClass.substring(newClass.lastIndexOf(".") + 1))) {
-                //如果类名在文件路径中出现，就表明不是内部类
-                assert !(left.get(0).getFilePath().equals(right.get(0).getFilePath()));
-                PackageTime pkgTimeOld = (PackageTime) oldClassBlock.getLastHistory().getParentCodeBlock().getLastHistory();//原父亲的codeBlock
-                PackageTime pkgTimeNew = new PackageTime(pkgTimeOld, commitTime, Operator.Move_And_Rename_Class);
-                pkgTimeNew.getClasses().remove(oldClassBlock);
-
-                String newParent = newClass.substring(0, newClass.lastIndexOf("."));//新的父节点
-                if (!mappings.containsKey(newParent)) {//如果不存在包 就新建
-                    CodeBlock pkgBlock = new CodeBlock(codeBlocks.size() + 1, CodeBlockType.Package);
-                    mappings.put(newParent, pkgBlock);
-                    PackageTime pkgTime = new PackageTime(newParent, commitTime, Operator.Add_Package, pkgBlock);
-                }
-                assert mappings.containsKey(newParent);
-                PackageTime newPkgTime = new PackageTime((PackageTime) mappings.get(newParent).getLastHistory(), commitTime, Operator.Move_And_Rename_Class);
-                newPkgTime.getClasses().add(oldClassBlock);//更新 新的父节点
-
-                ClassTime classTime = new ClassTime(newClass, commitTime, Operator.Move_And_Rename_Class, oldClassBlock, newPkgTime.getOwner());
-                mappings.put(newClass, mappings.get(oldClass));
-
-                //todo 暂时没改变method的签名 留到最后遍历文件时处理
-            } else {
-                //todo 内部类的处理，不是文件的重命名，但是要对比两个新旧文件的内容 filePairs.put(leftFile, rightFile)
-                System.out.println("Inner class remains to be processed...");
-            }
+//                String newParent = newClass.substring(0, newClass.lastIndexOf("."));//新的父节点
+//                if (!mappings.containsKey(newParent)) {//如果不存在包 就新建
+//                    CodeBlock pkgBlock = new CodeBlock(codeBlocks.size() + 1, CodeBlockType.Package);
+//                    mappings.put(newParent, pkgBlock);
+//                    PackageTime pkgTime = new PackageTime(newParent, commitTime, Operator.Add_Package, pkgBlock);
+//                }
+//                assert mappings.containsKey(newParent);
+//                PackageTime newPkgTime = new PackageTime((PackageTime) mappings.get(newParent).getLastHistory(), commitTime, Operator.Move_And_Rename_Class);
+//                newPkgTime.getClasses().add(oldClassBlock);//更新 新的父节点
+//
+//                ClassTime classTime = new ClassTime(newClass, commitTime, Operator.Move_And_Rename_Class, oldClassBlock, newPkgTime.getOwner());
+//                mappings.put(newClass, mappings.get(oldClass));
+//
+//                //todo 暂时没改变method的签名 留到最后遍历文件时处理
+//            } else {
+//                //todo 内部类的处理，不是文件的重命名，但是要对比两个新旧文件的内容 filePairs.put(leftFile, rightFile)
+//                System.out.println("Inner class remains to be processed...");
+//            }
         }
     },
     Extract_Method {
@@ -472,9 +468,62 @@ public enum Operator {
         }
     },
     Pull_Up_Method {
-        //move method from one class to super class,将几个子类中的方法移到超类中，跨文件，涉及方法的移动，还可能修改名字，但是不影响文件数目
+        //move method from one class to super class,将几个子类中的方法移到超类中，跨文件，涉及方法的移动，还可能修改名字，但是不影响文件数目,一般情况下 一个refactoring只涉及一个类
+        //相当于是move method
         public void apply(List<CodeBlock> codeBlocks, HashMap<String, CodeBlock> mappings, Refactoring r, CommitCodeChange commitTime, String name) {
-            System.out.println(r.getType());
+            //find method, oldclass and newclass from mappings, change parentBlock from oldclass to newClass
+            String oldClass = r.getFirstClassName();
+            String newClass = r.getLastClassName();
+            assert oldClass.contains(".");
+            assert newClass.contains(".");
+            assert r.getLeftSideLocations().size() == r.getRightSideLocations().size();
+            assert r.getRightSideLocations().size() == 1;
+            HashMap<String, String> oldMethod = r.getLeftSideLocations().get(0).parseMethodDeclaration();//parse the method name
+            HashMap<String, String> newMethod = r.getRightSideLocations().get(0).parseMethodDeclaration();
+
+            assert mappings.containsKey(oldClass + ":" + oldMethod.get("MN"));
+            assert mappings.containsKey(oldClass);
+            CodeBlock methodBlock = mappings.get(oldClass + ":" + oldMethod.get("MN"));
+            CodeBlock classBlockOld = mappings.get(oldClass);//original class
+            assert classBlockOld.equals(methodBlock.getLastHistory().getParentCodeBlock());
+
+            //if newClass doesn't exist, create; otherwise find from mappings
+            CodeBlock classBlockNew; //new class, find from mappings or create
+            if (mappings.containsKey(newClass)) {
+                classBlockNew = mappings.get(newClass);
+            } else {
+                classBlockNew = new CodeBlock(codeBlocks.size() + 1, CodeBlockType.Class);
+                ClassTime newClassTimeNew = new ClassTime(newClass, commitTime, Operator.Add_Class, classBlockNew, mappings.get(newClass.substring(0,newClass.lastIndexOf("."))));//todo don't know parentBlock
+                mappings.put(newClass, classBlockNew);
+            }
+            // create new methodTime, update parentBlock; create two classTime for oldClassBlock and newClassBlock, move from oldTime to newTime
+            MethodTime methodTimeNew = (MethodTime) methodBlock.getLastHistory().clone();
+            methodTimeNew.setName(newMethod.get("MN"));
+            methodTimeNew.setParameters(newMethod.get("PA"));
+            methodTimeNew.setTime(commitTime);
+            methodTimeNew.setRefactorType(Operator.Pull_Up_Method);
+            methodTimeNew.setParentCodeBlock(classBlockNew);
+            commitTime.addCodeChange(methodTimeNew);
+            methodBlock.addHistory(methodTimeNew);
+            mappings.put(newClass + ":" + newMethod.get("MN"), methodBlock);
+
+            //remove from oldClass
+            ClassTime oldClassTimeNew = (ClassTime) classBlockOld.getLastHistory().clone();
+            oldClassTimeNew.setTime(commitTime);
+            commitTime.addCodeChange(oldClassTimeNew);
+            oldClassTimeNew.setRefactorType(Operator.Move_Method);
+            assert oldClassTimeNew.getMethods().contains(methodBlock);
+            oldClassTimeNew.getMethods().remove(methodBlock);
+            classBlockOld.addHistory(oldClassTimeNew);
+            //add to newClass
+            ClassTime newClassTimeNew = (ClassTime) classBlockNew.getLastHistory().clone();
+            newClassTimeNew.setTime(commitTime);
+            commitTime.addCodeChange(newClassTimeNew);
+            newClassTimeNew.setRefactorType(Operator.Move_Method);
+            newClassTimeNew.getMethods().add(methodBlock);
+            classBlockNew.addHistory(newClassTimeNew);
+
+//            System.out.println(r.getType());
         }
     },
     Push_Down_Method {
@@ -486,6 +535,8 @@ public enum Operator {
     Extract_And_Move_Method {
         //可能从多个方法中提取出一个新的方法， 涉及新建一个methodBlock，有多个derived from，并且移到了一个新的类中，跨文件
         public void apply(List<CodeBlock> codeBlocks, HashMap<String, CodeBlock> mappings, Refactoring r, CommitCodeChange commitTime, String name) {
+            String oldClass = r.getFirstClassName();
+            String newClass = r.getLastClassName();
             System.out.println(r.getType());
         }
     },
@@ -501,42 +552,113 @@ public enum Operator {
             System.out.println(r.getType());
         }
     },
-    Move_Method {//跨文件
-
+    Move_Method {
         public void apply(List<CodeBlock> codeBlocks, HashMap<String, CodeBlock> mappings, Refactoring r, CommitCodeChange commitTime, String name) {
-            System.out.println(r.getType());
+            //find method, oldclass and newclass from mappings, change parentBlock from oldclass to newClass
+            String oldClass = r.getFirstClassName();
+            String newClass = r.getLastClassName();
+            List<SideLocation> left = r.getLeftSideLocations();
+            List<SideLocation> right = r.getRightSideLocations();
+            assert oldClass.contains(".");
+            assert newClass.contains(".");
+            assert left.size() == right.size();
+            assert left.size() == 1;
+            HashMap<String, String> oldMethod = left.get(0).parseMethodDeclaration();//parse the method name
+            HashMap<String, String> newMethod = right.get(0).parseMethodDeclaration();
+            String oldSig = oldClass + ":" + oldMethod.get("MN");
+            String newSig = newClass + ":" + newMethod.get("MN");
+            assert mappings.containsKey(oldSig);
+            assert mappings.containsKey(oldClass);
+            CodeBlock methodBlock = mappings.get(oldSig);
+            CodeBlock classBlockOld = mappings.get(oldClass);//original class
+            assert classBlockOld.equals(methodBlock.getLastHistory().getParentCodeBlock());
+
+            //if newClass doesn't exist, create; otherwise find from mappings
+            CodeBlock classBlockNew; //new class, find from mappings or create
+            if (mappings.containsKey(newClass)) {
+                classBlockNew = mappings.get(newClass);
+            } else {
+                classBlockNew = new CodeBlock(codeBlocks.size() + 1, CodeBlockType.Class);
+                ClassTime newClassTimeNew = new ClassTime(newClass, commitTime, Operator.Add_Class, classBlockNew, mappings.get(newClass.substring(0,newClass.lastIndexOf("."))));//todo don't know parentBlock
+                mappings.put(newClass, classBlockNew);
+            }
+            // create new methodTime, update parentBlock; create two classTime for oldClassBlock and newClassBlock, move from oldTime to newTime
+            MethodTime methodTimeNew = (MethodTime) methodBlock.getLastHistory().clone();
+            methodTimeNew.setName(newMethod.get("MN"));
+            methodTimeNew.setParameters(newMethod.get("PA"));
+            methodTimeNew.setTime(commitTime);
+            methodTimeNew.setRefactorType(Operator.Move_Method);
+            methodTimeNew.setParentCodeBlock(classBlockNew);
+            commitTime.addCodeChange(methodTimeNew);
+            methodBlock.addHistory(methodTimeNew);
+            mappings.put(newSig, methodBlock);
+
+            //remove from oldClass
+            ClassTime oldClassTimeNew = (ClassTime) classBlockOld.getLastHistory().clone();
+            oldClassTimeNew.setTime(commitTime);
+            commitTime.addCodeChange(oldClassTimeNew);
+            oldClassTimeNew.setRefactorType(Operator.Move_Method);
+            assert oldClassTimeNew.getMethods().contains(methodBlock);
+            oldClassTimeNew.getMethods().remove(methodBlock);
+            classBlockOld.addHistory(oldClassTimeNew);
+            //add to newClass
+            ClassTime newClassTimeNew = (ClassTime) classBlockNew.getLastHistory().clone();
+            newClassTimeNew.setTime(commitTime);
+            commitTime.addCodeChange(newClassTimeNew);
+            newClassTimeNew.setRefactorType(Operator.Move_Method);
+            newClassTimeNew.getMethods().add(methodBlock);
+            classBlockNew.addHistory(newClassTimeNew);
+//            System.out.println(r.getType());
         }
     },
     Change_Return_Type { //trival 只需要修改返回类型 一般不跨文件
-
         public void apply(List<CodeBlock> codeBlocks, HashMap<String, CodeBlock> mappings, Refactoring r, CommitCodeChange commitTime, String name) {
-            System.out.println(r.getType());
+            String className = r.getLastClassName();
+            List<SideLocation> left = r.getLeftSideLocations();
+            List<SideLocation> right = r.getRightSideLocations();
+            assert left.size() == right.size();
+            assert left.size() == 2;
+            assert left.get(0).getFilePath().equals(right.get(0).getFilePath());
+            HashMap<String, String> oldMethod = left.get(1).parseMethodDeclaration();//parse the method name
+            HashMap<String, String> newMethod = right.get(1).parseMethodDeclaration();
+            String newSig = className + ":" + newMethod.get("MN");
+            assert mappings.containsKey(className + ":" + oldMethod.get("MN"));
+            CodeBlock methodBlock = mappings.get(className + ":" + oldMethod.get("MN"));
+            MethodTime methodTimeNew = (MethodTime) methodBlock.getLastHistory().clone();
+            methodTimeNew.setName(newMethod.get("MN"));
+            methodTimeNew.setParameters(newMethod.get("PA"));
+            //todo return type
+            methodTimeNew.setTime(commitTime);
+            methodTimeNew.setRefactorType(Operator.Change_Return_Type);
+            commitTime.addCodeChange(methodTimeNew);
+            methodBlock.addHistory(methodTimeNew);
+            mappings.put(newSig, methodBlock);
+//            System.out.println(r.getType());
         }
     },
-    Rename_Method {//trival 一般不跨文件 只需要修改方法名字
-
+    Rename_Method {
         public void apply(List<CodeBlock> codeBlocks, HashMap<String, CodeBlock> mappings, Refactoring r, CommitCodeChange commitTime, String name) {
-            String[] des = r.getDescription().split(" ");
-            String classSig = des[des.length - 1];
-            String className = classSig.substring(classSig.lastIndexOf(".") + 1);
+            String className = r.getLastClassName();
             List<SideLocation> left = r.getLeftSideLocations();
             List<SideLocation> right = r.getRightSideLocations();
             assert left.size() == right.size();
             assert left.size() == 1;
             assert left.get(0).getFilePath().equals(right.get(0).getFilePath());
-            HashMap<String, String> oldMethod = codeElement2Method(left.get(0).getCodeElement());
-            HashMap<String, String> newMethod = codeElement2Method(right.get(0).getCodeElement());
-            String oldName = className + ":" + oldMethod.get("MN");
-            String newName = className + ":" + newMethod.get("MN");
-            assert mappings.containsKey(oldName);
-            CodeBlock codeBlock = mappings.get(oldName);
-            MethodTime methodTimeOld = (MethodTime) codeBlock.getLastHistory();
-            MethodTime methodTimeNew = new MethodTime(methodTimeOld, commitTime, Operator.Rename_Method);
-//            methodTimeNew.setSignature(newName);
+            HashMap<String, String> oldMethod = left.get(0).parseMethodDeclaration();//parse the method name
+            HashMap<String, String> newMethod = right.get(0).parseMethodDeclaration();
+            String oldSig = className + ":" + oldMethod.get("MN");
+            String newSig = className + ":" + newMethod.get("MN");
+            assert mappings.containsKey(oldSig);
+            CodeBlock codeBlock = mappings.get(oldSig);
+            MethodTime methodTimeNew = (MethodTime) codeBlock.getLastHistory().clone();
+            methodTimeNew.setName(newMethod.get("MN"));
             methodTimeNew.setParameters(newMethod.get("PA"));
+            methodTimeNew.setTime(commitTime);
+            methodTimeNew.setRefactorType(Operator.Rename_Method);
+            commitTime.addCodeChange(methodTimeNew);
             codeBlock.addHistory(methodTimeNew);
-            mappings.put(newName, codeBlock);
-//            methodTimeNew.setParameterType(newMethod.get("PT")); //parameterType needs to be updated
+            mappings.put(newSig, codeBlock);
+//            System.out.println(r.getType());
         }
     },
     Parameterize_Variable {//方法名级别
@@ -559,21 +681,73 @@ public enum Operator {
     },
     Change_Parameter_Type {
         public void apply(List<CodeBlock> codeBlocks, HashMap<String, CodeBlock> mappings, Refactoring r, CommitCodeChange commitTime, String name) {
+//            String className = r.getLastClassName();
+//            List<SideLocation> left = r.getLeftSideLocations();
+//            List<SideLocation> right = r.getRightSideLocations();
+//            assert right.size() == 2;
+//            assert left.size() == 2;
+////            assert left.get(0).getFilePath().equals(right.get(0).getFilePath());
+//            HashMap<String, String> oldMethod = left.get(1).parseMethodDeclaration();
+//            HashMap<String, String> newMethod = right.get(1).parseMethodDeclaration();
+//            System.out.println(className + ":" + oldMethod.get("MN"));
+//            assert mappings.containsKey(className + ":" + oldMethod.get("MN"));//todo 会出错 664146363dc6ad39bb29b7c108eed6236457d189
+//            CodeBlock codeBlock = mappings.get(className + ":" + oldMethod.get("MN"));
+//            mappings.put(className + ":" + newMethod.get("MN"), codeBlock);
+//            MethodTime methodTime = (MethodTime) codeBlock.getLastHistory().clone();
+//            methodTime.setName(newMethod.get("MN"));
+//            methodTime.setTime(commitTime);
+//            methodTime.setRefactorType(Operator.Change_Parameter_Type);
+//            methodTime.setParameters(newMethod.get("PA"));//update parameterType
+//            commitTime.addCodeChange(methodTime);
+//            codeBlock.addHistory(methodTime);
+            //todo parameterType
             System.out.println(r.getType());
         }
     },
     Add_Parameter {
         public void apply(List<CodeBlock> codeBlocks, HashMap<String, CodeBlock> mappings, Refactoring r, CommitCodeChange commitTime, String name) {
-
-//            AttributeTime attributeTime = new AttributeTime();
-//            attributeTime.setTime(currentTime);
-
-            System.out.println(r.getType());
+            String className = r.getLastClassName();
+            List<SideLocation> left = r.getLeftSideLocations();
+            List<SideLocation> right = r.getRightSideLocations();
+            assert right.size() == 2;
+            assert left.size() == 1;
+            assert left.get(0).getFilePath().equals(right.get(0).getFilePath());
+            HashMap<String, String> oldMethod = left.get(0).parseMethodDeclaration();
+            HashMap<String, String> newMethod = right.get(1).parseMethodDeclaration();
+            assert mappings.containsKey(className + ":" + oldMethod.get("MN"));
+            CodeBlock codeBlock = mappings.get(className + ":" + oldMethod.get("MN"));
+            mappings.put(className + ":" + newMethod.get("MN"), codeBlock);
+            MethodTime methodTime = (MethodTime) codeBlock.getLastHistory().clone();
+            methodTime.setName(newMethod.get("MN"));
+            methodTime.setTime(commitTime);
+            methodTime.setRefactorType(Operator.Add_Parameter);
+            methodTime.setParameters(newMethod.get("PA"));//update parameterType
+            commitTime.addCodeChange(methodTime);
+            codeBlock.addHistory(methodTime);//todo return type
+//            System.out.println(r.getType());
         }
     },
     Remove_Parameter {
         public void apply(List<CodeBlock> codeBlocks, HashMap<String, CodeBlock> mappings, Refactoring r, CommitCodeChange commitTime, String name) {
-            System.out.println(r.getType());
+            String className = r.getLastClassName();
+            List<SideLocation> left = r.getLeftSideLocations();
+            List<SideLocation> right = r.getRightSideLocations();
+            assert right.size() == 1;
+            assert left.size() == 2;
+            assert left.get(0).getFilePath().equals(right.get(0).getFilePath());
+            HashMap<String, String> oldMethod = left.get(1).parseMethodDeclaration();
+            HashMap<String, String> newMethod = right.get(0).parseMethodDeclaration();
+            assert mappings.containsKey(className + ":" + oldMethod.get("MN"));
+            CodeBlock codeBlock = mappings.get(className + ":" + oldMethod.get("MN"));
+            mappings.put(className + ":" + newMethod.get("MN"), codeBlock);
+            MethodTime methodTime = (MethodTime) codeBlock.getLastHistory().clone();
+            methodTime.setName(newMethod.get("MN"));
+            methodTime.setTime(commitTime);
+            methodTime.setRefactorType(Operator.Remove_Parameter);
+            methodTime.setParameters(newMethod.get("PA"));//update parameterType
+            commitTime.addCodeChange(methodTime);
+            codeBlock.addHistory(methodTime);
+//            System.out.println(r.getType());
         }
     },
     Reorder_Parameter {
@@ -600,9 +774,7 @@ public enum Operator {
     },
     Rename_Attribute {
         public void apply(List<CodeBlock> codeBlocks, HashMap<String, CodeBlock> mappings, Refactoring r, CommitCodeChange commitTime, String name) {
-            String[] des = r.getDescription().split(" ");
-            String classSig = des[des.length - 1];
-            String className = classSig.substring(classSig.lastIndexOf(".") + 1);
+            String className = r.getLastClassName();
             List<SideLocation> left = r.getLeftSideLocations();
             List<SideLocation> right = r.getRightSideLocations();
             assert left.size() == right.size();
@@ -610,18 +782,20 @@ public enum Operator {
             assert left.get(0).getFilePath().equals(right.get(0).getFilePath());
             String[] leftCodeElement = left.get(0).getCodeElement().split(" : ");
             String[] rightCodeElement = right.get(0).getCodeElement().split(" : ");
-            String oldName = className + ":" + leftCodeElement[1] + "_" + leftCodeElement[0];
-            String newName = className + ":" + rightCodeElement[1] + "_" + rightCodeElement[0];
+            assert leftCodeElement.length == 2;
+            assert rightCodeElement.length == 2;
+            String oldName = leftCodeElement[1] + "_" + leftCodeElement[0];
+            String newName = rightCodeElement[1] + "_" + rightCodeElement[0];
             String returnType = rightCodeElement[1];//todo 返回值类型
-            assert mappings.containsKey(oldName);
-            CodeBlock codeBlock = mappings.get(oldName);
-            MethodTime methodTimeOld = (MethodTime) codeBlock.getLastHistory();
-            MethodTime methodTimeNew = new MethodTime(methodTimeOld, commitTime, Operator.Rename_Method);
-//            methodTimeNew.setSignature(newName);
-//            methodTimeNew.getFilePath().add(right.get(0).getFilePath());
-//            methodTimeNew.setParameters(newMethod.get("PA"));
-            codeBlock.addHistory(methodTimeNew);
-            mappings.put(newName, codeBlock);
+            assert mappings.containsKey(className + ":" + oldName);
+            mappings.put(className + ":" + newName, mappings.get(className + ":" + oldName));// update signature
+            AttributeTime attributeTime = (AttributeTime) mappings.get(className + ":" + oldName).getLastHistory().clone();//create new attributeTimeBlock
+            attributeTime.setName(newName);
+            attributeTime.setTime(commitTime);
+            attributeTime.setRefactorType(Operator.Rename_Attribute);
+            mappings.get(className + ":" + newName).addHistory(attributeTime);
+            commitTime.addCodeChange(attributeTime);
+            System.out.println(r.getType());
         }
     },
     Merge_Attribute {
@@ -636,6 +810,28 @@ public enum Operator {
     },
     Change_Attribute_Type {
         public void apply(List<CodeBlock> codeBlocks, HashMap<String, CodeBlock> mappings, Refactoring r, CommitCodeChange commitTime, String name) {
+//            String className = r.getLastClassName();
+//            List<SideLocation> left = r.getLeftSideLocations();
+//            List<SideLocation> right = r.getRightSideLocations();
+//            assert left.size() == right.size();
+//            assert left.size() == 1;
+//            System.out.println(r.getDescription());//todo 如果是先rename了类，那么这里显示的是更新后的类名
+//            assert left.get(0).getFilePath().equals(right.get(0).getFilePath());//todo 会出错 Change Attribute Type pi : DistributedPipeInput to pi : PipeInput in class org.jboss.test.messaging.core.distributed.SharedPipeOutputTest.Sender
+//            String[] leftCodeElement = left.get(0).getCodeElement().split(" : ");
+//            String[] rightCodeElement = right.get(0).getCodeElement().split(" : ");
+//            assert leftCodeElement.length == 2;
+//            assert rightCodeElement.length == 2;
+//            String oldName = leftCodeElement[1] + "_" + leftCodeElement[0];
+//            String newName = rightCodeElement[1] + "_" + rightCodeElement[0];
+//            String returnType = rightCodeElement[1];//todo 返回值类型
+//            assert mappings.containsKey(className + ":" + oldName);
+//            mappings.put(className + ":" + newName, mappings.get(className + ":" + oldName));// update signature
+//            AttributeTime attributeTime = (AttributeTime) mappings.get(className + ":" + oldName).getLastHistory().clone();//create new attributeTimeBlock
+//            attributeTime.setName(newName);
+//            attributeTime.setTime(commitTime);
+//            attributeTime.setRefactorType(Operator.Change_Attribute_Type);
+//            mappings.get(className + ":" + newName).addHistory(attributeTime);
+//            commitTime.addCodeChange(attributeTime);
             System.out.println(r.getType());
         }
     },
@@ -645,12 +841,27 @@ public enum Operator {
             System.out.println(r.getType());
         }
     },
-    Encapsulate_Attribute {
+    Encapsulate_Attribute {//应该是只增加了一个get方法
         //Attribute encapsulation is useful when you have an attribute that is affected by several different methods,
         // each of which needs that attribute to be in a known state. To prevent programmers from changing the attribute
         // in the 4GL code, you can make the attribute private so that programmers can only access it from the object's methods.
         public void apply(List<CodeBlock> codeBlocks, HashMap<String, CodeBlock> mappings, Refactoring r, CommitCodeChange commitTime, String name) {
-            System.out.println(r.getType());
+            //add new method
+            String className = r.getLastClassName();
+            assert r.getRightSideLocations().size()==2;
+            assert mappings.containsKey(className);
+            HashMap<String, String> info = r.getRightSideLocations().get(1).parseMethodDeclaration();
+            CodeBlock classBlock = mappings.get(className);
+            CodeBlock methodBlock = new CodeBlock(codeBlocks.size()+1, CodeBlockType.Method);
+            MethodTime methodTime = new MethodTime(info.get("MN"), commitTime, Operator.Add_Method, methodBlock, classBlock, info.get("PA"));
+            mappings.put(className+":"+info.get("MN"), methodBlock);
+            ClassTime classTime = (ClassTime) classBlock.getLastHistory().clone();
+            classTime.setTime(commitTime);
+            commitTime.addCodeChange(classTime);
+            classTime.setRefactorType(Operator.Encapsulate_Attribute);
+            classTime.getMethods().add(methodBlock);
+            classBlock.addHistory(classTime);
+//            System.out.println(r.getType());
         }
     },//TODO not_sure_if_neccessarry
     Inline_Attribute {
