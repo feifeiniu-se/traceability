@@ -36,7 +36,7 @@ public class AttributeTime extends CodeBlockTime{
     }
 
     @Override
-    List<CodeBlock> getClasses() {
+    public List<CodeBlock> getClasses() {
         return null;
     }
 

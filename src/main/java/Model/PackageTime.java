@@ -1,4 +1,5 @@
 package Model;
+
 import Constructor.Enums.Operator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,8 +12,9 @@ import java.util.List;
 @Data
 public class PackageTime extends CodeBlockTime implements Cloneable, Serializable {
     List<CodeBlock> classes = new ArrayList<>();
+    List<CodeBlock> packages = new ArrayList<>();
 
-    public PackageTime(String name, CommitCodeChange commitTime, Operator type, CodeBlock own){// add new package
+    public PackageTime(String name, CommitCodeChange commitTime, Operator type, CodeBlock own) {// add new package
         this.name = name;
         time = commitTime;
         refactorType = type;
@@ -20,6 +22,7 @@ public class PackageTime extends CodeBlockTime implements Cloneable, Serializabl
         own.addHistory(this);
         commitTime.addCodeChange(this);
     }
+
     @Override
     public Object clone() {
         PackageTime packageTime = null;
@@ -28,40 +31,10 @@ public class PackageTime extends CodeBlockTime implements Cloneable, Serializabl
         return packageTime;
     }
 
-//    public PackageTime deepCopy() throws JsonProcessingException {
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        PackageTime res = objectMapper.readValue(objectMapper.writeValueAsString(this), PackageTime.class);
-//        return res;
-//    }
-
-//    public PackageTime(String name, CommitCodeChange commitTime, Operator type, CodeBlockTime oldCodeBlockTime, CodeBlock own){
-//        this.name = name;
-//        time = commitTime;
-//        refactorType = type;
-//        if(type.equals(Operator.Split_Package)){
-//            deriver.add(oldCodeBlockTime);
-//            oldCodeBlockTime.getDerivee().add(this);
-//        }else if(type.equals(Operator.Merge_Package)){
-//            derivee.add(oldCodeBlockTime);
-//            oldCodeBlockTime.getDeriver().add(this);
-//        }
-//        owner = own;
-//        own.addHistory(this);
-//        commitTime.addCodeChange(this);
-//    }
-//
-//    public PackageTime(PackageTime pkg, CommitCodeChange cmt, Operator tp) {//move class
-//        name = pkg.getName();
-//        time = cmt;
-//        refactorType = tp;
-//        deriver = pkg.getDeriver();
-//        derivee = pkg.getDerivee();
-//        parentCodeBlock = pkg.getParentCodeBlock();
-//        owner = pkg.getOwner();
-//        classes = pkg.getClasses();
-//        owner.addHistory(this);
-//        cmt.addCodeChange(this);
-//    }
+    @Override
+    public List<CodeBlock> getClasses() {
+        return classes;
+    }
 
     @Override
     List<String> getFilePath() {

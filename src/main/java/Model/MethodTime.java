@@ -28,7 +28,7 @@ public class MethodTime extends CodeBlockTime{
 
         ClassTime parentTime = (ClassTime) parent.getLastHistory().clone();
         parentTime.setTime(cmt);
-        parentTime.setRefactorType(Operator.Add_Method);
+        parentTime.setRefactorType(tp);
         parentTime.getMethods().add(own);
         parent.addHistory(parentTime);
         cmt.addCodeChange(parentTime);
@@ -64,7 +64,7 @@ public class MethodTime extends CodeBlockTime{
     }
 
     @Override
-    List<CodeBlock> getClasses() {
+    public List<CodeBlock> getClasses() {
         return null;
     }
 

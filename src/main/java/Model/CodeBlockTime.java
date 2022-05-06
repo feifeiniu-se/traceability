@@ -22,7 +22,7 @@ public abstract class CodeBlockTime implements Cloneable, Serializable {
 
     abstract List<String> getFilePath();
     abstract List<CodeBlock> getPackages();
-    abstract List<CodeBlock> getClasses();
+    public abstract List<CodeBlock> getClasses();
     abstract List<CodeBlock> getMethods();
     abstract List<CodeBlock> getAttributes();
     abstract List<CodeBlock> getParameterRetureType();

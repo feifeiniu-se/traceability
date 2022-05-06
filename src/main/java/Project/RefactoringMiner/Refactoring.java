@@ -3,6 +3,7 @@ package Project.RefactoringMiner;
 import lombok.Data;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 public class Refactoring {
@@ -26,5 +27,19 @@ public class Refactoring {
         }
         return tmp[i+1];
     }
+
+    public List<SideLocation> leftFilter(String str1){
+        List<SideLocation> res = leftSideLocations.stream()
+                .filter(leftSideLocation -> leftSideLocation.getDescription().contains(str1))
+                .collect(Collectors.toList());
+        return res;
+    }
+    public List<SideLocation> rightFilter(String str1){
+        List<SideLocation> res = rightSideLocations.stream()
+                .filter(rightSideLocation -> rightSideLocation.getDescription().contains(str1))
+                .collect(Collectors.toList());
+        return res;
+    }
+
 
 }

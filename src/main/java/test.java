@@ -34,9 +34,14 @@ public class test {
 //        p2.getClasses().add(new CodeBlock(4, CodeBlockType.Class));
 //        System.out.println(p2.getFilePath());
 //        String x = codeElement2Name("org.jboss.messaging.newcore");
-        String x = "package MessageConsumerImpl(destination Destination, messageSelector String, noLocal boolean)";
+        String x1 = "inputPipe : LocalPipe";
+        String x2 = "protected replicatorID : Serializable";
+        String res1 = parse(x1);
+        String res2 = parse(x2);
+        System.out.println("X");
 //        Utils.codeElement2Name(x);
-        System.out.println(x.lastIndexOf(":"));
+
+
 
 //        System.out.println(a.toString().get);
 //        test.put("ni", test.get("haha"));
@@ -44,6 +49,14 @@ public class test {
 //        System.out.println(values.size());
 //        System.out.println(test.get("hg"));
 //        System.out.println(test.values().);
+    }
+    public static String parse(String x){
+        String[] tmp = x.split(" : ");
+        assert  tmp.length==2;
+        String tmp2 = tmp[0].substring(tmp[0].indexOf(" ")+1);
+
+        System.out.println(x.lastIndexOf(":"));
+        return tmp[1]+"_"+tmp2;
     }
     public static String cutString(String str, String start, String end){
         Integer s = str.indexOf(start);

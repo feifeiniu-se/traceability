@@ -12,4 +12,5 @@ public class Handler {
     public void handle(List<CodeBlock> codeBlocks, HashMap<String, CodeBlock> mappings, Refactoring r, CommitCodeChange commitTime, Operator operator, String name){
         operator.apply(codeBlocks, mappings, r, commitTime, name);
     }
+
 }

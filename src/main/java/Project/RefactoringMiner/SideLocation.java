@@ -60,6 +60,7 @@ public class SideLocation {
     public String parseAttributeOrParameter(){
         String[] tmp = codeElement.split(" : ");
         assert  tmp.length==2;
-        return tmp[1]+"_"+tmp[0];
+        String[] tmp2= tmp[0].split(" ");
+        return tmp[1]+"_"+tmp[0].substring(tmp[0].indexOf(" ")+1);
     }
 }

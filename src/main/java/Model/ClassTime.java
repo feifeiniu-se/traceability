@@ -79,6 +79,15 @@ public class ClassTime extends CodeBlockTime {
 //        cmt.addCodeChange(this);
 //    }
 
+    @Override
+    public List<CodeBlock> getClasses(){return classes;}
+
+    @Override
+    public List<CodeBlock> getMethods(){return methods;}
+
+    @Override
+    public List<CodeBlock> getAttributes(){return attributes;}
+
     public List<String> getFilePath() {
         return null;
     }
