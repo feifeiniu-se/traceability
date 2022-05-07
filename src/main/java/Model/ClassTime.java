@@ -43,14 +43,14 @@ public class ClassTime extends CodeBlockTime {
         if (parent.getType().equals(CodeBlockType.Class)) {//if the parent is a class
             ClassTime parentTime = (ClassTime) parent.getLastHistory().clone();
             parentTime.setTime(cmt);
-            parentTime.setRefactorType(Operator.Add_Class);
+            parentTime.setRefactorType(tp);
             parentTime.getClasses().add(own);
             parent.addHistory(parentTime);
             cmt.addCodeChange(parentTime);
         } else if (parent.getType().equals(CodeBlockType.Package)) {// if the parent is a package
             PackageTime parentTime = (PackageTime)parent.getLastHistory().clone();
             parentTime.setTime(cmt);
-            parentTime.setRefactorType(Operator.Add_Class);
+            parentTime.setRefactorType(tp);
             parentTime.getClasses().add(own);
             parent.addHistory(parentTime);
             cmt.addCodeChange(parentTime);

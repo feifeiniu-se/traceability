@@ -19,7 +19,7 @@ public class AttributeTime extends CodeBlockTime{
 
         ClassTime parentTime = (ClassTime) parent.getLastHistory().clone();
         parentTime.setTime(cmt);
-        parentTime.setRefactorType(Operator.Add_Attribute);
+        parentTime.setRefactorType(tp);
         parentTime.getAttributes().add(own);
         parent.addHistory(parentTime);
         cmt.addCodeChange(parentTime);

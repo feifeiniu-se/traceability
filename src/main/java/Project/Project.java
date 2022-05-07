@@ -48,7 +48,8 @@ public class Project {
         name = info[0];
         startHash = info[1];
         endHash = info[2];
-        endHash = "cb4dcf5ca0d7462167ae05e23499ad3d38bb1885";//TODO for test f65d3a05dfec17d851aed9f1b262ee64710b99a7
+        startHash = "cc5e122e6d1c7ed375bff065c616ef28529a9b8c";
+        endHash = "4dfaa740475401936243b76e79ee3be8e839e1c2";//TODO for test f65d3a05dfec17d851aed9f1b262ee64710b99a7
         projectAddress = "C:\\Users\\Feifei\\dataset\\projects\\" + name;
         refactoringMinerAddress = "C:\\Users\\Feifei\\dataset\\projects\\allRefactorings\\" + name + ".json";
         commitList = getList();
