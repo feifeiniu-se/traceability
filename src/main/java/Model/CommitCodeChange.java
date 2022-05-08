@@ -26,6 +26,8 @@ public class CommitCodeChange {
     public void addCodeChange(CodeBlockTime cbt){
         codeChange.add(cbt);
     }
+    public CommitCodeChange getPreCommit(){return this.preCommit;}
+    public CommitCodeChange getPostCommit(){return this.postCommit;}
 
     //    public String toString()
 }

@@ -26,9 +26,9 @@ public class Refactorings {//这是一个commit的内容
             "Extract Interface",
             "Move Class",
             "Rename Class",
-            "Extract and Move Method",
+            "Extract And Move Method",
             "Rename Package",
-            "Move and Rename Class",
+            "Move And Rename Class",
             "Extract Class",
             "Extract Subclass",
 //            "Extract Variable",
@@ -37,9 +37,9 @@ public class Refactorings {//这是一个commit的内容
 //            "Rename Variable",
 //            "Rename Parameter",
             "Rename Attribute",
-            "Move and Rename Attribute",
-//            "Replace Variable with Attribute",
-//            "Replace Attribute (with Attribute)",//TODO 暂时没找到例子
+            "Move And Rename Attribute",
+//            "Replace Variable With Attribute",
+//            "Replace Attribute (With Attribute)",//TODO 暂时没找到例子
 //            "Merge Variable",
             "Merge Parameter",
             "Merge Attribute",
@@ -51,8 +51,8 @@ public class Refactorings {//这是一个commit的内容
             "Change Return Type",
             "Change Attribute Type",
             "Extract Attribute",
-            "Move and Rename Method",
-            "Move and Inline Method",
+            "Move And Rename Method",
+            "Move And Inline Method",
 //            "Add Method Annotation",
 //            "Remove Method Annotation",
 //            "Modify Method Annotation",
@@ -81,7 +81,7 @@ public class Refactorings {//这是一个commit的内容
             // each of which needs that attribute to be in a known state. To prevent programmers from changing the attribute
             // in the 4GL code, you can make the attribute private so that programmers can only access it from the object's methods.
             "Parameterize Attribute",
-            "Replace Attribute with Variable",
+            "Replace Attribute With Variable",
 //            "Add Method Modifier (final, static, abstract, synchronized)",
 //            "Remove Method Modifier (final, static, abstract, synchronized)",
 //            "Add Attribute Modifier (final, static, transient, volatile)",
@@ -99,8 +99,8 @@ public class Refactorings {//这是一个commit的内容
 //            "Localize Parameter",
             "Change Type Declaration Kind",
             "Collapse Hierarchy",
-//            "Replace Loop with Pipeline",
-            "Replace Anonymous with Lambda",//done 暂时没找到 只发生在方法内部
+//            "Replace Loop With Pipeline",
+            "Replace Anonymous With Lambda",//done 暂时没找到 只发生在方法内部
             "Merge Class",
            "Inline Attribute"
 
@@ -124,10 +124,10 @@ public class Refactorings {//这是一个commit的内容
             "Pull Up Attribute",
             "Push Down Method",
             "Push Down Attribute",
-            "Extract and Move Method",
+            "Extract And Move Method",
             "Parameterize Variable",
             "Rename Attribute",
-            "Move and Rename Attribute",
+            "Move And Rename Attribute",
             "Move Attribute",
             "Merge Parameter",
             "Merge Attribute",
@@ -137,14 +137,14 @@ public class Refactorings {//这是一个commit的内容
             "Change Return Type",
             "Change Attribute Type",
             "Extract Attribute",
-            "Move and Rename Method",
-            "Move and Inline Method",
+            "Move And Rename Method",
+            "Move And Inline Method",
             "Add Parameter",
             "Remove Parameter",
             "Reorder Parameter",
             "Encapsulate Attribute",
             "Parameterize Attribute",
-            "Replace Attribute with Variable",
+            "Replace Attribute With Variable",
             "Inline Attribute"
     ));
     private static Set<String> secondLevelTypes = new HashSet<>(Arrays.asList(
@@ -152,7 +152,7 @@ public class Refactorings {//这是一个commit的内容
             "Extract Interface",
             "Move Class",
             "Rename Class",
-            "Move and Rename Class",
+            "Move And Rename Class",
             "Extract Class",
             "Extract Subclass",
             "Change Type Declaration Kind",

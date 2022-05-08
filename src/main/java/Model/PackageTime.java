@@ -1,12 +1,11 @@
 package Model;
 
 import Constructor.Enums.Operator;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Data
@@ -36,14 +35,15 @@ public class PackageTime extends CodeBlockTime implements Cloneable, Serializabl
         return classes;
     }
 
+
     @Override
-    List<String> getFilePath() {
-        return null;
+    public String getSignature() {
+        return this.getName();
     }
 
     @Override
-    List<CodeBlock> getPackages() {
-        return null;
+    public List<CodeBlock> getPackages() {
+        return packages;
     }
 
     @Override
@@ -62,7 +62,8 @@ public class PackageTime extends CodeBlockTime implements Cloneable, Serializabl
     }
 
     @Override
-    List<String> getParameters() {
+    String getParameters() {
         return null;
     }
+
 }

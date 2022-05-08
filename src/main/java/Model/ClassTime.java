@@ -2,8 +2,6 @@ package Model;
 
 import Constructor.Enums.CodeBlockType;
 import Constructor.Enums.Operator;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -93,7 +91,12 @@ public class ClassTime extends CodeBlockTime {
     }
 
     @Override
-    List<CodeBlock> getPackages() {
+    public String getSignature() {
+        return this.getParentCodeBlock().getLastHistory().getSignature()+"."+this.getName();
+    }
+
+    @Override
+    public List<CodeBlock> getPackages() {
         return null;
     }
 
@@ -103,7 +106,7 @@ public class ClassTime extends CodeBlockTime {
     }
 
     @Override
-    List<String> getParameters() {
+    String getParameters() {
         return null;
     }
 
@@ -116,10 +119,5 @@ public class ClassTime extends CodeBlockTime {
         classTime.setAttributes(new ArrayList<>(attributes));
         return classTime;
     }
-//    @Override
-//    public CodeBlockTime deepCopy() throws JsonProcessingException {
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        ClassTime res = objectMapper.readValue(objectMapper.writeValueAsString(this), ClassTime.class);
-//        return res;
-//    }
+
 }

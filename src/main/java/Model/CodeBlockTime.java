@@ -1,7 +1,6 @@
 package Model;
 
 import Constructor.Enums.Operator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -20,13 +19,14 @@ public abstract class CodeBlockTime implements Cloneable, Serializable {
     CodeBlock parentCodeBlock;
     CodeBlock owner;
 
-    abstract List<String> getFilePath();
-    abstract List<CodeBlock> getPackages();
+    public abstract String getSignature();
+    public abstract List<CodeBlock> getPackages();
     public abstract List<CodeBlock> getClasses();
     abstract List<CodeBlock> getMethods();
     abstract List<CodeBlock> getAttributes();
     abstract List<CodeBlock> getParameterRetureType();
-    abstract List<String> getParameters();
+    abstract String getParameters();
+
     @Override
     public Object clone() {
         CodeBlockTime codeBlockTime = null;

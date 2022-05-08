@@ -55,7 +55,7 @@ public class Constructor {
 
             //firstly, go through all refactorings; and then all changed files
             Refactorings refact = project.getRefactorings().get(hashCode.getHashCode());
-            if (refact != null) {//if refactoring is not null, separate them into three levels: package, class, method&attribute
+            if (refact != null && commitTime.getPreCommit() != null) {//if refactoring is not null, separate them into three levels: package, class, method&attribute
                 if (!refact.getRefactorings().isEmpty()) {
                     //package level
                     List<Refactoring> firstLevel = refact.filter("first");
@@ -73,7 +73,7 @@ public class Constructor {
                 }
             }
 
-            if (refact != null) {//if refactoring is not null, separate them into three levels: package, class, method&attribute
+            if (refact != null && commitTime.getPreCommit() != null) {//if refactoring is not null, separate them into three levels: package, class, method&attribute
                 if (!refact.getRefactorings().isEmpty()) {
                     // class level
                     List<Refactoring> secondLevel = refact.filter("second");
@@ -90,7 +90,7 @@ public class Constructor {
                     classVisitor.classVisitor(fileContent, codeBlocks, codeChange, mappings);
                 }
             }
-            if (refact != null) {//if refactoring is not null, separate them into three levels: package, class, method&attribute
+            if (refact != null && commitTime.getPreCommit() != null) {//if refactoring is not null, separate them into three levels: package, class, method&attribute
                 if (!refact.getRefactorings().isEmpty()) {
                     //method & attribute level
                     List<Refactoring> thirdLevel = refact.filter("third");

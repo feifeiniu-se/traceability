@@ -1,8 +1,6 @@
 package Model;
 
-import Constructor.Enums.CodeBlockType;
 import Constructor.Enums.Operator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -53,13 +51,14 @@ public class MethodTime extends CodeBlockTime{
 //        System.out.println("Method");
         return methodTime;
     }
+
     @Override
-    List<String> getFilePath() {
-        return null;
+    public String getSignature() {
+        return this.getParentCodeBlock().getLastHistory().getSignature()+":"+this.getName();
     }
 
     @Override
-    List<CodeBlock> getPackages() {
+    public List<CodeBlock> getPackages() {
         return null;
     }
 
@@ -80,11 +79,12 @@ public class MethodTime extends CodeBlockTime{
 
     @Override
     List<CodeBlock> getParameterRetureType() {
-        return null;
+        return parameterType;
     }
 
     @Override
-    List<String> getParameters(){return null;};
+    String getParameters(){return parameters;}
+
 
 //    @Override
 //    public CodeBlockTime deepCopy() throws JsonProcessingException {
