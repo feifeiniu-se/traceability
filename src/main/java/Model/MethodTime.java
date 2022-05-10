@@ -75,7 +75,7 @@ public class MethodTime extends CodeBlockTime{
     }
 
     @Override
-    Set<CodeBlock> getAttributes() {
+    public Set<CodeBlock> getAttributes() {
         return null;
     }
 

@@ -31,7 +31,7 @@ public class SideLocation {
         res.put("RT", returnType);
 
         String[] parameterList = cutString(codeElement, "(", ")").replace(", ", ",").split(",");
-        String name = codeElement.substring(codeElement.indexOf(" ")+1, codeElement.indexOf("("));
+        String name = codeElement.substring(codeElement.substring(0, codeElement.indexOf("(")).lastIndexOf(" ")+1, codeElement.indexOf("("));
         String parameterTypes = "(";
         String parameters = "[";
         if(cutString(codeElement, "(", ")").length()<1){//如果parameter为空

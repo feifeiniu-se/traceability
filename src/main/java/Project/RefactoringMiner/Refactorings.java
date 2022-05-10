@@ -115,7 +115,10 @@ public class Refactorings {//这是一个commit的内容
             "Add Parameter",
             "Remove Parameter",
             "Reorder Parameter",
-            "Parameterize Attribute"
+            "Parameterize Attribute",
+            "Change Return Type",
+            "Rename Attribute",
+            "Change Attribute Type"
     ));
     private static Set<String> methodAndAttributeLevelTypes = new HashSet<>(Arrays.asList(
             "Extract Method",
@@ -123,20 +126,17 @@ public class Refactorings {//这是一个commit的内容
             "Rename Method",
             "Move Method",
             "Pull Up Method",
-            "Pull Up Attribute",
             "Push Down Method",
-            "Push Down Attribute",
             "Extract And Move Method",
-            "Rename Attribute",
+            "Move And Rename Method",
+            "Move And Inline Method",
+            "Pull Up Attribute",
+            "Push Down Attribute",
             "Move And Rename Attribute",
             "Move Attribute",
             "Merge Attribute",
             "Split Attribute",
-            "Change Return Type",
-            "Change Attribute Type",
             "Extract Attribute",
-            "Move And Rename Method",
-            "Move And Inline Method",
             "Encapsulate Attribute",
             "Replace Attribute With Variable",
             "Inline Attribute"

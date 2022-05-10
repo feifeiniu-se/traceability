@@ -50,7 +50,7 @@ public class PackageTime extends CodeBlockTime implements Cloneable, Serializabl
     }
 
     @Override
-    Set<CodeBlock> getAttributes() {
+    public Set<CodeBlock> getAttributes() {
         return null;
     }
 

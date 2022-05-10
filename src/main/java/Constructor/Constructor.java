@@ -34,6 +34,7 @@ public class Constructor {
         for(CommitHashCode hashCode: commitList){
             System.out.println(codeBlocks.size());
             System.out.println(mappings.size());
+            System.out.println("Commit: "+hashCode.getHashCode());
             //add a new commitTime for each commit, for the code change during this commit
             CommitCodeChange commitTime = new CommitCodeChange(hashCode.getHashCode());
             if(codeChange.size()>0){
@@ -103,7 +104,7 @@ public class Constructor {
                             Operator.valueOf(r.getType().replace(" ", "_")).apply(codeBlocks, mappings, r, commitTime, null);
                         }
                     }
-                    //parameters
+                    //parameters & return type
                     List<Refactoring> parameterLevelRefactorings = refact.filter("parameter");
                     if (!parameterLevelRefactorings.isEmpty()) {
                         for(Refactoring r: parameterLevelRefactorings){

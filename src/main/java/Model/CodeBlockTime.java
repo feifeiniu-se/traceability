@@ -25,7 +25,7 @@ public abstract class CodeBlockTime implements Cloneable, Serializable {
     public abstract Set<CodeBlock> getPackages();
     public abstract Set<CodeBlock> getClasses();
     public abstract Set<CodeBlock> getMethods();
-    abstract Set<CodeBlock> getAttributes();
+    public abstract Set<CodeBlock> getAttributes();
     abstract Set<CodeBlock> getParameterRetureType();
     abstract String getParameters();
 
