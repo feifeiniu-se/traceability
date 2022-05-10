@@ -4,14 +4,12 @@ import Constructor.Enums.Operator;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Data
 public class PackageTime extends CodeBlockTime implements Cloneable, Serializable {
-    List<CodeBlock> classes = new ArrayList<>();
-    List<CodeBlock> packages = new ArrayList<>();
+    Set<CodeBlock> classes = new HashSet<>();
+    Set<CodeBlock> packages = new HashSet<>();
 
     public PackageTime(String name, CommitCodeChange commitTime, Operator type, CodeBlock own) {// add new package
         this.name = name;
@@ -26,12 +24,12 @@ public class PackageTime extends CodeBlockTime implements Cloneable, Serializabl
     public Object clone() {
         PackageTime packageTime = null;
         packageTime = (PackageTime) super.clone();
-        packageTime.setClasses(new ArrayList<>(classes));
+        packageTime.setClasses(new HashSet<>(classes));
         return packageTime;
     }
 
     @Override
-    public List<CodeBlock> getClasses() {
+    public Set<CodeBlock> getClasses() {
         return classes;
     }
 
@@ -42,22 +40,22 @@ public class PackageTime extends CodeBlockTime implements Cloneable, Serializabl
     }
 
     @Override
-    public List<CodeBlock> getPackages() {
+    public Set<CodeBlock> getPackages() {
         return packages;
     }
 
     @Override
-    List<CodeBlock> getMethods() {
+    public Set<CodeBlock> getMethods() {
         return null;
     }
 
     @Override
-    List<CodeBlock> getAttributes() {
+    Set<CodeBlock> getAttributes() {
         return null;
     }
 
     @Override
-    List<CodeBlock> getParameterRetureType() {
+    Set<CodeBlock> getParameterRetureType() {
         return null;
     }
 

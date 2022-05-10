@@ -3,6 +3,7 @@ package Model;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import Constructor.Enums.CodeBlockType;
 import lombok.Data;
@@ -39,9 +40,9 @@ public class CodeBlock {
     }
 
     public void updateMappings(HashMap<String, CodeBlock> mappings, String oldName, String newName) {
+        System.out.println("oldName: "+oldName);
+        System.out.println("newName:" + newName);
         assert mappings.containsKey(oldName);
-//        System.out.println(this.getLastHistory().getMethods());
-//        System.out.println(oldName+" *** "+newName);
         mappings.put(newName, this);
 
         if (!(this.getLastHistory().getPackages() ==null)) {
@@ -56,6 +57,11 @@ public class CodeBlock {
         }
         if(!(this.getLastHistory().getMethods()==null)){
             for(CodeBlock methodBlock: this.getLastHistory().getMethods()){
+                System.out.println("methodName: "+methodBlock.getLastHistory().getName());
+                System.out.println("methodType: "+methodBlock.getLastHistory().getRefactorType());
+                System.out.println("methodSig: "+methodBlock.getLastHistory().getSignature());
+                System.out.println("refactType: "+this.getLastHistory().getRefactorType());
+                System.out.println("clasName:" + this.getLastHistory().getName());
                 methodBlock.updateMappings(mappings, methodBlock.getLastHistory().getSignature(), methodBlock.getLastHistory().getSignature().replace(oldName, newName));
             }
         }
@@ -67,5 +73,16 @@ public class CodeBlock {
 
     }
 
+    @Override
+    public boolean equals(Object o){
+        if(this==o) return true;
+        if(o==null||getClass()!=o.getClass()) return false;
+        CodeBlock codeBlock = (CodeBlock) o;
+        return Objects.equals(codeBlockID, codeBlock.codeBlockID) && Objects.equals(type, codeBlock.type);
+    }
+    @Override
+    public int hashCode(){
+        return Objects.hash(codeBlockID, type);
+    }
 
 }

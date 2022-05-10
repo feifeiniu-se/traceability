@@ -5,7 +5,9 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 public abstract class CodeBlockTime implements Cloneable, Serializable {
@@ -14,17 +16,17 @@ public abstract class CodeBlockTime implements Cloneable, Serializable {
     CodeBlockTime pre = null;
     CodeBlockTime post = null;
     Operator refactorType;
-    List<CodeBlockTime> deriver = new ArrayList<>();//父
-    List<CodeBlockTime> derivee = new ArrayList<>();//子
+    Set<CodeBlockTime> deriver = new HashSet<>();//父
+    Set<CodeBlockTime> derivee = new HashSet<>();//子
     CodeBlock parentCodeBlock;
     CodeBlock owner;
 
     public abstract String getSignature();
-    public abstract List<CodeBlock> getPackages();
-    public abstract List<CodeBlock> getClasses();
-    abstract List<CodeBlock> getMethods();
-    abstract List<CodeBlock> getAttributes();
-    abstract List<CodeBlock> getParameterRetureType();
+    public abstract Set<CodeBlock> getPackages();
+    public abstract Set<CodeBlock> getClasses();
+    public abstract Set<CodeBlock> getMethods();
+    abstract Set<CodeBlock> getAttributes();
+    abstract Set<CodeBlock> getParameterRetureType();
     abstract String getParameters();
 
     @Override
@@ -32,8 +34,8 @@ public abstract class CodeBlockTime implements Cloneable, Serializable {
         CodeBlockTime codeBlockTime = null;
         try {
             codeBlockTime = (CodeBlockTime) super.clone();
-            codeBlockTime.setDeriver(new ArrayList<>(deriver));
-            codeBlockTime.setDerivee(new ArrayList<>(derivee));
+            codeBlockTime.setDeriver(new HashSet<>(deriver));
+            codeBlockTime.setDerivee(new HashSet<>(derivee));
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }

@@ -57,7 +57,7 @@ public class ClassVisitor {
             String signature = pkgName + "." + name;
             if (!mappings.containsKey(signature)) {
                 //creat new classBlock, update package
-                CodeBlock classBlock = new CodeBlock(codeBlocks.size() - 1, CodeBlockType.Class);
+                CodeBlock classBlock = new CodeBlock(codeBlocks.size() + 1, CodeBlockType.Class);
                 mappings.put(signature, classBlock);
                 codeBlocks.add(classBlock);
                 ClassTime classTime = new ClassTime(name, commitCodeChange, Operator.Add_Class, classBlock, pkgBlock);//create classTime, add to classBlock, commitTime, update parentBlock

@@ -4,15 +4,17 @@ import Constructor.Enums.Operator;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 public class MethodTime extends CodeBlockTime{
 
-    List<CodeBlock> callers = new ArrayList<>();
-    List<CodeBlock> callees = new ArrayList<>();
+    Set<CodeBlock> callers = new HashSet<>();
+    Set<CodeBlock> callees = new HashSet<>();
     String parameters;
-    List<CodeBlock> parameterType = new ArrayList<>();
+    Set<CodeBlock> parameterType = new HashSet<>();
 
     public MethodTime(String name, CommitCodeChange cmt, Operator tp, CodeBlock own, CodeBlock parent, String params) {//add method
         this.name = name;
@@ -45,9 +47,9 @@ public class MethodTime extends CodeBlockTime{
     public Object clone() {
         MethodTime methodTime = null;
         methodTime = (MethodTime) super.clone();
-        methodTime.setCallers(new ArrayList<>(callers));
-        methodTime.setCallees(new ArrayList<>(callees));
-        methodTime.setParameterType(new ArrayList<>(parameterType));
+        methodTime.setCallers(new HashSet<>(callers));
+        methodTime.setCallees(new HashSet<>(callees));
+        methodTime.setParameterType(new HashSet<>(parameterType));
 //        System.out.println("Method");
         return methodTime;
     }
@@ -58,27 +60,27 @@ public class MethodTime extends CodeBlockTime{
     }
 
     @Override
-    public List<CodeBlock> getPackages() {
+    public Set<CodeBlock> getPackages() {
         return null;
     }
 
     @Override
-    public List<CodeBlock> getClasses() {
+    public Set<CodeBlock> getClasses() {
         return null;
     }
 
     @Override
-    List<CodeBlock> getMethods() {
+    public Set<CodeBlock> getMethods() {
         return null;
     }
 
     @Override
-    List<CodeBlock> getAttributes() {
+    Set<CodeBlock> getAttributes() {
         return null;
     }
 
     @Override
-    List<CodeBlock> getParameterRetureType() {
+    Set<CodeBlock> getParameterRetureType() {
         return parameterType;
     }
 

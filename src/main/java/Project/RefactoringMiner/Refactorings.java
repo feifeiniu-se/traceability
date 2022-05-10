@@ -13,46 +13,56 @@ public class Refactorings {//这是一个commit的内容
     private List<Refactoring> refactorings;
 
     private static Set<String> filterTypes = new HashSet<>(Arrays.asList(
-            "Extract Method",
+            "Rename Package",
+            "Extract Superclass", "Move And Rename Class",
+            "Extract Interface",
+            "Move Class","Extract Class",
+            "Extract Subclass",
+            "Rename Class",
+            "Move Method", "Extract Method", "Pull Up Method", "Push Down Method","Extract And Move Method",
             "Inline Method",
             "Rename Method",
-            "Move Method",
-            "Move Attribute",
-            "Pull Up Method",
-            "Pull Up Attribute",
-            "Push Down Method",
-            "Push Down Attribute",
-            "Extract Superclass",
-            "Extract Interface",
-            "Move Class",
-            "Rename Class",
-            "Extract And Move Method",
-            "Rename Package",
-            "Move And Rename Class",
-            "Extract Class",
-            "Extract Subclass",
-//            "Extract Variable",
-//            "Inline Variable",
             "Parameterize Variable",
-//            "Rename Variable",
-//            "Rename Parameter",
-            "Rename Attribute",
-            "Move And Rename Attribute",
-//            "Replace Variable With Attribute",
-//            "Replace Attribute (With Attribute)",//TODO 暂时没找到例子
-//            "Merge Variable",
+            "Move Attribute",
+            "Pull Up Attribute",
+            "Push Down Attribute", "Move And Rename Attribute", "Rename Attribute",
             "Merge Parameter",
             "Merge Attribute",
-//            "Split Variable",
             "Split Parameter",
             "Split Attribute",
-//            "Change Variable Type",
             "Change Parameter Type",
             "Change Return Type",
             "Change Attribute Type",
             "Extract Attribute",
             "Move And Rename Method",
             "Move And Inline Method",
+            "Add Parameter",
+            "Remove Parameter",
+            "Reorder Parameter",
+            "Encapsulate Attribute",//TODO maybe method&attribute not sure
+            //Attribute encapsulation is useful when you have an attribute that is affected by several different methods,
+            // each of which needs that attribute to be in a known state. To prevent programmers from changing the attribute
+            // in the 4GL code, you can make the attribute private so that programmers can only access it from the object's methods.
+            "Parameterize Attribute",
+            "Replace Attribute With Variable",
+            "Move Package",
+            "Split Package",
+            "Merge Package",
+            "Change Type Declaration Kind",
+            "Collapse Hierarchy",
+            "Replace Anonymous With Lambda",//done 暂时没找到 只发生在方法内部
+            "Merge Class",
+            "Inline Attribute"
+
+//            "Extract Variable",
+//            "Inline Variable",
+//            "Rename Variable",
+//            "Rename Parameter",
+//            "Replace Variable With Attribute",
+//            "Replace Attribute (With Attribute)",//TODO 暂时没找到例子
+//            "Merge Variable",
+//            "Split Variable",
+//            "Change Variable Type",
 //            "Add Method Annotation",
 //            "Remove Method Annotation",
 //            "Modify Method Annotation",
@@ -68,20 +78,11 @@ public class Refactorings {//这是一个commit的内容
 //            "Add Variable Annotation",
 //            "Remove Variable Annotation",
 //            "Modify Variable Annotation",
-            "Add Parameter",
-            "Remove Parameter",
-            "Reorder Parameter",
 //            "Add Thrown Exception Type",
 //            "Remove Thrown Exception Type",
 //            "Change Thrown Exception Type",
 //            "Change Method Access Modifier",
 //            "Change Attribute Access Modifier",
-            "Encapsulate Attribute",//TODO maybe method&attribute not sure
-            //Attribute encapsulation is useful when you have an attribute that is affected by several different methods,
-            // each of which needs that attribute to be in a known state. To prevent programmers from changing the attribute
-            // in the 4GL code, you can make the attribute private so that programmers can only access it from the object's methods.
-            "Parameterize Attribute",
-            "Replace Attribute With Variable",
 //            "Add Method Modifier (final, static, abstract, synchronized)",
 //            "Remove Method Modifier (final, static, abstract, synchronized)",
 //            "Add Attribute Modifier (final, static, transient, volatile)",
@@ -93,17 +94,8 @@ public class Refactorings {//这是一个commit的内容
 //            "Change Class Access Modifier",
 //            "Add Class Modifier (final, static, abstract)",
 //            "Remove Class Modifier (final, static, abstract)",
-            "Move Package",
-            "Split Package",
-            "Merge Package",
 //            "Localize Parameter",
-            "Change Type Declaration Kind",
-            "Collapse Hierarchy",
 //            "Replace Loop With Pipeline",
-            "Replace Anonymous With Lambda",//done 暂时没找到 只发生在方法内部
-            "Merge Class",
-           "Inline Attribute"
-
     ));
 
     /**
@@ -115,7 +107,17 @@ public class Refactorings {//这是一个commit的内容
                 .collect(Collectors.toList());
     }
 
-    private static Set<String> thirdLevelTypes = new HashSet<>(Arrays.asList(
+    private static Set<String> parameterLevelTypes = new HashSet<>(Arrays.asList(
+            "Parameterize Variable",
+            "Merge Parameter",
+            "Split Parameter",
+            "Change Parameter Type",
+            "Add Parameter",
+            "Remove Parameter",
+            "Reorder Parameter",
+            "Parameterize Attribute"
+    ));
+    private static Set<String> methodAndAttributeLevelTypes = new HashSet<>(Arrays.asList(
             "Extract Method",
             "Inline Method",
             "Rename Method",
@@ -125,29 +127,21 @@ public class Refactorings {//这是一个commit的内容
             "Push Down Method",
             "Push Down Attribute",
             "Extract And Move Method",
-            "Parameterize Variable",
             "Rename Attribute",
             "Move And Rename Attribute",
             "Move Attribute",
-            "Merge Parameter",
             "Merge Attribute",
-            "Split Parameter",
             "Split Attribute",
-            "Change Parameter Type",
             "Change Return Type",
             "Change Attribute Type",
             "Extract Attribute",
             "Move And Rename Method",
             "Move And Inline Method",
-            "Add Parameter",
-            "Remove Parameter",
-            "Reorder Parameter",
             "Encapsulate Attribute",
-            "Parameterize Attribute",
             "Replace Attribute With Variable",
             "Inline Attribute"
     ));
-    private static Set<String> secondLevelTypes = new HashSet<>(Arrays.asList(
+    private static Set<String> classLevelTypes = new HashSet<>(Arrays.asList(
             "Extract Superclass",
             "Extract Interface",
             "Move Class",
@@ -159,7 +153,7 @@ public class Refactorings {//这是一个commit的内容
             "Collapse Hierarchy",
             "Merge Class"
     ));
-    private static Set<String> firstLevelTypes = new HashSet<>(Arrays.asList(
+    private static Set<String> packageLevelTypes = new HashSet<>(Arrays.asList(
             "Rename Package",
             "Move Package",
             "Split Package",
@@ -167,31 +161,37 @@ public class Refactorings {//这是一个commit的内容
     ));
     public List<Refactoring> filter(String types){
         List<Refactoring> res = new ArrayList<>();
-        if(types.equals("first")){
+        if(types.equals("package")){
             for(Refactoring r: refactorings){
-                if(firstLevelTypes.contains(r.getType())){
+                if(packageLevelTypes.contains(r.getType())){
                     res.add(r);
                 }
             }
 
-        }else if(types.equals("second")){
+        }else if(types.equals("class")){
             for(Refactoring r: refactorings){
-                if(secondLevelTypes.contains(r.getType())){
+                if(classLevelTypes.contains(r.getType())){
                     res.add(r);
                 }
             }
         }
-        else if(types.equals("third")){
+        else if(types.equals("methodAndAttribute")){
             for(Refactoring r: refactorings){
-                if(thirdLevelTypes.contains(r.getType())){
+                if(methodAndAttributeLevelTypes.contains(r.getType())){
                     res.add(r);
                 }
             }
-        }else{
+        }else if(types.equals("parameter")){
+            for(Refactoring r:refactorings){
+                if(parameterLevelTypes.contains(r.getType())){
+                    res.add(r);
+                }
+            }
+        }
+        else{
             return null;
         }
         return res;
-
     }
 
 }

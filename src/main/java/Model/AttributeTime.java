@@ -3,6 +3,7 @@ import Constructor.Enums.Operator;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 public class AttributeTime extends CodeBlockTime{
@@ -31,27 +32,27 @@ public class AttributeTime extends CodeBlockTime{
     }
 
     @Override
-    public List<CodeBlock> getPackages() {
+    public Set<CodeBlock> getPackages() {
         return null;
     }
 
     @Override
-    public List<CodeBlock> getClasses() {
+    public Set<CodeBlock> getClasses() {
         return null;
     }
 
     @Override
-    List<CodeBlock> getMethods() {
+    public Set<CodeBlock> getMethods() {
         return null;
     }
 
     @Override
-    List<CodeBlock> getAttributes() {
+    Set<CodeBlock> getAttributes() {
         return null;
     }
 
     @Override
-    List<CodeBlock> getParameterRetureType() {
+    Set<CodeBlock> getParameterRetureType() {
         return null;
     }
 

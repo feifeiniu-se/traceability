@@ -38,8 +38,7 @@ public class PackageVisitor {
             String name = md.getNameAsString();
             if(!mappings.containsKey(name)){
                 //if mappings don't contain package, then create
-                handler.handle(codeBlocks, mappings, null, commitTime, Operator.Add_Package, name);
-
+                Operator.Add_Package.apply(codeBlocks, mappings, null, commitTime, name);
             }
         }
     }

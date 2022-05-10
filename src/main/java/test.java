@@ -36,10 +36,11 @@ public class test {
 //        String x = codeElement2Name("org.jboss.messaging.newcore");
         String x1 = "Move And Inline Method public read(is DataInputStream) : void moved from class org.jboss.jms.wireformat.CallbackSupport to class org.jboss.jms.message.JBossMessage & inlined to public read(in DataInputStream) : void";
         String x2 = "protected replicatorID : Serializable";
+        x2 = x2.replace("protected", "haha");
 //        String res1 = parse(x1);
 //        String res2 = parse(cutString(x1, "to class ", " & "));
-        String[] tmp = x1.substring(0, x1.indexOf(" & ")).split(" ");
-        System.out.println(tmp[tmp.length-1]);
+//        String[] tmp = x1.substring(0, x1.indexOf(" & ")).split(" ");
+        System.out.println(x2);
 //        Utils.codeElement2Name(x);
 
 

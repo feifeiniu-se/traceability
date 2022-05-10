@@ -5,14 +5,15 @@ import Constructor.Enums.Operator;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 public class ClassTime extends CodeBlockTime {
-    List<CodeBlock> classes = new ArrayList<>();
-    List<CodeBlock> methods = new ArrayList<>();
-    List<CodeBlock> attributes = new ArrayList<>();
-
+    Set<CodeBlock> classes = new HashSet<>();
+    Set<CodeBlock> methods = new HashSet<>();
+    Set<CodeBlock> attributes = new HashSet<>();
 
 //    public ClassTime(String sig, String path, CommitCodeChange cmt, Operator tp, CodeBlock own, CodeBlock parent){
 //        if(!own.getHistory().isEmpty()){
@@ -57,36 +58,16 @@ public class ClassTime extends CodeBlockTime {
         }
     }
 
-//    public ClassTime(String newClassName, CommitCodeChange cmt, Operator tp, CodeBlock newClassBlock) {//merge_Class
-//        signature = newClassName;
-//        time = cmt;
-//        refactorType = tp;
-//        owner = newClassBlock;
-//        newClassBlock.addHistory(this);
-//        cmt.addCodeChange(this);
-//    }
-//
-//    public ClassTime(ClassTime classTime, CommitCodeChange cmt, Operator tp) {//merge class 复制旧的class的内容
-//        signature = classTime.getSignature();
-//        time = cmt;
-//        refactorType = tp;
-//        deriver = classTime.getDeriver();
-//        parentCodeBlock = classTime.getParentCodeBlock();
-//        owner = classTime.getOwner();
-//        owner.addHistory(this);
-//        cmt.addCodeChange(this);
-//    }
+    @Override
+    public Set<CodeBlock> getClasses(){return classes;}
 
     @Override
-    public List<CodeBlock> getClasses(){return classes;}
+    public Set<CodeBlock> getMethods(){return methods;}
 
     @Override
-    public List<CodeBlock> getMethods(){return methods;}
+    public Set<CodeBlock> getAttributes(){return attributes;}
 
-    @Override
-    public List<CodeBlock> getAttributes(){return attributes;}
-
-    public List<String> getFilePath() {
+    public Set<String> getFilePath() {
         return null;
     }
 
@@ -96,12 +77,12 @@ public class ClassTime extends CodeBlockTime {
     }
 
     @Override
-    public List<CodeBlock> getPackages() {
+    public Set<CodeBlock> getPackages() {
         return null;
     }
 
     @Override
-    List<CodeBlock> getParameterRetureType() {
+    Set<CodeBlock> getParameterRetureType() {
         return null;
     }
 
@@ -114,9 +95,9 @@ public class ClassTime extends CodeBlockTime {
     public Object clone() {
         ClassTime classTime = null;
         classTime = (ClassTime) super.clone();
-        classTime.setClasses(new ArrayList<>(classes));
-        classTime.setMethods(new ArrayList<>(methods));
-        classTime.setAttributes(new ArrayList<>(attributes));
+        classTime.setClasses(new HashSet<>(classes));
+        classTime.setMethods(new HashSet<>(methods));
+        classTime.setAttributes(new HashSet<>(attributes));
         return classTime;
     }
 
