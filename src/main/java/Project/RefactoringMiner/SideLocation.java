@@ -23,6 +23,7 @@ public class SideLocation {
     public HashMap<String, String> parseMethodDeclaration(){
         HashMap<String, String> res = new HashMap<>();
         String returnType;
+//        System.out.println(filePath);
         if(codeElement.lastIndexOf(":")>0){
             returnType = codeElement.substring(codeElement.lastIndexOf(":")+1).replace(" ", "");
         }else{
@@ -58,7 +59,7 @@ public class SideLocation {
         return res;
     }
     public String parseAttributeOrParameter(){
-        String[] tmp = codeElement.split(" : ");
+        String[] tmp = codeElement.replace("[]", "").split(" : ");
         assert  tmp.length==2;
         return tmp[1]+"_"+tmp[0].substring(tmp[0].indexOf(" ")+1);
     }

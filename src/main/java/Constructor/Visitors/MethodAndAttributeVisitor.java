@@ -67,11 +67,14 @@ public class MethodAndAttributeVisitor {
                 String methodName = null;
                 String parameters = null;
                 if (member.isMethodDeclaration()) {
-                    methodName = member.asMethodDeclaration().getType().toString() + "_" + member.asMethodDeclaration().getSignature();
+//
+                    String returnType = member.asMethodDeclaration().getType().toString().contains(".")?member.asMethodDeclaration().getType().asClassOrInterfaceType().getNameAsString():member.asMethodDeclaration().getType().toString();
+
+                    methodName = returnType + "_" + member.asMethodDeclaration().getSignature();
                     parameters = member.asMethodDeclaration().getParameters().toString();
                     //if the type of parameter is classorInterfaceType from another project(like ReplicatorInput(org.jgroups.Channel, Serializable)), modify it.
                     if (methodName.contains(".")) {
-                        for(int i=0; i<member.asMethodDeclaration().getParameters().size(); i++){
+                        for (int i = 0; i < member.asMethodDeclaration().getParameters().size(); i++) {
                             if (member.asMethodDeclaration().getParameters().get(i).getType().isClassOrInterfaceType()) {
                                 methodName = methodName.replace(member.asMethodDeclaration().getParameters().get(i).getType().toString(), member.asMethodDeclaration().getParameters().get(i).getType().asClassOrInterfaceType().getNameAsString());
                             }
@@ -83,7 +86,7 @@ public class MethodAndAttributeVisitor {
                     parameters = member.asConstructorDeclaration().getParameters().toString();
                     //if the type of parameter is classorInterfaceType from another project(like ReplicatorInput(org.jgroups.Channel, Serializable)), modify it.
                     if (methodName.contains(".")) {
-                        for(int i=0; i<member.asConstructorDeclaration().getParameters().size(); i++){
+                        for (int i = 0; i < member.asConstructorDeclaration().getParameters().size(); i++) {
                             if (member.asConstructorDeclaration().getParameters().get(i).getType().isClassOrInterfaceType()) {
                                 methodName = methodName.replace(member.asConstructorDeclaration().getParameters().get(i).getType().toString(), member.asConstructorDeclaration().getParameters().get(i).getType().asClassOrInterfaceType().getNameAsString());
                             }

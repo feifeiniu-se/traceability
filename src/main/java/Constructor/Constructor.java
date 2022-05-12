@@ -74,6 +74,7 @@ public class Constructor {
                 }
             }
 
+            updateMappings(mappings, codeBlocks);
             //classLevel; firstly refactorings, then javaparser visitor
             if (refact != null && commitTime.getPreCommit() != null) {
                 if (!refact.getRefactorings().isEmpty()) {
@@ -93,7 +94,7 @@ public class Constructor {
                     classVisitor.classVisitor(fileContent, codeBlocks, codeChange, mappings);
                 }
             }
-
+            updateMappings(mappings, codeBlocks);
             //method and attribute level: firstly refactoring, then javaparser visitor
             if (refact != null && commitTime.getPreCommit() != null) {
                 if (!refact.getRefactorings().isEmpty()) {
@@ -121,6 +122,13 @@ public class Constructor {
                     methodAndAttributeVisitor.methodAAttributeVisitor(fileContent, codeBlocks, codeChange, mappings);
                 }
             }
+            updateMappings(mappings, codeBlocks);
+        }
+    }
+
+    private void updateMappings(HashMap<String, CodeBlock> mappings, List<CodeBlock> codeBlocks) {
+        for(CodeBlock codeBlock: codeBlocks){
+            mappings.put(codeBlock.getLastHistory().getSignature(), codeBlock);
         }
     }
 

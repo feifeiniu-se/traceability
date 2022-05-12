@@ -40,29 +40,36 @@ public class CodeBlock {
     }
 
     public void updateMappings(HashMap<String, CodeBlock> mappings, String oldName, String newName) {
-//        System.out.println("oldName: "+oldName);
-//        System.out.println("newName:" + newName);
-        assert mappings.containsKey(oldName);
+//        System.out.println("oldName: "+this.getType()+":"+oldName);
+//        System.out.println("newName:"+this.getType()+":" + newName);
+//        assert mappings.containsKey(oldName);
         mappings.put(newName, this);
 
         if (!(this.getLastHistory().getPackages() ==null)) {
             for (CodeBlock pkg : this.getLastHistory().getPackages()) {
-                pkg.updateMappings(mappings, pkg.getLastHistory().getSignature(), pkg.getLastHistory().getSignature().replace(oldName, newName));
+                String pkgName = pkg.getLastHistory().getName();
+                assert pkgName.contains(oldName);
+                pkg.updateMappings(mappings, pkgName, pkgName.replace(oldName, newName));
             }
         }
         if (!(this.getLastHistory().getClasses()==null)) {
+//            this.getHistory().forEach(e->System.out.println("refactType: "+e.getRefactorType()+"::"+e.getSignature()));
+//            this.getLastHistory().getClasses().forEach(e->System.out.println("classes:"+e.getLastHistory().getName()));
             for (CodeBlock classBlock : this.getLastHistory().getClasses()) {
-                classBlock.updateMappings(mappings, classBlock.getLastHistory().getSignature(), classBlock.getLastHistory().getSignature().replace(oldName, newName));
+                String className = classBlock.getLastHistory().getName();
+                classBlock.updateMappings(mappings, oldName+"."+className, newName+"."+className);
             }
         }
         if(!(this.getLastHistory().getMethods()==null)){
+//            this.getLastHistory().getMethods().forEach(e->System.out.println("methods:"+e.getLastHistory().getName()));
+//            this.getHistory().forEach(e->System.out.println("refactType: "+e.getRefactorType()));
             for(CodeBlock methodBlock: this.getLastHistory().getMethods()){
+                String methodName = methodBlock.getLastHistory().getName();
 //                System.out.println("methodName: "+methodBlock.getLastHistory().getName());
 //                System.out.println("methodType: "+methodBlock.getLastHistory().getRefactorType());
 //                System.out.println("methodSig: "+methodBlock.getLastHistory().getSignature());
-//                System.out.println("className:" + this.getLastHistory().getName());
-//                this.getHistory().forEach(e->System.out.println("refactType: "+e.getRefactorType()));
-                methodBlock.updateMappings(mappings, methodBlock.getLastHistory().getSignature(), methodBlock.getLastHistory().getSignature().replace(oldName, newName));
+//                methodBlock.getHistory().forEach(e->System.out.println("methodRefact: "+e.getRefactorType()+": "+e.getName()));
+                methodBlock.updateMappings(mappings, oldName+":"+methodName, newName+":"+methodName);
             }
         }
         if(!(this.getLastHistory().getAttributes()==null)){
@@ -70,12 +77,13 @@ public class CodeBlock {
 //            this.getHistory().forEach(e->System.out.println("refactType: "+e.getRefactorType()));
 //            this.getLastHistory().getAttributes().forEach(e->System.out.println("attribute: "+e.getLastHistory().getSignature()));
             for(CodeBlock attriBlock: this.getLastHistory().getAttributes()){
+                String attriName = attriBlock.getLastHistory().getName();
 //                System.out.println("attriName: "+attriBlock.getLastHistory().getName());
 //                System.out.println("attriType: "+attriBlock.getLastHistory().getRefactorType());
 //                System.out.println("attriSig: "+attriBlock.getLastHistory().getSignature());
 //                attriBlock.getHistory().forEach(e->System.out.println("AttriRefactoring: "+e.getRefactorType()+" "+"AttriSig: "+e.getSignature()));
 
-                attriBlock.updateMappings(mappings, attriBlock.getLastHistory().getSignature(), attriBlock.getLastHistory().getSignature().replace(oldName, newName));
+                attriBlock.updateMappings(mappings, oldName+":"+attriName, newName+":"+attriName);
             }
         }
 
