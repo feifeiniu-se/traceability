@@ -33,7 +33,7 @@ public class ClassVisitor {
         this.commitCodeChange = codeChange.get(codeChange.size() - 1); //获得当前commit的内容
         JavaParser javaParser = new JavaParser();
         CompilationUnit cu = javaParser.parse(fileContent).getResult().get();//done
-
+        System.out.println(javaParser.parse(fileContent).getResult());
         pkgName = cu.getPackageDeclaration().get().getNameAsString();
         assert mappings.containsKey(pkgName);
         pkgBlock = mappings.get(pkgName);

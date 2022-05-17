@@ -169,6 +169,7 @@ public enum Operator {
             oldPkgTime.setTime(commitTime);
             commitTime.addCodeChange(oldPkgTime);
             oldPkgTime.setRefactorType(Operator.Split_Package);
+            oldPkgBlock.addHistory(oldPkgTime);
 
             //先判断新的包是否存在 如果存在就更新 不存在就新建
             for (String pkgName : newPkgNames) {
@@ -212,8 +213,12 @@ public enum Operator {
                 commitTime.addCodeChange(classTime);
                 classBlock.addHistory(classTime);
                 String parentSig = newClassName.substring(0, newClassName.lastIndexOf("."));
-                System.out.println(r.getDescription());
-                assert mappings.containsKey(parentSig);
+                if(!mappings.containsKey(parentSig)){//如果parentSig还是不存在，说明是包中包，就直接新建新的包，暂时忽略包中包
+                    CodeBlock pkgBlockInner = new CodeBlock(codeBlocks.size()+1, CodeBlockType.Package);
+                    PackageTime pkgTimeInner = new PackageTime(parentSig, commitTime, Operator.Split_Package, pkgBlockInner);
+                    mappings.put(parentSig, pkgBlockInner);
+                    codeBlocks.add(pkgBlockInner);
+                }
                 classTime.setParentCodeBlock(mappings.get(parentSig));
                 mappings.get(parentSig).getLastHistory().getClasses().add(classBlock);
             }
@@ -371,13 +376,13 @@ public enum Operator {
             List<SideLocation> left = r.getLeftSideLocations();
             List<SideLocation> right = r.getRightSideLocations();
 
-            String className = right.get(right.size() - 1).getCodeElement();
+            String classSig = right.get(right.size() - 1).getCodeElement();
             assert left.size() == right.size() - 1;
-            assert !mappings.containsKey(className);
+//            assert !mappings.containsKey(className);
             //create new className
             CodeBlock classBlock = new CodeBlock(codeBlocks.size() + 1, CodeBlockType.Class);
-            ClassTime classTime = new ClassTime(className.substring(className.lastIndexOf(".")+1), commitTime, Operator.Extract_Interface, classBlock, mappings.get(className.substring(0, className.lastIndexOf("."))));
-            mappings.put(className, classBlock);
+            ClassTime classTime = new ClassTime(classSig.substring(classSig.lastIndexOf(".")+1), commitTime, Operator.Extract_Interface, classBlock, mappings.get(classSig.substring(0, classSig.lastIndexOf("."))));
+            mappings.put(classSig, classBlock);
             codeBlocks.add(classBlock);
 
             //derive and deriver relation
@@ -720,6 +725,7 @@ public enum Operator {
             List<SideLocation> right = r.getRightSideLocations();
             assert left.size() == right.size();
             assert left.size() == 1;
+            System.out.println(r.getDescription());
             String oldName = left.get(0).getCodeElement();
             String newName = right.get(0).getCodeElement();
             assert mappings.containsKey(oldName);
@@ -1426,7 +1432,7 @@ public enum Operator {
             String className = r.getLastClassName();
             List<SideLocation> left = r.getLeftSideLocations();
             List<SideLocation> right = r.getRightSideLocations();
-            assert left.get(0).getFilePath().equals(right.get(0).getFilePath());
+//            assert left.get(0).getFilePath().equals(right.get(0).getFilePath());
             HashMap<String, String> oldMethod = left.get(left.size() - 1).parseMethodDeclaration();//parse the method name
             HashMap<String, String> newMethod = right.get(right.size() - 1).parseMethodDeclaration();
             String oldSig = className + ":" + oldMethod.get("MN");
