@@ -54,10 +54,11 @@ public class Project {
         if (OsInfoUtil.isWindows()) {
             projectAddress = "C:\\Users\\Feifei\\dataset\\projects\\" + name;
             refactoringMinerAddress = "C:\\Users\\Feifei\\dataset\\projects\\allRefactorings\\" + name + ".json";
-        } else if (OsInfoUtil.isMacOS()) {
+        } else if (OsInfoUtil.isMacOSX()) {
             projectAddress = "/Users/neowoodley/Postgraduate/ScientificResearch/CaseStudy/code/" + name;
-            refactoringMinerAddress = "/Users/neowoodley/Postgraduate/ScientificResearch/CaseStudy/refactoring_miner_output" + name + ".json";
+            refactoringMinerAddress = "/Users/neowoodley/Postgraduate/ScientificResearch/CaseStudy/refactoring_miner_output/" + name + ".json";
         }
+        System.out.println(projectAddress+", "+refactoringMinerAddress);
         commitList = getList();
         refactorings = readRefactoring();
     }

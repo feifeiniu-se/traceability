@@ -1,0 +1,22 @@
+2022-05-12 10:22:22,458 INFO  start.main(start.java:42) - Constructor finished.
+2022-05-12 10:23:07,406 INFO  start.main(start.java:42) - Constructor finished.
+2022-05-12 10:23:22,723 INFO  start.main(start.java:42) - Constructor finished.
+2022-05-17 23:40:22,626 INFO  Util.sqlite.SqliteHelper.getConnection(SqliteHelper.java:34) - Connection already exists.
+2022-05-17 23:40:22,630 INFO  Util.sqlite.SqliteHelper.getConnection(SqliteHelper.java:34) - Connection already exists.
+2022-05-17 23:40:25,780 INFO  Util.sqlite.SqliteHelper.getConnection(SqliteHelper.java:34) - Connection already exists.
+2022-05-17 23:42:21,529 INFO  Util.sqlite.SqliteHelper.getConnection(SqliteHelper.java:34) - Connection already exists.
+2022-05-17 23:42:24,792 INFO  Util.sqlite.SqliteHelper.getConnection(SqliteHelper.java:34) - Connection already exists.
+2022-05-18 00:00:05,691 INFO  Util.sqlite.SqliteHelper.getConnection(SqliteHelper.java:34) - Connection already exists.
+2022-05-18 00:00:08,883 INFO  Util.sqlite.SqliteHelper.getConnection(SqliteHelper.java:34) - Connection already exists.
+2022-05-18 00:00:12,032 INFO  Util.sqlite.SqliteHelper.getConnection(SqliteHelper.java:34) - Connection already exists.
+2022-05-18 00:00:21,724 INFO  Util.sqlite.SqliteHelper.getConnection(SqliteHelper.java:34) - Connection already exists.
+2022-05-18 00:00:34,036 INFO  Util.sqlite.SqliteHelper.getConnection(SqliteHelper.java:34) - Connection already exists.
+2022-05-18 00:01:03,194 INFO  Util.sqlite.SqliteHelper.getConnection(SqliteHelper.java:34) - Connection already exists.
+2022-05-18 00:01:06,357 INFO  Util.sqlite.SqliteHelper.getConnection(SqliteHelper.java:34) - Connection already exists.
+2022-05-18 00:01:15,569 INFO  Util.sqlite.SqliteHelper.getConnection(SqliteHelper.java:34) - Connection already exists.
+2022-05-18 00:01:21,374 INFO  Util.sqlite.SqliteHelper.getConnection(SqliteHelper.java:34) - Connection already exists.
+2022-05-18 00:01:25,715 INFO  Util.sqlite.SqliteHelper.getConnection(SqliteHelper.java:34) - Connection already exists.
+2022-05-18 00:08:42,625 INFO  Util.sqlite.SqliteHelper.getConnection(SqliteHelper.java:34) - Connection already exists.
+2022-05-18 00:08:46,091 INFO  Util.sqlite.SqliteHelper.getConnection(SqliteHelper.java:34) - Connection already exists.
+2022-05-18 00:08:57,343 INFO  Util.sqlite.SqliteHelper.getConnection(SqliteHelper.java:34) - Connection already exists.
+2022-05-18 00:09:24,435 INFO  Util.sqlite.SqliteHelper.getConnection(SqliteHelper.java:34) - Connection already exists.

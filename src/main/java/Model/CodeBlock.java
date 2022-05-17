@@ -8,6 +8,10 @@ import java.util.Objects;
 import Constructor.Enums.CodeBlockType;
 import lombok.Data;
 
+/**
+ * 横向关系（同一个commit的不同代码块之间）
+ * 把项目分为多个不同的CodeBlock，分割粒度为package、class、method、attribute
+ */
 @Data
 public class CodeBlock {
     Integer codeBlockID;
