@@ -1,7 +1,7 @@
 drop table if exists CodeBlockTime;
 create table CodeBlockTime
 (
-    id              integer primary key not null, -- CodeBlockTime的id
+    id              integer primary key autoincrement, -- CodeBlockTime的id
     name            varchar(200),                 -- 名称
     commitId        varchar(45),                  -- commit hash值
     refactorType    varchar(50),                  -- 重构的类型，eg. Add_Package
@@ -43,9 +43,9 @@ create table Mapping
 drop table if exists CodeBlockTimeChild;
 create table CodeBlockTimeChild
 (
-    codeBlockTimeId integer,    -- CodeBlockTime的id
-    codeBlockId     integer,    -- CodeBlock的id，即孩子
-    codeBlockType   varchar(20) -- CodeBlock的类型，eg. class/method
+    codeBlockTimeId integer,         -- CodeBlockTime的id
+    codeBlockChildId     integer,    -- CodeBlockTime的孩子的id，即CodeBlock的id
+    codeBlockChildType   varchar(20) -- CodeBlockTime的孩子的类型，即CodeBlock的类型，eg. class/method
 );
 
 
@@ -57,3 +57,10 @@ insert into CommitCodeChange values('33333','22222','44444');
 
 select * from sqlite_master;
 
+select * from CodeBlockTime;
+
+
+select * from CodeBlockTime;
+
+select last_insert_rowid() as id from CodeBlockTime limit 1;
+insert into CodeBlockTime (name,commitId,refactorType,parentCodeBlock,owner) values('test','123','Package',123,456);

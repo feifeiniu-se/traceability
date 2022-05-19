@@ -55,20 +55,6 @@ public class SqliteHelper {
     }
 
     /**
-     * 由客户端构造PreparedStatement，在这里提交并执行
-     * @param preparedStatement
-     * @throws SQLException
-     * @throws ClassNotFoundException
-     */
-    public void executePreparedStatement(PreparedStatement preparedStatement) throws SQLException, ClassNotFoundException {
-//        Connection connection = getConnection();
-//        connection.setAutoCommit(false);
-        preparedStatement.executeBatch();
-//        connection.setAutoCommit(true);
-        destroyed();
-    }
-
-    /**
      * 执行select查询，返回结果列表
      *
      * @param sql
@@ -84,7 +70,7 @@ public class SqliteHelper {
             T result = resultSetExtractor.extractData(resultSet);
             return result;
         }finally {
-            destroyed();
+//            destroyed();
         }
     }
 
@@ -96,10 +82,26 @@ public class SqliteHelper {
                 results.add(mapper.mapRow(resultSet, resultSet.getRow()));
             }
         }finally {
-            destroyed();
+//            destroyed();
         }
         return results;
     }
+
+    /**
+     * 由客户端构造PreparedStatement，在这里提交并执行
+     * @param preparedStatement
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     */
+    public void executePreparedStatement(PreparedStatement preparedStatement) throws SQLException, ClassNotFoundException {
+        Connection connection = getConnection();
+        connection.setAutoCommit(false);
+        preparedStatement.executeBatch();
+        connection.setAutoCommit(true);
+//        destroyed();
+    }
+
+
 
     /**
      * 执行多个SQL更新语句
@@ -114,7 +116,7 @@ public class SqliteHelper {
                 getStatement().executeUpdate(sql);
             }
         }finally {
-            destroyed();
+//            destroyed();
         }
     }
 
@@ -131,7 +133,7 @@ public class SqliteHelper {
                 getStatement().executeUpdate(sql);
             }
         }finally {
-            destroyed();
+//            destroyed();
         }
     }
 

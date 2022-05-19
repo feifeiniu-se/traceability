@@ -1,6 +1,8 @@
 import Constructor.Constructor;
 import Model.CodeBlock;
 import Model.CommitCodeChange;
+import Persistence.CodeBlockSaver;
+import Persistence.CommitCodeChangeSaver;
 import Project.Project;
 import lombok.extern.slf4j.Slf4j;
 
@@ -45,7 +47,17 @@ public class start {
         // todo：CodeBlockTime 缺少孩子节点
         //todo save to file/database
 //        save(codeBlocks, commits);
+
         log.info("Constructor finished.");
+        log.info("Start to save CommitCodeChange");
+        CommitCodeChangeSaver commitCodeChangeSaver = new CommitCodeChangeSaver("/Users/neowoodley/Postgraduate/ScientificResearch/CaseStudy/sqlite/data/traceability.sqlite3");
+        commitCodeChangeSaver.save(commits);
+
+        log.info("Start to save CodeBlock");
+        CodeBlockSaver codeBlockSaver = new CodeBlockSaver("/Users/neowoodley/Postgraduate/ScientificResearch/CaseStudy/sqlite/data/traceability.sqlite3");
+        codeBlockSaver.save(codeBlocks);
+        log.info("CodeBlockSaver finished.");
+
         System.out.println(codeBlocks.size());
         System.out.println(commits.size());
     }

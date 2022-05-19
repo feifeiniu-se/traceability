@@ -1,7 +1,6 @@
 package Persistence;
 
 import Model.CommitCodeChange;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -9,12 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CommitCodeChangeSaverTest {
-    private CommitCodeChangeSaver commitCodeChangeSaver;
-
-    @Before
-    public void setUp() {
-        commitCodeChangeSaver = new CommitCodeChangeSaver("/Users/neowoodley/Postgraduate/ScientificResearch/CaseStudy/sqlite/data/traceability.sqlite3");
-    }
+    private final CommitCodeChangeSaver commitCodeChangeSaver= new CommitCodeChangeSaver("/Users/neowoodley/Postgraduate/ScientificResearch/CaseStudy/sqlite/data/traceability.sqlite3");
 
     @Test
     public void saveTest1() {
@@ -27,9 +21,7 @@ public class CommitCodeChangeSaverTest {
         commitCodeChange3.setPreCommit(commitCodeChange2);
         List<CommitCodeChange> commitCodeChanges = new ArrayList<>(Arrays.asList(commitCodeChange1, commitCodeChange2, commitCodeChange3));
 
-        System.out.println(commitCodeChanges);
-
         commitCodeChangeSaver.save(commitCodeChanges);
-//        commitCodeChangeSaver.query();
+        commitCodeChangeSaver.query();
     }
 }

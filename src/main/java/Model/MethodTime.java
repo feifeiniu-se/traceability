@@ -3,9 +3,7 @@ package Model;
 import Constructor.Enums.Operator;
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -13,7 +11,7 @@ public class MethodTime extends CodeBlockTime{
 
     Set<CodeBlock> callers = new HashSet<>();
     Set<CodeBlock> callees = new HashSet<>();
-    String parameters;
+    String parameters;  // todo: insert into CodeBlockTime需要修改
     Set<CodeBlock> parameterType = new HashSet<>();
 
     public MethodTime(String name, CommitCodeChange cmt, Operator tp, CodeBlock own, CodeBlock parent, String params) {//add method
