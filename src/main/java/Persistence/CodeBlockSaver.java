@@ -60,7 +60,7 @@ public class CodeBlockSaver {
 
     private void saveCodeBlockTime(List<CodeBlockTime> codeBlockTimes) {
         try {
-            PreparedStatement preparedStatement = helper.getPreparedStatement("insert into CodeBlockTime (name,commitId,refactorType,parentCodeBlock,owner) values(?,?,?,?,?);");
+            PreparedStatement preparedStatement = helper.getPreparedStatement("insert into CodeBlockTime (name,commitId,refactorType,parentCodeBlock,owner,parameters) values(?,?,?,?,?,?);");
             for (CodeBlockTime codeBlockTime : codeBlockTimes) {
                 preparedStatement.setString(1, codeBlockTime.getName());
                 preparedStatement.setString(2, codeBlockTime.getTime().getCommitID());
@@ -75,6 +75,9 @@ public class CodeBlockSaver {
                 }
                 if (parentCodeBlock == null && owner == null) {
                     logger.error("parentCodeBlock & owner = null");
+                }
+                if (codeBlockTime instanceof MethodTime) {
+                    preparedStatement.setString(6, ((MethodTime) codeBlockTime).getParameters());
                 }
                 preparedStatement.executeUpdate();  // 立即执行
                 int id = helper.executeQuery("select last_insert_rowid() as id from CodeBlockTime limit 1;", resultSet -> {

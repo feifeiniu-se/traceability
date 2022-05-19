@@ -83,7 +83,7 @@ public class MethodTime extends CodeBlockTime{
     }
 
     @Override
-    String getParameters(){return parameters;}
+    public String getParameters(){return parameters;}
 
 
 //    @Override
