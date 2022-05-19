@@ -1,0 +1,365 @@
+@startuml
+
+/' diagram meta data start
+config=StructureConfiguration;
+{
+  "projectClassification": {
+    "searchMode": "OpenProject", // OpenProject, AllProjects
+    "includedProjects": "",
+    "pathEndKeywords": "*.impl",
+    "isClientPath": "",
+    "isClientName": "",
+    "isTestPath": "",
+    "isTestName": "",
+    "isMappingPath": "",
+    "isMappingName": "",
+    "isDataAccessPath": "",
+    "isDataAccessName": "",
+    "isDataStructurePath": "",
+    "isDataStructureName": "",
+    "isInterfaceStructuresPath": "",
+    "isInterfaceStructuresName": "",
+    "isEntryPointPath": "",
+    "isEntryPointName": "",
+    "treatFinalFieldsAsMandatory": false
+  },
+  "graphRestriction": {
+    "classPackageExcludeFilter": "",
+    "classPackageIncludeFilter": "",
+    "classNameExcludeFilter": "",
+    "classNameIncludeFilter": "",
+    "methodNameExcludeFilter": "",
+    "methodNameIncludeFilter": "",
+    "removeByInheritance": "", // inheritance/annotation based filtering is done in a second step
+    "removeByAnnotation": "",
+    "removeByClassPackage": "", // cleanup the graph after inheritance/annotation based filtering is done
+    "removeByClassName": "",
+    "cutMappings": false,
+    "cutEnum": true,
+    "cutTests": true,
+    "cutClient": true,
+    "cutDataAccess": false,
+    "cutInterfaceStructures": false,
+    "cutDataStructures": false,
+    "cutGetterAndSetter": true,
+    "cutConstructors": true
+  },
+  "graphTraversal": {
+    "forwardDepth": 6,
+    "backwardDepth": 6,
+    "classPackageExcludeFilter": "",
+    "classPackageIncludeFilter": "",
+    "classNameExcludeFilter": "",
+    "classNameIncludeFilter": "",
+    "methodNameExcludeFilter": "",
+    "methodNameIncludeFilter": "",
+    "hideMappings": false,
+    "hideDataStructures": false,
+    "hidePrivateMethods": true,
+    "hideInterfaceCalls": true, // indirection: implementation -> interface (is hidden) -> implementation
+    "onlyShowApplicationEntryPoints": false, // root node is included
+    "useMethodCallsForStructureDiagram": "ForwardOnly" // ForwardOnly, BothDirections, No
+  },
+  "details": {
+    "aggregation": "GroupByClass", // ByClass, GroupByClass, None
+    "showClassGenericTypes": true,
+    "showMethods": true,
+    "showMethodParameterNames": true,
+    "showMethodParameterTypes": true,
+    "showMethodReturnType": true,
+    "showPackageLevels": 2,
+    "showDetailedClassStructure": true
+  },
+  "rootClass": "Model.CodeBlock",
+  "extensionCallbackMethod": "" // qualified.class.name#methodName - signature: public static String method(String)
+}
+diagram meta data end '/
+
+
+
+digraph g {
+    rankdir="TB"
+    splines=polyline
+    
+
+'nodes 
+subgraph cluster_1649327589 { 
+   	label=Visitors
+	labeljust=l
+	fillcolor="#ececec"
+	style=filled
+   
+   ClassVisitor185034105[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)ClassVisitor</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   codeBlocks: List&lt;CodeBlock&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   codeChange: List&lt;CommitCodeChange&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   commitCodeChange: CommitCodeChange [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   mappings: HashMap&lt;String, CodeBlock&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   pkgBlock: CodeBlock [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   pkgName: String [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" ># canEqual(other: Object): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ classVisitor(fileContent: String, codeBlocks: List&lt;CodeBlock&gt;, codeChange: List&lt;CommitCodeChange&gt;, mappings: HashMap&lt;String, CodeBlock&gt;)</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+MethodAndAttributeVisitor185034105[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)MethodAndAttributeVisitor</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   codeBlocks: List&lt;CodeBlock&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   commitTime: CommitCodeChange [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   commonTypes: List&lt;String&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   mappings: HashMap&lt;String, CodeBlock&gt; [0..*]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ classVisit(members: List&lt;BodyDeclaration&gt;, signature: String, classBlock: CodeBlock)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ methodAAttributeVisitor(fileContent: String, codeBlocks: List&lt;CodeBlock&gt;, codeChange: List&lt;CommitCodeChange&gt;, mappings: HashMap&lt;String, CodeBlock&gt;)</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+PackageVisitor185034105[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)PackageVisitor</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   codeBlocks: List&lt;CodeBlock&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   commitTime: CommitCodeChange [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   handler: Handler [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   mappings: HashMap&lt;String, CodeBlock&gt; [0..*]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ packageVisitor(fileContent: String, codeBlocks: List&lt;CodeBlock&gt;, codeChange: List&lt;CommitCodeChange&gt;, mappings: HashMap&lt;String, CodeBlock&gt;)</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+} 
+
+subgraph cluster_74517257 { 
+   	label=Model
+	labeljust=l
+	fillcolor="#ececec"
+	style=filled
+   
+   AttributeTime74517257[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)AttributeTime</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   declareType: CodeBlock [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" ># canEqual(other: Object): boolean</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+ClassTime74517257[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)ClassTime</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   attributes: Set&lt;CodeBlock&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   classes: Set&lt;CodeBlock&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   methods: Set&lt;CodeBlock&gt; [0..*]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" ># canEqual(other: Object): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ clone(): Object</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+CodeBlock74517257[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)CodeBlock</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   codeBlockID: Integer [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   history: List&lt;CodeBlockTime&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   type: CodeBlockType [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ addHistory(cbt: CodeBlockTime)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ updateMappings(mappings: HashMap&lt;String, CodeBlock&gt;, oldName: String, newName: String)</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+CodeBlockTime74517257[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)CodeBlockTime</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   derivee: Set&lt;CodeBlockTime&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   deriver: Set&lt;CodeBlockTime&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   name: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   owner: CodeBlock [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   parentCodeBlock: CodeBlock [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   post: CodeBlockTime [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   pre: CodeBlockTime [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   refactorType: Operator [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   time: CommitCodeChange [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" ># canEqual(other: Object): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ clone(): Object</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+CommitCodeChange74517257[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)CommitCodeChange</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   codeChange: List&lt;CodeBlockTime&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   commitID: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   postCommit: CommitCodeChange [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   preCommit: CommitCodeChange [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ addCodeChange(cbt: CodeBlockTime)</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+MethodTime74517257[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)MethodTime</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   callees: Set&lt;CodeBlock&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   callers: Set&lt;CodeBlock&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   parameterType: Set&lt;CodeBlock&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   parameters: String [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" ># canEqual(other: Object): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ clone(): Object</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+PackageTime74517257[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)PackageTime</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   classes: Set&lt;CodeBlock&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   packages: Set&lt;CodeBlock&gt; [0..*]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" ># canEqual(other: Object): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ clone(): Object</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+} 
+
+subgraph cluster_79462362 { 
+   	label=Constructor
+	labeljust=l
+	fillcolor="#ececec"
+	style=filled
+   
+   Constructor79462362[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)Constructor</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   codeBlocks: List&lt;CodeBlock&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   codeChange: List&lt;CommitCodeChange&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   mappings: HashMap&lt;String, CodeBlock&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   project: Project [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" ># canEqual(other: Object): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" >+ start()</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+} 
+
+'edges    
+AttributeTime74517257 -> CodeBlock74517257[label="declareType
+[0..1]"];
+ClassTime74517257 -> CodeBlock74517257[label="attributes
+[0..*]"];
+ClassTime74517257 -> CodeBlock74517257[label="classes
+[0..*]"];
+ClassTime74517257 -> CodeBlock74517257[label="methods
+[0..*]"];
+ClassVisitor185034105 -> CodeBlock74517257[label="codeBlocks
+[0..*]"];
+ClassVisitor185034105 -> CodeBlock74517257[label="mappings
+[0..*]"];
+ClassVisitor185034105 -> CodeBlock74517257[label="pkgBlock
+[0..1]"];
+ClassVisitor185034105 -> CommitCodeChange74517257[label="codeChange
+[0..*]"];
+ClassVisitor185034105 -> CommitCodeChange74517257[label="commitCodeChange
+[0..1]"];
+CodeBlock74517257 -> CodeBlockTime74517257[label="history
+[0..*]"];
+CodeBlockTime74517257 -> AttributeTime74517257[arrowhead=none, arrowtail=empty, dir=both];
+CodeBlockTime74517257 -> ClassTime74517257[arrowhead=none, arrowtail=empty, dir=both];
+CodeBlockTime74517257 -> CodeBlock74517257[label="owner
+[0..1]"];
+CodeBlockTime74517257 -> CodeBlock74517257[label="parentCodeBlock
+[0..1]"];
+CodeBlockTime74517257 -> CommitCodeChange74517257[label="time
+[0..1]"];
+CodeBlockTime74517257 -> MethodTime74517257[arrowhead=none, arrowtail=empty, dir=both];
+CodeBlockTime74517257 -> PackageTime74517257[arrowhead=none, arrowtail=empty, dir=both];
+CommitCodeChange74517257 -> CodeBlockTime74517257[label="codeChange
+[0..*]"];
+Constructor79462362 -> CodeBlock74517257[label="codeBlocks
+[0..*]"];
+Constructor79462362 -> CodeBlock74517257[label="mappings
+[0..*]"];
+Constructor79462362 -> CommitCodeChange74517257[label="codeChange
+[0..*]"];
+MethodAndAttributeVisitor185034105 -> CodeBlock74517257[label="codeBlocks
+[0..*]"];
+MethodAndAttributeVisitor185034105 -> CodeBlock74517257[label="mappings
+[0..*]"];
+MethodAndAttributeVisitor185034105 -> CommitCodeChange74517257[label="commitTime
+[0..1]"];
+MethodTime74517257 -> CodeBlock74517257[label="callees
+[0..*]"];
+MethodTime74517257 -> CodeBlock74517257[label="callers
+[0..*]"];
+MethodTime74517257 -> CodeBlock74517257[label="parameterType
+[0..*]"];
+PackageTime74517257 -> CodeBlock74517257[label="classes
+[0..*]"];
+PackageTime74517257 -> CodeBlock74517257[label="packages
+[0..*]"];
+PackageVisitor185034105 -> CodeBlock74517257[label="codeBlocks
+[0..*]"];
+PackageVisitor185034105 -> CodeBlock74517257[label="mappings
+[0..*]"];
+PackageVisitor185034105 -> CommitCodeChange74517257[label="commitTime
+[0..1]"];
+    
+}
+@enduml

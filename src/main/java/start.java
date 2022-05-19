@@ -1,12 +1,14 @@
 import Constructor.Constructor;
 import Model.CodeBlock;
 import Model.CommitCodeChange;
+import Persistence.CodeBlockSaver;
+import Persistence.CommitCodeChangeSaver;
 import Project.Project;
-import Project.RefactoringMiner.Commits;
-import Project.Utils.CommitHashCode;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
+@Slf4j
 public class start {
 
     public static void main(String[] args){
@@ -34,13 +36,29 @@ public class start {
         Project p = new Project(info[2].split(" "));
         Constructor constructor = new Constructor(p);
         constructor.start();// start code analysis
-        List<CodeBlock> codeBlocks = constructor.getCodeBlocks();
-        List<CommitCodeChange> commits = constructor.getCodeChange();
+        List<CodeBlock> codeBlocks = constructor.getCodeBlocks();  // 把项目分为codeblock，包、类、属性，横向
+        List<CommitCodeChange> commits = constructor.getCodeChange();  // commitId对应hash值，代表在当前commit hash中，纵向
+        // codeBlockId、commitId可以唯一确定一个codeblocktime，但也有可能是没有东西的
+        // todo：mappings: hashTable 用于知道一个codeblock曾经的别名，属于哪个类、哪个方法
+        //  {
+        //      key[String]: codeblock的签名
+        //      value[int]: CodeBlockId
+        // }
+        // todo：CodeBlockTime 缺少孩子节点
         //todo save to file/database
 //        save(codeBlocks, commits);
+
+        log.info("Constructor finished.");
+        log.info("Start to save CommitCodeChange");
+        CommitCodeChangeSaver commitCodeChangeSaver = new CommitCodeChangeSaver("/Users/neowoodley/Postgraduate/ScientificResearch/CaseStudy/sqlite/data/traceability.sqlite3");
+        commitCodeChangeSaver.save(commits);
+
+        log.info("Start to save CodeBlock");
+        CodeBlockSaver codeBlockSaver = new CodeBlockSaver("/Users/neowoodley/Postgraduate/ScientificResearch/CaseStudy/sqlite/data/traceability.sqlite3");
+        codeBlockSaver.save(codeBlocks);
+        log.info("CodeBlockSaver finished.");
+
         System.out.println(codeBlocks.size());
         System.out.println(commits.size());
-
-
     }
 }

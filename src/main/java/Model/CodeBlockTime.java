@@ -4,9 +4,7 @@ import Constructor.Enums.Operator;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -16,8 +14,8 @@ public abstract class CodeBlockTime implements Cloneable, Serializable {
     CodeBlockTime pre = null;
     CodeBlockTime post = null;
     Operator refactorType;
-    Set<CodeBlockTime> deriver = new HashSet<>();//父
-    Set<CodeBlockTime> derivee = new HashSet<>();//子
+    Set<CodeBlockTime> deriver = new HashSet<>();  // 父：两个类合并为一个类
+    Set<CodeBlockTime> derivee = new HashSet<>();  // 子
     CodeBlock parentCodeBlock;
     CodeBlock owner;
 
@@ -41,6 +39,4 @@ public abstract class CodeBlockTime implements Cloneable, Serializable {
         }
         return codeBlockTime;
     }
-
-
 }
