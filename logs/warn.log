@@ -1438,3 +1438,7 @@
 2022-05-19 22:04:40,156 WARN  org.eclipse.jgit.lib.Repository.close(Repository.java:950) - close() called when useCnt is already zero for Repository[/Users/neowoodley/Postgraduate/ScientificResearch/CaseStudy/code/hornetq/.git]
 2022-05-19 22:04:40,190 WARN  org.eclipse.jgit.lib.Repository.close(Repository.java:950) - close() called when useCnt is already zero for Repository[/Users/neowoodley/Postgraduate/ScientificResearch/CaseStudy/code/hornetq/.git]
 2022-05-19 22:04:40,270 WARN  org.eclipse.jgit.lib.Repository.close(Repository.java:950) - close() called when useCnt is already zero for Repository[/Users/neowoodley/Postgraduate/ScientificResearch/CaseStudy/code/hornetq/.git]
+2022-05-19 16:48:28,448 WARN  org.eclipse.jgit.lib.Repository.close(Repository.java:950) - close() called when useCnt is already zero for Repository[C:\Users\Feifei\dataset\projects\hornetq\.git]
+2022-05-19 16:48:28,671 WARN  org.eclipse.jgit.lib.Repository.close(Repository.java:950) - close() called when useCnt is already zero for Repository[C:\Users\Feifei\dataset\projects\hornetq\.git]
+2022-05-26 18:27:40,411 WARN  org.eclipse.jgit.lib.Repository.close(Repository.java:950) - close() called when useCnt is already zero for Repository[C:\Users\Feifei\dataset\projects\hornetq\.git]
+2022-05-26 18:27:40,646 WARN  org.eclipse.jgit.lib.Repository.close(Repository.java:950) - close() called when useCnt is already zero for Repository[C:\Users\Feifei\dataset\projects\hornetq\.git]
