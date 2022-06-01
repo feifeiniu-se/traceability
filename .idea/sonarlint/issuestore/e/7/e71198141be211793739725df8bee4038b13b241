@@ -1,0 +1,21 @@
+
+t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(«Û“ìùÿÿÿÿ
+P
+java:S1118":Add a private constructor to hide the implicit public one.(¼Øûì
+P	java:S125"<This block of commented-out lines of code should be removed.(íø€R
+V	java:S125V"<This block of commented-out lines of code should be removed.(©Áàüÿÿÿÿ
+W
+java:S1128"<Remove this unused import 'Constructor.Enums.CodeBlockType'.(ÍÅà±úÿÿÿÿ
+M
+java:S1128"7Remove this unused import 'Constructor.Enums.Operator'.(€ŒÄ×
+8
+java:S1128""Remove this unused import 'Model'.(Ğ†‡Û
+W
+java:S1128"ARemove this unused import 'Project.RefactoringMiner.Refactoring'.(âÄùô
+F
+java:S1128	"0Remove this unused import 'java.util.ArrayList'.(÷‰îƒ
+I
+java:S1128
+".Remove this unused import 'java.util.HashMap'.(™˜”€ùÿÿÿÿ
+F
+java:S1128"+Remove this unused import 'java.util.List'.(Õë±Äøÿÿÿÿ

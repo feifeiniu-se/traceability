@@ -1,0 +1,14 @@
+
+o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(á–Ì“
+A
+java:S1948"&Make "time" transient or serializable.(ÔÎæÖþÿÿÿÿ
+:
+java:S1948"$Make "deriver" private or transient.(Ê­É¦
+?
+java:S1948"$Make "derivee" private or transient.(ü¢–Ðøÿÿÿÿ
+L
+java:S1948"1Make "parentCodeBlock" transient or serializable.(Æÿ£„þÿÿÿÿ
+=
+java:S1948"'Make "owner" transient or serializable.(‡·†ë
+i
+java:S2975"SRemove this "clone" implementation; use a copy constructor or copy factory instead.(Ž²ÈÞ

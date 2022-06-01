@@ -1,0 +1,14 @@
+
+t
+java:S1488F"^Immediately return this expression instead of assigning it to the temporary variable "result".(®àÕÏ
+t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(Ûì—˘˝ˇˇˇˇ
+T
+java:S11174">Rename "connection" which hides the field declared at line 13.(È¿Á»
+Q	java:S125I"<This block of commented-out lines of code should be removed.(ÿ‰Ù§
+Q	java:S125U"<This block of commented-out lines of code should be removed.(ÿ‰Ù§
+T
+java:S1117a">Rename "connection" which hides the field declared at line 13.(È¿Á»
+Q	java:S125e"<This block of commented-out lines of code should be removed.(ÿ‰Ù§
+Q	java:S125w"<This block of commented-out lines of code should be removed.(ÿ‰Ù§
+R	java:S125à"<This block of commented-out lines of code should be removed.(ÿ‰Ù§
+W	java:S125¶"<This block of commented-out lines of code should be removed.(ªûùï˚ˇˇˇˇ

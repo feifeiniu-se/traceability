@@ -1,0 +1,20 @@
+
+{
+java:S1319."eThe type of "mappings" should be an interface such as "Map" rather than the implementation "HashMap".(Éê¯Ç
+o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(á–Ì“
+>
+java:S42747"(Replace this assert with a proper check.(ÄÝÇ°
+V	java:S125/"<This block of commented-out lines of code should be removed.(‚†‡–úÿÿÿÿ
+D
+java:S19404")Use the opposite operator ("!=") instead.(›Êßÿÿÿÿÿ
+D
+java:S1940;")Use the opposite operator ("!=") instead.(›ÿ¢Àÿÿÿÿÿ
+Q	java:S125<"<This block of commented-out lines of code should be removed.(üè¡‡
+?
+java:S1940C")Use the opposite operator ("!=") instead.(½Í«–
+P	java:S125D"<This block of commented-out lines of code should be removed.(×ÝÉ_
+Q	java:S125H"<This block of commented-out lines of code should be removed.(‡Ùà“
+?
+java:S1940O")Use the opposite operator ("!=") instead.(ûëœŠ
+V	java:S125P"<This block of commented-out lines of code should be removed.(€ïÔÑùÿÿÿÿ
+V	java:S125U"<This block of commented-out lines of code should be removed.(ìž©øÿÿÿÿ

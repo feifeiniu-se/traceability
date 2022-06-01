@@ -1,0 +1,18 @@
+
+o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(á–Ì“
+H
+java:S1948
+"-Make "declareType" transient or serializable.(ÔÂ§âüÿÿÿÿ
+A
+java:S1168$"+Return an empty collection instead of null.(¥¹ï
+A
+java:S1168)"+Return an empty collection instead of null.(¥¹ï
+A
+java:S1168."+Return an empty collection instead of null.(¥¹ï
+A
+java:S11683"+Return an empty collection instead of null.(¥¹ï
+A
+java:S11688"+Return an empty collection instead of null.(¥¹ï
+Q	java:S125B"<This block of commented-out lines of code should be removed.(»â¬Õ
+F
+java:S1128"+Remove this unused import 'java.util.List'.(Õë±Äøÿÿÿÿ

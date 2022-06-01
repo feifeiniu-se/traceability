@@ -1,0 +1,12 @@
+
+ƒ
+java:S1319"mThe return type of this method should be an interface such as "Map" rather than the implementation "HashMap".(ê¯Ö‘
+7
+java:S1643."Use a StringBuilder instead.(ÂõÓåÿÿÿÿÿ
+2
+java:S1643/"Use a StringBuilder instead.(ğ˜üŠ
+R
+java:S49734"<Strings and Boxed types should be compared using "equals()".(™µ·ê
+o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(Ã«çÖ
+V	java:S125"<This block of commented-out lines of code should be removed.(«ˆôéøÿÿÿÿ
+V	java:S125+"<This block of commented-out lines of code should be removed.(—òÇšûÿÿÿÿ

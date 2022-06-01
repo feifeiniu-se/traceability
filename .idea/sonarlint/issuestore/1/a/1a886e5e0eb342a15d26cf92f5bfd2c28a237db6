@@ -1,0 +1,25 @@
+
+o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(á–Ì“
+?
+java:S1948")Make "callers" transient or serializable.(º•Ìê
+D
+java:S1948")Make "callees" transient or serializable.(æù­¢üÿÿÿÿ
+D
+java:S1948"/Make "parameterType" transient or serializable.(Æ»•)
+M
+java:S1135"2Complete the task associated to this TODO comment.(ãÈê¨şÿÿÿÿ
+i
+java:S2975-"SRemove this "clone" implementation; use a copy constructor or copy factory instead.(²ÈŞ
+Q	java:S125%"<This block of commented-out lines of code should be removed.(œ«¿È
+V	java:S1253"<This block of commented-out lines of code should be removed.(Âø€‡üÿÿÿÿ
+A
+java:S1168>"+Return an empty collection instead of null.(¥¹ï
+A
+java:S1168C"+Return an empty collection instead of null.(¥¹ï
+A
+java:S1168H"+Return an empty collection instead of null.(¥¹ï
+A
+java:S1168M"+Return an empty collection instead of null.(¥¹ï
+Q	java:S125Z"<This block of commented-out lines of code should be removed.(»â¬Õ
+H
+java:S1135_"2Complete the task associated to this TODO comment.(¤ªæ³

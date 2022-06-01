@@ -68,13 +68,14 @@ public class Constructor {
             }
             if(!fileList.isEmpty()) {
                 for (Map.Entry<String, DiffFile> file : fileList.entrySet()) {
+//                    System.out.println(file.getValue().getPath());
                     String fileContent = file.getValue().getContent();
                     PackageVisitor pkgVisitor = new PackageVisitor();
                     pkgVisitor.packageVisitor(fileContent, codeBlocks, codeChange, mappings);
                 }
             }
-
             updateMappings(mappings, codeBlocks);
+
             //classLevel; firstly refactorings, then javaparser visitor
             if (refact != null && commitTime.getPreCommit() != null) {
                 if (!refact.getRefactorings().isEmpty()) {
@@ -91,38 +92,39 @@ public class Constructor {
                 for (Map.Entry<String, DiffFile> file : fileList.entrySet()) {
                     String fileContent = file.getValue().getContent();
                     ClassVisitor classVisitor = new ClassVisitor();
+//                    System.out.println(file.getValue().getPath());
                     classVisitor.classVisitor(fileContent, codeBlocks, codeChange, mappings);
                 }
             }
             updateMappings(mappings, codeBlocks);
-            //method and attribute level: firstly refactoring, then javaparser visitor
-            if (refact != null && commitTime.getPreCommit() != null) {
-                if (!refact.getRefactorings().isEmpty()) {
-                    //method & attribute
-                    List<Refactoring> methodAndAttributeLevelRefactorings = refact.filter("methodAndAttribute");
-                    if (!methodAndAttributeLevelRefactorings.isEmpty()) {
-                        for(Refactoring r: methodAndAttributeLevelRefactorings){
-                            Operator.valueOf(r.getType().replace(" ", "_")).apply(codeBlocks, mappings, r, commitTime, null);
-                        }
-                    }
-                    //parameters & return type
-                    List<Refactoring> parameterLevelRefactorings = refact.filter("parameter");
-                    if (!parameterLevelRefactorings.isEmpty()) {
-                        for(Refactoring r: parameterLevelRefactorings){
-                            Operator.valueOf(r.getType().replace(" ", "_")).apply(codeBlocks, mappings, r, commitTime, null);
-                        }
-                    }
-
-                }
-            }
-            if(!fileList.isEmpty()){
-                for(Map.Entry<String, DiffFile> file: fileList.entrySet()){
-                    String fileContent = file.getValue().getContent();
-                    MethodAndAttributeVisitor methodAndAttributeVisitor = new MethodAndAttributeVisitor();//including inner class, method, attribute
-                    methodAndAttributeVisitor.methodAAttributeVisitor(fileContent, codeBlocks, codeChange, mappings);
-                }
-            }
-            updateMappings(mappings, codeBlocks);
+//            //method and attribute level: firstly refactoring, then javaparser visitor
+//            if (refact != null && commitTime.getPreCommit() != null) {
+//                if (!refact.getRefactorings().isEmpty()) {
+//                    //method & attribute
+//                    List<Refactoring> methodAndAttributeLevelRefactorings = refact.filter("methodAndAttribute");
+//                    if (!methodAndAttributeLevelRefactorings.isEmpty()) {
+//                        for(Refactoring r: methodAndAttributeLevelRefactorings){
+//                            Operator.valueOf(r.getType().replace(" ", "_")).apply(codeBlocks, mappings, r, commitTime, null);
+//                        }
+//                    }
+//                    //parameters & return type
+//                    List<Refactoring> parameterLevelRefactorings = refact.filter("parameter");
+//                    if (!parameterLevelRefactorings.isEmpty()) {
+//                        for(Refactoring r: parameterLevelRefactorings){
+//                            Operator.valueOf(r.getType().replace(" ", "_")).apply(codeBlocks, mappings, r, commitTime, null);
+//                        }
+//                    }
+//
+//                }
+//            }
+//            if(!fileList.isEmpty()){
+//                for(Map.Entry<String, DiffFile> file: fileList.entrySet()){
+//                    String fileContent = file.getValue().getContent();
+//                    MethodAndAttributeVisitor methodAndAttributeVisitor = new MethodAndAttributeVisitor();//including inner class, method, attribute
+//                    methodAndAttributeVisitor.methodAAttributeVisitor(fileContent, codeBlocks, codeChange, mappings);
+//                }
+//            }
+//            updateMappings(mappings, codeBlocks);
         }
     }
 
@@ -131,108 +133,5 @@ public class Constructor {
             mappings.put(codeBlock.getLastHistory().getSignature(), codeBlock);
         }
     }
-
-//    private void handlingFiles(HashMap<String, DiffFile> fileList1) {
-//        Map<String, DiffFile> fileList = fileList1.entrySet().stream()
-//                .filter(p -> FileType.ADD.equals(p.getValue().getType())|| FileType.MODIFY.equals(p.getValue().getType()))
-//                .collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
-//
-//        if(!fileList.isEmpty()){
-//            //firstly, package level
-//            for(Map.Entry<String, DiffFile> file: fileList.entrySet()){
-//                String fileContent = file.getValue().getContent();
-//                PackageVisitor pkgVisitor = new PackageVisitor();
-//                pkgVisitor.packageVisitor(fileContent, codeBlocks, codeChange, mappings);
-//            }
-//            //secondly, class level
-//            for(Map.Entry<String, DiffFile> file: fileList.entrySet()){
-//                String fileContent = file.getValue().getContent();
-//                ClassVisitor classVisitor = new ClassVisitor();
-//                classVisitor.classVisitor(fileContent, codeBlocks, codeChange, mappings);
-//
-//            }
-//            //thirdly, inner class, method, and attribute level
-//            for(Map.Entry<String, DiffFile> file: fileList.entrySet()){
-//                String fileContent = file.getValue().getContent();
-//                MethodAAttributeVisitor third = new MethodAAttributeVisitor();//包含inner class, method, attribute
-//                third.methodAAttributeVisitor(fileContent, codeBlocks, codeChange, mappings);
-//            }
-////            System.out.println(mappings.size());
-//        }
-//    }
-
-
-//package level
-//    private void handlingPackage(List<Refactoring> firstLevel, CommitCodeChange commitTime) {
-////        "Rename Package",
-////        "Move Package",
-////        "Split Package",
-////        "Merge Package"
-//        for(Refactoring r: firstLevel){
-//            Operator.valueOf(r.getType().replace(" ", "_")).apply(codeBlocks, mappings, r, commitTime, null);
-//        }
-//
-//    }
-
-    //class level
-//    private void handleMinerRefactoringClassLevel(List<Refactoring> secondLevel, CommitCodeChange commitTime){
-////        "Move Class",//
-////        "Rename Class",//
-////        "Move and Rename Class",//
-////        "Merge Class"//
-////        "Extract Superclass",/
-////        "Extract Interface",//
-////        "Extract Class",//
-////        "Extract Subclass",//
-////        "Change Type Declaration Kind",
-////        "Collapse Hierarchy",//
-//
-//        for(Refactoring r: secondLevel){
-//            Operator.valueOf(r.getType().replace(" ", "_")).apply(codeBlocks, mappings, r, commitTime, null);
-//            //Handler handler = new Handler();
-//            //handler.handle(codeBlocks, mappings, r, commitTime, , null);
-//        }
-//    }
-
-
-
-//    //method & attribute level
-//    private void handlingMethodAndAttribute(List<Refactoring> thirdLevel, CommitCodeChange commitTime){
-////        "Extract Method",
-////        "Inline Method",
-////        "Rename Method",//done
-////        "Move Method",
-////        "Pull Up Method",
-////        "Push Down Method",
-////        "Extract and Move Method",
-////        "Move and Rename Method",
-////        "Move and Inline Method",
-////        "Merge Parameter",
-////        "Split Parameter",
-////        "Add Parameter",
-////        "Remove Parameter",
-////        "Reorder Parameter",
-////        "Change Parameter Type",
-////        "Parameterize Attribute",
-////        "Parameterize Variable",
-////        "Change Return Type",
-////        "Rename Attribute",//done
-////        "Move and Rename Attribute",
-////        "Merge Attribute",
-////        "Split Attribute",
-////        "Change Attribute Type",
-////        "Extract Attribute",
-////        "Encapsulate Attribute",
-////        "Replace Attribute with Variable",
-////        "Inline Attribute"
-////        "Pull Up Attribute",
-////        "Push Down Attribute",
-//
-//        for(Refactoring r: thirdLevel){
-//            Handler handler = new Handler();
-//            handler.handle(codeBlocks, mappings, r, commitTime, Operator.valueOf(r.getType().replace(" ", "_")), null);
-//        }
-//    }
-        
 
 }

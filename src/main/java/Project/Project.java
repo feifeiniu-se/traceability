@@ -44,27 +44,28 @@ public class Project {
     private static GitService gitService = new GitServiceImpl();
 
 
-    public Project(String[] info){
+    public Project(String[] info) {
         name = info[0];
         startHash = info[1];
         endHash = info[2];
-        startHash = "16b3873d7a60d586c91f797bae96ee7849a62adc";
-//        endHash = "3ecdabd0f3f25715df44e3d9ad11ea6baf9ce067";//TODO for test f65d3a05dfec17d851aed9f1b262ee64710b99a7
+//        startHash = "66f66a11e996d1dfbba76976fb37808093c59d3f";
+//        endHash = "212c991ccf0126db97e44d46c3b30712254d0df2";//TODO for test f65d3a05dfec17d851aed9f1b262ee64710b99a7
         projectAddress = "C:\\Users\\Feifei\\dataset\\projects\\" + name;
         refactoringMinerAddress = "C:\\Users\\Feifei\\dataset\\projects\\allRefactorings\\" + name + ".json";
         commitList = getList();
         refactorings = readRefactoring();
     }
+
     //return the list of commit hashcode between startHash and endHash
-    public List<CommitHashCode> getList(){
+    public List<CommitHashCode> getList() {
         //done
         List<CommitHashCode> commits = new ArrayList<>();
         commits.add(new CommitHashCode(null, startHash));
         String last = startHash;
-        try (Repository repo = gitService.openRepository(projectAddress); Git git= Git.open(new File(projectAddress))) {
+        try (Repository repo = gitService.openRepository(projectAddress); Git git = Git.open(new File(projectAddress))) {
             Iterable<RevCommit> walk = gitService.createRevsWalkBetweenCommits(repo, startHash, endHash);
             Iterator<RevCommit> iterator = walk.iterator();
-            while(iterator.hasNext()){
+            while (iterator.hasNext()) {
                 RevCommit currentCommit = iterator.next();
                 commits.add(new CommitHashCode(last, currentCommit.getId().getName()));
                 last = currentCommit.getId().getName();
@@ -75,12 +76,13 @@ public class Project {
         }
         return commits;
     }
+
     // return the source code of project after one commit: hashCode
-    public Map<String, String> getSourceCode(String hashCode){
+    public Map<String, String> getSourceCode(String hashCode) {
         //done return all the java file, notice: return list is null
         Map<String, String> res = new HashMap<>();
 
-        try (Repository repository = gitService.openRepository(projectAddress); Git git= Git.open(new File(projectAddress))) {
+        try (Repository repository = gitService.openRepository(projectAddress); Git git = Git.open(new File(projectAddress))) {
             RevWalk walk = new RevWalk(repository);
             RevCommit commit = walk.parseCommit(repository.resolve(hashCode));
             res = fileIter(repository, commit);
@@ -92,6 +94,7 @@ public class Project {
         }
         return null;
     }
+
     public static Map<String, String> fileIter(Repository repository, RevCommit commit) {
 
         Set<String> repositoryDirectories = new LinkedHashSet<>();  // file path
@@ -118,7 +121,9 @@ public class Project {
                     StringWriter writer = new StringWriter();
                     // 将 loader 中打开的用于读取 object 数据的 input stream 中的内容拷贝到 writer 中
                     IOUtils.copy(loader.openStream(), writer);
-                    fileContents.put(pathString, writer.toString());
+                    if (!writer.toString().contains("<<<<<<< .working")) {//过滤掉文件中包含的非merge冲突文件
+                        fileContents.put(pathString, writer.toString());
+                    }
                 }
                 if (pathString.endsWith(".java") && pathString.contains("/")) {
                     // 获取 Java 文件的目录
@@ -139,7 +144,7 @@ public class Project {
     }
 
     //return the refactorings
-    public HashMap<String, Refactorings> readRefactoring(){
+    public HashMap<String, Refactorings> readRefactoring() {
         //done
         String fileContent = readFile(refactoringMinerAddress);
 
@@ -150,10 +155,11 @@ public class Project {
         HashMap<String, Refactorings> res = transferRefactorings(refactors.getCommits());// transfer refactorings into hashmap<sha, refactorings> format
         return res;
     }
+
     private static HashMap<String, Refactorings> transferRefactorings(List<Refactorings> listOfRefactors) {
         HashMap<String, Refactorings> res = new HashMap<>();
-        for(Refactorings r: listOfRefactors){
-            if(r.getRefactorings().size()>0){
+        for (Refactorings r : listOfRefactors) {
+            if (r.getRefactorings().size() > 0) {
                 res.put(r.getSha1(), r);
             }
         }
@@ -161,37 +167,45 @@ public class Project {
     }
 
     //return the list of <oldFile, newFile>, which stands for the parent file and current file
-    public HashMap<String, DiffFile> getDiffList(CommitHashCode commitHash){
+    public HashMap<String, DiffFile> getDiffList(CommitHashCode commitHash) {
         //done
         HashMap<String, DiffFile> res = new HashMap<>();
         String parent = commitHash.getParent();
         String hashCode = commitHash.getHashCode();
-        if(parent==null){
+        if (parent == null) {
             //this is the first commit
             Map<String, String> sourceCode = getSourceCode(hashCode);//all the java code and it's name during this commit
             // set all the files as add
-            if(sourceCode.size()<1){return null;}// no new java file
-            for(Map.Entry<String, String> entry: sourceCode.entrySet()){
+            if (sourceCode.size() < 1) {
+                return null;
+            }// no new java file
+            for (Map.Entry<String, String> entry : sourceCode.entrySet()) {
                 res.put(entry.getKey(), new DiffFile(FileType.ADD, entry.getKey(), entry.getValue()));
             }
-        }else{
+        } else {
             //get the list of diff between two commits
             Map<String, String> oldCode = getSourceCode(parent);
             Map<String, String> newCode = getSourceCode(hashCode);
 
-            try(Git git = Git.open(new File(projectAddress));Repository repository = git.getRepository();){
+            try (Git git = Git.open(new File(projectAddress)); Repository repository = git.getRepository();) {
                 final List<DiffEntry> diffs = git.diff()
                         .setOldTree(prepareTreeParser(repository, parent))
                         .setNewTree(prepareTreeParser(repository, hashCode))
                         .setPathFilter(PathSuffixFilter.create(".java"))
                         .call();
-                if(diffs.size()<1){return null;}
+                if (diffs.size() < 1) {
+                    return null;
+                }
 //                System.out.println("Found: " + diffs.size() + " differences");
                 for (DiffEntry diff : diffs) {
-                    if(diff.getChangeType().name().equals("DELETE")){
+                    //newCode.containsKey()
+                    if (diff.getChangeType().name().equals("DELETE")) {
                         res.put(diff.getOldPath(), new DiffFile(FileType.valueOf(diff.getChangeType().name()), diff.getNewPath(), newCode.get(diff.getNewPath()), diff.getOldPath(), oldCode.get(diff.getOldPath())));
-                    }else {
-                        res.put(diff.getNewPath(), new DiffFile(FileType.valueOf(diff.getChangeType().name()), diff.getNewPath(), newCode.get(diff.getNewPath()), diff.getOldPath(), oldCode.get(diff.getOldPath())));
+                    } else {
+                        if(newCode.get(diff.getNewPath())!=null){
+                            res.put(diff.getNewPath(), new DiffFile(FileType.valueOf(diff.getChangeType().name()), diff.getNewPath(), newCode.get(diff.getNewPath()), diff.getOldPath(), oldCode.get(diff.getOldPath())));
+                        }
+
                     }
 //                    System.out.println("Diff: " + diff.getChangeType() + ": " +
 //                            (diff.getOldPath().equals(diff.getNewPath()) ? diff.getNewPath() : diff.getOldPath() + " -> " + diff.getNewPath()));
@@ -209,6 +223,7 @@ public class Project {
         return res;
 
     }
+
     private static AbstractTreeIterator prepareTreeParser(Repository repository, String objectId) throws IOException {
         // from the commit we can build the tree which allows us to construct the TreeParser
         //noinspection Duplicates

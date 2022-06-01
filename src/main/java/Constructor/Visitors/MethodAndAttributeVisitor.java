@@ -35,6 +35,7 @@ public class MethodAndAttributeVisitor {
             // first give all this java doc member
             String className = type.getNameAsString();
             String signature_class = pkgName + "." + className;//todo 查看signature内容到底是啥，会不会一直增加
+//            System.out.println(signature_class);
             assert mappings.containsKey(signature_class);
             CodeBlock classBlock = mappings.get(signature_class);
             List<BodyDeclaration> members = type.getMembers();
@@ -52,9 +53,9 @@ public class MethodAndAttributeVisitor {
                     String attributeName = member.asFieldDeclaration().getElementType().toString() + "_" + member.asFieldDeclaration().getVariable(i).getNameAsString();
                     String signature_attribute = signature + ":" + attributeName;
                     String returenType = member.asFieldDeclaration().getElementType().toString();
-                    if (!commonTypes.contains(returenType)) {
-//                        System.out.println("Uncommon types: "+returenType);//todo
-                    }
+//                    if (!commonTypes.contains(returenType)) {
+////                        System.out.println("Uncommon types: "+returenType);//todo
+//                    }
                     if (!mappings.containsKey(signature_attribute)) {
                         CodeBlock codeBlock = new CodeBlock(codeBlocks.size() + 1, CodeBlockType.Attribute);
                         mappings.put(signature_attribute, codeBlock);
@@ -105,6 +106,7 @@ public class MethodAndAttributeVisitor {
                     MethodTime methodTime = new MethodTime(methodName, commitTime, Operator.Add_Method, codeBlock, classBlock, parameters);
                 }
             }
+            //todo 记得把classVisitor中其他的类型加进来
 
             // if member state equal ClassOrInterfaceDeclaration, and you can identify it which is inner class
             if (member.isClassOrInterfaceDeclaration()) {

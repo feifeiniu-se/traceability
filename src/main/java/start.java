@@ -16,8 +16,8 @@ public class start {
         String info[] = new String[]{
                 "derby 20d9cee957c322cb5382eab53abe95d4ab37521a 7f3984246d625b811bf2557d75d26835229f747a",
                 "groovy-core 449ebe9d9514ec278682ca73d432257c435a27f5 01309f9d4be34ddf93c4a9943b5a97843bff6181",
-                "hornetq 1a9aa377d578e1ca8bb7aa4cf99ab53d9183801e fdc19ebf7e456571860ec229a504bf73a2b4cb8d",
-                "izpack 55e619ea6e9dcc9c6c0bad01e1bc3430a726381b dc346dbd228d628c242780e936465b49f31a9446",
+                "hornetq 33bc296f4a30336a2d7cf62c34102c959057f73e fdc19ebf7e456571860ec229a504bf73a2b4cb8d ",
+                "izpack 2129654742f1ce3da1f4852bef44831803becaad dc346dbd228d628c242780e936465b49f31a9446",
                 "narayana 41b827234a532a37f4c5c424319acc43e8b4c49f de330d21a54b3d0bcda32e82aeff93e34c1d2271",
                 "railo ce51a97c9054cfeb15bf9200ed638f02f0e2b9ae ca2389a7abbfeeddbcdba6d4e78a194287f60a04",
                 "Resteasy 1bc32b87dcd3a8694eabf518cf1632a8f11fe747 90e70c2b1d938f1ebccd1ef40cec1c0b86d8b9bf",
@@ -33,30 +33,24 @@ public class start {
                 "maven d5a0360d8d418cbc12be605a0676a0e9ba8902db f5f76c70e1828a7e6c6267fc4bc53abc35c19ce7"
         };
 
-        Project p = new Project(info[2].split(" "));
+        int i = 2;
+        Project p = new Project(info[i].split(" "));
         Constructor constructor = new Constructor(p);
         constructor.start();// start code analysis
         List<CodeBlock> codeBlocks = constructor.getCodeBlocks();  // 把项目分为codeblock，包、类、属性，横向
         List<CommitCodeChange> commits = constructor.getCodeChange();  // commitId对应hash值，代表在当前commit hash中，纵向
         // codeBlockId、commitId可以唯一确定一个codeblocktime，但也有可能是没有东西的
-        // todo：mappings: hashTable 用于知道一个codeblock曾经的别名，属于哪个类、哪个方法
-        //  {
-        //      key[String]: codeblock的签名
-        //      value[int]: CodeBlockId
-        // }
-        // todo：CodeBlockTime 缺少孩子节点
-        //todo save to file/database
 //        save(codeBlocks, commits);
 
-        log.info("Constructor finished.");
-        log.info("Start to save CommitCodeChange");
-        CommitCodeChangeSaver commitCodeChangeSaver = new CommitCodeChangeSaver("/Users/neowoodley/Postgraduate/ScientificResearch/CaseStudy/sqlite/data/traceability.sqlite3");
+//        log.info("Constructor finished.");
+//        log.info("Start to save CommitCodeChange");
+        CommitCodeChangeSaver commitCodeChangeSaver = new CommitCodeChangeSaver("C:\\Users\\Feifei\\dataset\\tracescore\\"+ info[1].split(" ")[0] +".sqlite3");
         commitCodeChangeSaver.save(commits);
 
-        log.info("Start to save CodeBlock");
-        CodeBlockSaver codeBlockSaver = new CodeBlockSaver("/Users/neowoodley/Postgraduate/ScientificResearch/CaseStudy/sqlite/data/traceability.sqlite3");
+//        log.info("Start to save CodeBlock");
+        CodeBlockSaver codeBlockSaver = new CodeBlockSaver("C:\\Users\\Feifei\\dataset\\tracescore\\"+ info[1].split(" ")[0] + ".sqlite3");
         codeBlockSaver.save(codeBlocks);
-        log.info("CodeBlockSaver finished.");
+//        log.info("CodeBlockSaver finished.");
 
         System.out.println(codeBlocks.size());
         System.out.println(commits.size());

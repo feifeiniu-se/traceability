@@ -1,73 +1,121 @@
-import Constructor.Enums.CodeBlockType;
-import Constructor.Enums.Operator;
-import Constructor.Utils;
-import Model.ClassTime;
-import Model.CodeBlock;
-import Model.CommitCodeChange;
-import Model.PackageTime;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.lang.ref.WeakReference;
+import java.util.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.github.javaparser.JavaParser;
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.PackageDeclaration;
+import com.github.javaparser.ast.body.*;
+import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
 
 public class test {
-    public static void main(String[] args){
-//        Map<String, CodeBlock> test = new HashMap<>();
-////        System.out.println(test.isEmpty());
-//        CodeBlock a = new CodeBlock(1, CodeBlockType.Class);
-//        CodeBlock b = new CodeBlock(2, CodeBlockType.Method);
-//        test.put("tsst", b);
-//        test.put("haha", a);
-
-//        PackageTime p = new PackageTime("test", "test", new CommitCodeChange("0"), Operator.ADD_Package, new CodeBlock(1, CodeBlockType.Package));
-//        PackageTime p2 = new PackageTime(p.getSignature(), p.getFilePath().get(0), p.getTime(), p.getRefactorType(), p.getOwner());
-//        p2.getFilePath().add("haha");
-//        p.getFilePath().add("7");
-//        List<CodeBlock> classes = new ArrayList<>();
-//        classes.add(new CodeBlock(2, CodeBlockType.Class));
-//        p.setClasses(classes);
-//        p2.setClasses(new ArrayList<>(p.getClasses()));
-//        p2.getClasses().add(new CodeBlock(4, CodeBlockType.Class));
-//        System.out.println(p2.getFilePath());
-//        String x = codeElement2Name("org.jboss.messaging.newcore");
-        String x1 = "Move And Inline Method public read(is DataInputStream) : void moved from class org.jboss.jms.wireformat.CallbackSupport to class org.jboss.jms.message.JBossMessage & inlined to public read(in DataInputStream) : void";
-        String x2 = "protected replicatorID : Serializable";
-        x2 = x2.replace("protected", "haha");
-//        String res1 = parse(x1);
-//        String res2 = parse(cutString(x1, "to class ", " & "));
-//        String[] tmp = x1.substring(0, x1.indexOf(" & ")).split(" ");
-        System.out.println(x2);
-//        Utils.codeElement2Name(x);
+    public static void main(String[] args) throws FileNotFoundException {
+        FileInputStream content = new FileInputStream("C:\\Users\\Feifei\\code\\TraceabilityModel\\src\\main\\java\\test.txt");
 
 
+        JavaParser javaParser = new JavaParser();
+        Optional<CompilationUnit> x = javaParser.parse(content).getResult();
+        CompilationUnit cu = x.get();
+        Visitor visitor = new Visitor();
+        visitor.visit(cu, null);
 
-//        System.out.println(a.toString().get);
-//        test.put("ni", test.get("haha"));
-//        Collection<CodeBlock> values = test.values();
-//        System.out.println(values.size());
-//        System.out.println(test.get("hg"));
-//        System.out.println(test.values().);
+
+//        String pkgName = cu.getPackageDeclaration().get().getNameAsString();
+
+
+        for (TypeDeclaration type : cu.getTypes()) {
+            // first give all this java doc member
+            String className = type.getNameAsString();
+            System.out.println(className + " type");
+
+            List<BodyDeclaration> members = type.getMembers();
+            // check all member content： class, method, attribute
+            classVisit(members, className);
+        }
+
+        System.out.println("OK2");
     }
-    public static String parse(String x){
+
+    public static class Visitor extends VoidVisitorAdapter<Void> {
+        @Override
+        public void visit(PackageDeclaration md, Void arg){
+            super.visit(md, arg);
+            String name = md.getNameAsString();
+            System.out.println(name + " package");
+        }
+
+        @Override
+        //class or interface
+        public void visit(ClassOrInterfaceDeclaration md, Void arg) {
+            super.visit(md, arg);
+            if(md.isNestedType()){
+                String name = md.getNameAsString();
+                System.out.println(name + " nested name");
+                return;
+            }
+
+            String name = md.getNameAsString();
+            System.out.println(name + " visit");
+//            System.out.println("OK");
+        }
+        public void visit(EnumDeclaration md, Void arg){
+            super.visit(md, arg);
+            String name = md.getNameAsString();
+            if(md.isNestedType()){
+                System.out.println("nested Enum");
+            }
+        }
+
+
+
+    }
+
+    public static void classVisit(List<BodyDeclaration> members, String signature) {
+        for (BodyDeclaration member : members) {
+            // if member state equal ClassOrInterfaceDeclaration, and you can identify it which is inner class
+            if (member.isClassOrInterfaceDeclaration()) {
+//                System.out.println("Inner class: "+member.asClassOrInterfaceDeclaration().getMethods().toString());
+                String innerClassName = member.asClassOrInterfaceDeclaration().getNameAsString();
+                String signature_inner_class = signature + "." + innerClassName;
+                System.out.println(signature_inner_class + " inner");
+
+                NodeList<BodyDeclaration<?>> innerMember = member.asClassOrInterfaceDeclaration().getMembers();
+                List<BodyDeclaration> innerMembers = new ArrayList<>();
+                for (int i = 0; i < innerMember.size(); i++) {
+                    innerMembers.add(innerMember.get(i));
+                }
+                classVisit(innerMembers, signature_inner_class);
+            }
+            if(member.isEnumDeclaration()){
+                String innerClassName = member.asEnumDeclaration().getNameAsString();
+                System.out.println(signature+ "." + innerClassName + " enum");
+            }
+        }
+    }
+
+    public static void checkWeakReferences(WeakReference<?>... references){
+
+    }
+    public static String parse(String x) {
         String[] tmp = x.split(" : ");
-        assert  tmp.length==2;
-        String tmp2 = tmp[0].substring(tmp[0].indexOf(" ")+1);
+        assert tmp.length == 2;
+        String tmp2 = tmp[0].substring(tmp[0].indexOf(" ") + 1);
 
         System.out.println(x.lastIndexOf(":"));
-        return tmp[1]+"_"+tmp2;
+        return tmp[1] + "_" + tmp2;
     }
-    public static String cutString(String str, String start, String end){
+
+    public static String cutString(String str, String start, String end) {
         Integer s = str.indexOf(start);
         Integer e = str.indexOf(end);
-        return str.substring(s+1, e);
+        return str.substring(s + 1, e);
     }
 
     public static String codeElement2Name(String codeElement) {
-        String x = codeElement.substring(codeElement.lastIndexOf(".")-1);
+        String x = codeElement.substring(codeElement.lastIndexOf(".") - 1);
         return codeElement.replace(x, x.replace(".", ":"));
     }
 }
