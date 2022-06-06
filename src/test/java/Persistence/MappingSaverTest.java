@@ -16,6 +16,6 @@ public class MappingSaverTest {
         mapping.put("3", "test3");
         mapping.put("4", "test4");
         mapping.put("5", "test5");
-        mappingSaver.save(mapping);
+//        mappingSaver.save(mapping);
     }
 }

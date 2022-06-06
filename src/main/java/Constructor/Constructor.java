@@ -32,8 +32,8 @@ public class Constructor {
     public void start(){
         List<CommitHashCode> commitList = project.getCommitList();
         for(CommitHashCode hashCode: commitList){
-            System.out.println(codeBlocks.size());
-            System.out.println(mappings.size());
+//            System.out.println(codeBlocks.size());
+//            System.out.println(mappings.size());
             System.out.println("Commit: "+hashCode.getHashCode());
             //add a new commitTime for each commit, for the code change during this commit
             CommitCodeChange commitTime = new CommitCodeChange(hashCode.getHashCode());

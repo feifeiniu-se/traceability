@@ -13,6 +13,7 @@ import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 
 public class PackageVisitor {
@@ -27,7 +28,11 @@ public class PackageVisitor {
         this.commitTime = codeChange.get(codeChange.size()-1); //获得当前commit的内容
         JavaParser javaParser=new JavaParser();
 //        System.out.println(fileContent);
-        CompilationUnit cu = javaParser.parse(fileContent).getResult().get();
+        Optional<CompilationUnit> tmp = javaParser.parse(fileContent).getResult();
+        if(!tmp.isPresent()){
+            return;
+        }
+        CompilationUnit cu = tmp.get();
         if(cu.getPackageDeclaration().isPresent()){
             Visitor visitor = new Visitor();
             visitor.visit(cu, null);// 遍历完文件的AST树，初步获得信息
@@ -37,7 +42,6 @@ public class PackageVisitor {
             if(!mappings.containsKey(pkgName)){
                 Operator.Add_Package.apply(codeBlocks, mappings, null, commitTime, pkgName);
             }
-
         }
 
     }
@@ -46,6 +50,7 @@ public class PackageVisitor {
         public void visit(PackageDeclaration md, Void arg){
             super.visit(md, arg);
             String name = md.getNameAsString();
+//            System.out.println(name);
             if(!mappings.containsKey(name)){
                 //if mappings don't contain package, then create
                 Operator.Add_Package.apply(codeBlocks, mappings, null, commitTime, name);

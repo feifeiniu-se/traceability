@@ -1,14 +1,0 @@
-
-o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(·ñÃì
-?
-java:S1948")Make "classes" transient or serializable.(≤ë€Õ
-@
-java:S1948"*Make "packages" transient or serializable.(«ÇÈ—
-i
-java:S2975"SRemove this "clone" implementation; use a copy constructor or copy factory instead.(é≤»ﬁ
-A
-java:S11681"+Return an empty collection instead of null.(•πÔç
-A
-java:S11686"+Return an empty collection instead of null.(•πÔç
-A
-java:S1168;"+Return an empty collection instead of null.(•πÔç

@@ -24,6 +24,39 @@ public class Utils {
         }
         return null;
     }
+    public static String defaultPackage(String classSignature){
+        if(!classSignature.contains(".")){
+            classSignature = "default.package." + classSignature;
+        }
+        return classSignature;
+    }
+
+    public static boolean isNestedClass(String filePath, String classSignature){
+        filePath = filePath.replace("/", ".");
+        filePath = filePath.substring(0, filePath.length()-5);
+        return !filePath.contains(classSignature);
+    }
+
+    public static String sig2Name(String sig){
+        return sig.substring(sig.lastIndexOf(".")+1);
+    }
+    public static String sig2Father(String sig){
+        return sig.substring(0, sig.lastIndexOf("."));
+    }
+    public static void add_fatherClass(String filePath, String sig, HashMap<String, CodeBlock> mappings){
+//        String father
+//
+//        Operator.Add_Class.apply(codeBlocks, mappings, null, commitTime, fatherSig);
+
+    }
+    public static String sig2Package(String filePath, String sig){
+        filePath = filePath.substring(0, filePath.lastIndexOf("/"));
+        filePath = filePath.replace("/", ".");
+        while (!filePath.contains(sig)){
+            sig = sig.substring(0, sig.lastIndexOf("."));
+        }
+        return sig;
+    }
 //    private static void moveClass(List<CodeBlock> codeBlocks, HashMap<String, CodeBlock> mappings, Operator type, CommitCodeChange commitTime, String oldName, String newName){
 //        //update class.father, class.son, classTime
 //        assert mappings.containsKey(oldName);

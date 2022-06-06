@@ -13,6 +13,7 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 @Data
 public class ClassVisitor {
@@ -31,7 +32,11 @@ public class ClassVisitor {
         this.commitCodeChange = codeChange.get(codeChange.size() - 1); //获得当前commit的内容
 //        System.out.println(fileContent);
         JavaParser javaParser = new JavaParser();
-        CompilationUnit cu = javaParser.parse(fileContent).getResult().get();//done
+        Optional<CompilationUnit> tmp = javaParser.parse(fileContent).getResult();
+        if(!tmp.isPresent()){
+            return;
+        }
+        CompilationUnit cu = tmp.get();
 
 //        System.out.println(fileContent);
         if(cu.getPackageDeclaration().isPresent()){
@@ -60,8 +65,7 @@ public class ClassVisitor {
         }
     }
 
-
-    private class Visitor extends VoidVisitorAdapter<Void> {
+    public class Visitor extends VoidVisitorAdapter<Void> {
 
         @Override
         //class or interface
@@ -123,6 +127,7 @@ public class ClassVisitor {
 //                System.out.println("Inner class: "+member.asClassOrInterfaceDeclaration().getMethods().toString());
                 String nestedClassName = member.asClassOrInterfaceDeclaration().getNameAsString();
                 String signature_inner_class = signature + "." + nestedClassName;
+//                System.out.println(signature_inner_class);
                 CodeBlock innerClassBlock;
                 if (!mappings.containsKey(signature_inner_class)) {
                     innerClassBlock = new CodeBlock(codeBlocks.size() + 1, CodeBlockType.Class);
@@ -140,7 +145,7 @@ public class ClassVisitor {
                 }
                 nestedClassVisit(innerMembers, signature_inner_class, innerClassBlock);
             }
-            if(member.isEnumDeclaration()){
+            else if(member.isEnumDeclaration()){
                 String nestedClassName = member.asEnumDeclaration().getNameAsString();
                 String signature_enum = signature + "." + nestedClassName;
 //                System.out.println(signature_enum + " enum");
@@ -161,9 +166,26 @@ public class ClassVisitor {
                 }
                 nestedClassVisit(innerMembers, signature_enum, enumClassBlock);
             }
-            if(member.isAnnotationDeclaration()){
-                assert 1==2;
+            else if(member.isAnnotationDeclaration()){
+                String nestedClassName = member.asAnnotationDeclaration().getNameAsString();
+                String signature_annotation = signature + "." + nestedClassName;
+                CodeBlock annotationClassBlock;
+                if(!mappings.containsKey(signature_annotation)){
+                    annotationClassBlock = new CodeBlock(codeBlocks.size()+1, CodeBlockType.Class);
+                    ClassTime classTime = new ClassTime(nestedClassName, commitCodeChange, Operator.Add_Class, annotationClassBlock, classBlock);
+                    mappings.put(signature_annotation, annotationClassBlock);
+                    codeBlocks.add(annotationClassBlock);
+                } else {
+                    annotationClassBlock = mappings.get(signature_annotation);
+                }
+                NodeList<BodyDeclaration<?>> innerMember = member.asAnnotationDeclaration().getMembers();
+                List<BodyDeclaration> innerMembers = new ArrayList<>();
+                for (int i = 0; i < innerMember.size(); i++) {
+                    innerMembers.add(innerMember.get(i));
+                }
+                nestedClassVisit(innerMembers, signature_annotation, annotationClassBlock);
             }
+
         }
     }
 

@@ -24,6 +24,9 @@ public class CodeBlockSaver {
             logger.error(e.toString());
         }
     }
+    public void close(){
+        helper.destroyed();
+    }
 
     public void save(List<CodeBlock> codeBlocks) {
         // 1. 保存 CodeBlock
@@ -41,12 +44,11 @@ public class CodeBlockSaver {
             saveCodeBlockTimeChild(history);
             saveCodeBlockTime_link(history);
         }
-        helper.destroyed();
     }
 
     private void saveCodeBlock(List<CodeBlock> codeBlocks) {
         try {
-            PreparedStatement preparedStatement = helper.getPreparedStatement("insert into CodeBlock (id,type) values(?,?);");
+            PreparedStatement preparedStatement = helper.getPreparedStatement("insert or replace into CodeBlock (id,type) values(?,?);");
             for (CodeBlock codeBlock : codeBlocks) {
                 preparedStatement.setInt(1, codeBlock.getCodeBlockID());
                 preparedStatement.setString(2, codeBlock.getType().toString());

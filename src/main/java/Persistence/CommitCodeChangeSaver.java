@@ -21,9 +21,13 @@ public class CommitCodeChangeSaver {
         }
     }
 
+    public void close(){
+        helper.destroyed();
+    }
+
     public void save(List<CommitCodeChange> commitCodeChanges) {
         try {
-            PreparedStatement preparedStatement = helper.getPreparedStatement("insert into CommitCodeChange values(?,?,?);");
+            PreparedStatement preparedStatement = helper.getPreparedStatement("insert or replace into CommitCodeChange values(?,?,?);");
             // 为了减少数据库连接的I/O开销，一般会把多条数据插入放在一条SQL语句中一次执行。
             // 开始事务后，进行大量操作的语句都保存在内存中，当提交时才全部写入数据库，此时，数据库文件也就只用打开一次。
             for (CommitCodeChange commitCodeChange : commitCodeChanges) {
@@ -43,6 +47,7 @@ public class CommitCodeChangeSaver {
                 preparedStatement.addBatch();
             }
             helper.executePreparedStatement(preparedStatement);
+            helper.destroyed();  // 手动关闭连接
         } catch (SQLException | ClassNotFoundException e) {
             logger.error(e.toString());
         }
