@@ -191,8 +191,8 @@ public enum Operator {
             for (int i = 0; i < left.size(); i++) {
                 String oldSig = left.get(i).getCodeElement();
                 String newSig = right.get(i).getCodeElement();
-                String oldPkgName = oldSig.substring(0, oldSig.lastIndexOf("."));
-                String newPkgName = newSig.substring(0, newSig.lastIndexOf("."));
+                String oldPkgName = sig2Father(oldSig);
+                String newFatherName = sig2Father(newSig);
                 assert mappings.containsKey(oldSig);
                 assert mappings.containsKey(oldPkgName);
                 //remove from old package
@@ -204,22 +204,28 @@ public enum Operator {
                 pkgBlockOld.addHistory(pkgTimeOld);
 
                 //add to new package
+                if (!mappings.containsKey(newFatherName)) {
+                    if (isNestedClass(right.get(i).getFilePath(), newSig)) {//如果是内部类 就需要逐级新建包 类
+                        if (!mappings.containsKey(sig2Package(right.get(i).getFilePath(), newSig))) {
+                            Operator.Add_Package.apply(codeBlocks, mappings, null, commitTime, sig2Package(right.get(i).getFilePath(), newSig));//增加包节点
+                        }
+                        Operator.Add_Class.apply(codeBlocks, mappings, null, commitTime, newFatherName);
 
-                CodeBlock pkgBlockNew;
-                PackageTime pkgTimeNew;
-                if (mappings.containsKey(newPkgName)) {
-                    pkgBlockNew = mappings.get(newPkgName);
-                    pkgTimeNew = (PackageTime) pkgBlockNew.getLastHistory().clone();
-                    pkgTimeNew.setTime(commitTime);
-                    pkgTimeNew.setRefactorType(Operator.Move_Package);
-                    commitTime.addCodeChange(pkgTimeNew);
-                    pkgBlockNew.addHistory(pkgTimeNew);
-                } else {
-                    pkgBlockNew = new CodeBlock(codeBlocks.size() + 1, CodeBlockType.Package);
-                    pkgTimeNew = new PackageTime(newPkgName, commitTime, Operator.Move_Package, pkgBlockNew);
-                    mappings.put(newPkgName, pkgBlockNew);
-                    codeBlocks.add(pkgBlockNew);
+                    } else {
+                        Operator.Add_Package.apply(codeBlocks, mappings, null, commitTime, newFatherName);
+                    }
+
                 }
+
+                CodeBlock fatherBlockNew;
+                CodeBlockTime fatherTimeNew;
+
+                fatherBlockNew = mappings.get(newFatherName);
+                fatherTimeNew = (CodeBlockTime) fatherBlockNew.getLastHistory().clone();
+                fatherTimeNew.setTime(commitTime);
+                fatherTimeNew.setRefactorType(Operator.Move_Package);
+                commitTime.addCodeChange(fatherTimeNew);
+                fatherBlockNew.addHistory(fatherTimeNew);
 
                 CodeBlock classBlock = mappings.get(oldSig);
                 classBlock.updateMappings(mappings, oldSig, newSig);
@@ -227,8 +233,8 @@ public enum Operator {
                 //update classTime
                 classTime.setTime(commitTime);
                 classTime.setRefactorType(Operator.Move_Package);
-                classTime.setParentCodeBlock(pkgBlockNew);
-                pkgTimeNew.getClasses().add(classBlock);
+                classTime.setParentCodeBlock(fatherBlockNew);
+                fatherTimeNew.getClasses().add(classBlock);
                 pkgTimeOld.getClasses().remove(classBlock);
                 commitTime.addCodeChange(classTime);
                 classBlock.addHistory(classTime);
@@ -318,13 +324,13 @@ public enum Operator {
                 classBlock.updateMappings(mappings, oldClassSig, newClassSig);
                 assert mappings.containsKey(sig2Father(oldClassSig));
                 if (!mappings.containsKey(sig2Father(newClassSig))) {
-                    if(isNestedClass(right.get(i).getFilePath(), newClassSig)){//如果是内部类 就需要逐级新建包 类
-                        if(!mappings.containsKey(sig2Package(right.get(i).getFilePath(), newClassSig))){
+                    if (isNestedClass(right.get(i).getFilePath(), newClassSig)) {//如果是内部类 就需要逐级新建包 类
+                        if (!mappings.containsKey(sig2Package(right.get(i).getFilePath(), newClassSig))) {
                             Operator.Add_Package.apply(codeBlocks, mappings, null, commitTime, sig2Package(right.get(i).getFilePath(), newClassSig));//增加包节点
                         }
                         Operator.Add_Class.apply(codeBlocks, mappings, null, commitTime, sig2Father(newClassSig));
 
-                    }else{
+                    } else {
                         Operator.Add_Package.apply(codeBlocks, mappings, null, commitTime, sig2Father(newClassSig));
                     }
 
@@ -615,6 +621,12 @@ public enum Operator {
             assert left.size() == 1;
             String newSig = right.get(1).getCodeElement();
             String originSigOld = left.get(0).getCodeElement();
+            if(!newSig.contains(".")){
+                newSig = "default.package." + newSig;
+            }
+            if(!originSigOld.contains(".")){
+                originSigOld = "default.package." + originSigOld;
+            }
             String originSigNew = right.get(0).getCodeElement();
             String newFatherName = newSig.substring(0, newSig.lastIndexOf("."));
             String newClassName = newSig.substring(newSig.lastIndexOf(".") + 1);
@@ -942,9 +954,9 @@ public enum Operator {
             String newName = right.get(0).getCodeElement();
             oldName = defaultPackage(oldName);
             newName = defaultPackage(newName);
-            if(oldName.contains("MemoryCacheModelProviderFactory")){
-                oldName = oldName.replace("MemoryCacheModelProviderFactory", "SimpleCacheModelProviderFactory");
-            }
+//            if (oldName.contains("MemoryCacheModelProviderFactory")) {
+//                oldName = oldName.replace("MemoryCacheModelProviderFactory", "SimpleCacheModelProviderFactory");
+//            } //todo
             assert mappings.containsKey(oldName);
             CodeBlock classBlock = mappings.get(oldName);
             //updating mappings
@@ -1238,10 +1250,6 @@ public enum Operator {
             HashMap<String, String> oldMethodNew = r.getRightSideLocations().get(r.getLeftSideLocations().size()).parseMethodDeclaration();
             System.out.println(r.getDescription());
             System.out.println(oldClassName + ":" + oldMethod.get("MN"));
-            if ((oldClassName + ":" + oldMethod.get("MN")).equals("org.hornetq.core.persistence.impl.journal.JournalStorageManager:void_loadBindingJournal(List<QueueBindingInfo>)")) {
-                CodeBlock x = mappings.get(oldClassName);
-                System.out.println("OK");
-            }
             assert mappings.containsKey(oldClassName + ":" + oldMethod.get("MN"));
             assert mappings.containsKey(newClassName);
             CodeBlock oldMethodBlock = mappings.get(oldClassName + ":" + oldMethod.get("MN"));
