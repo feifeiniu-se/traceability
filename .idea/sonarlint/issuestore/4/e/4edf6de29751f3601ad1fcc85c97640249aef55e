@@ -1,12 +1,0 @@
-
-1
-java:S1700"Rename field "refactorings"(“å–å
-o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(Ã«çÖ
-M
-java:S1135*"2Complete the task associated to this TODO comment.(Ğ˜¼ßùÿÿÿÿ
-G
-java:S1135>"2Complete the task associated to this TODO comment.(óœ¿^
-h
-java:S3776¢"RRefactor this method to reduce its Cognitive Complexity from 25 to the 15 allowed.(”Üù
-B
-java:S1168À"+Return an empty collection instead of null.(¥¹ï

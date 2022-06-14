@@ -45,7 +45,7 @@ public class start {
                 "maven d5a0360d8d418cbc12be605a0676a0e9ba8902db f5f76c70e1828a7e6c6267fc4bc53abc35c19ce7"
         };
 
-        int i = 12;
+        int i = 1;
         System.out.println(info[i]);
         Project p = new Project(info[i].split(" "));
         String database = "C:\\Users\\Feifei\\dataset\\tracescore\\seam2.sqlite3";
@@ -57,21 +57,21 @@ public class start {
         // codeBlockId、commitId可以唯一确定一个codeblocktime，但也有可能是没有东西的
 //        save(codeBlocks, commits);
 
-//        log.info("Constructor finished.");
-//        log.info("Start to save CommitCodeChange");
-        CommitCodeChangeSaver commitCodeChangeSaver = new CommitCodeChangeSaver(database);
-        commitCodeChangeSaver.save(commits);
-        commitCodeChangeSaver.close();
-
-        MappingSaver mappingSaver = new MappingSaver(database);
-        mappingSaver.save(mappings);
-        mappingSaver.close();
-
-//        log.info("Start to save CodeBlock");
-        CodeBlockSaver codeBlockSaver = new CodeBlockSaver(database);
-        codeBlockSaver.save(codeBlocks);
-        codeBlockSaver.close();
-//        log.info("CodeBlockSaver finished.");
+////        log.info("Constructor finished.");
+////        log.info("Start to save CommitCodeChange");
+//        CommitCodeChangeSaver commitCodeChangeSaver = new CommitCodeChangeSaver(database);
+//        commitCodeChangeSaver.save(commits);
+//        commitCodeChangeSaver.close();
+//
+//        MappingSaver mappingSaver = new MappingSaver(database);
+//        mappingSaver.save(mappings);
+//        mappingSaver.close();
+//
+////        log.info("Start to save CodeBlock");
+//        CodeBlockSaver codeBlockSaver = new CodeBlockSaver(database);
+//        codeBlockSaver.save(codeBlocks);
+//        codeBlockSaver.close();
+////        log.info("CodeBlockSaver finished.");
 
         int x = 0;
         for(CodeBlock cb: codeBlocks){

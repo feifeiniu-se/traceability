@@ -48,7 +48,7 @@ public class CodeBlock {
 //        System.out.println("newName:"+this.getType()+":" + newName);
 //        assert mappings.containsKey(oldName);
         mappings.put(newName, this);
-        System.out.println(newName);
+//        System.out.println(newName);
 
         if (!(this.getLastHistory().getPackages() ==null)) {
             for (CodeBlock pkg : this.getLastHistory().getPackages()) {

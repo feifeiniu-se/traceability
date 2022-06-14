@@ -1,8 +1,6 @@
 
 c
 3src/main/java/Project/RefactoringMiner/Commits.java,f\8\f80c193c7d1d33bb97e2478b437a8e348adbd688
-g
-7src/main/java/Project/RefactoringMiner/Refactoring.java,f\4\f45525a5e7770cfb707002059ea6c93193de438b
 \
 ,src/main/java/Project/Utils/FileContent.java,f\0\f0397615d3d6d4c8953168e4cdff0a6bc55d2137
 V
@@ -17,20 +15,12 @@ V
 &src/main/java/Model/AttributeTime.java,b\e\be242d97c136da085b783bc67d8f7749816880a6
 S
 #src/main/java/Model/MethodTime.java,1\a\1a886e5e0eb342a15d26cf92f5bfd2c28a237db6
-h
-8src/main/java/Project/RefactoringMiner/SideLocation.java,8\f\8fa1d66e48d945ecf9f903df78bff77e169a3d21
-h
-8src/main/java/Project/RefactoringMiner/Refactorings.java,4\e\4edf6de29751f3601ad1fcc85c97640249aef55e
-\
-,src/main/java/Model/CodeBlock_structure.puml,8\4\84222f6a7d01530408f7e0f77072fe09af412c06
 [
 +src/main/java/Util/sqlite/SqliteHelper.java,1\a\1a0000dc53c45378a8cbfe20dfd392e3792dc87b
 X
 (src/main/java/Util/sqlite/RowMapper.java,4\f\4f88ee1eed17957a1bbb2422a569d84dccaad8fd
 a
 1src/main/java/Util/sqlite/ResultSetExtractor.java,8\2\825a93d7bcae658003a965327ae5feca34f5ee5a
-7
-pom.xml,4\4\442292b8a7efeabbe4cc176709b833b1792140ec
 V
 &src/main/java/Model/CodeBlockTime.java,b\7\b71ba852f3140be9417a5460c66813efa3db7a83
 N
@@ -45,5 +35,3 @@ a
 1src/test/java/Persistence/CodeBlockSaverTest.java,e\3\e3efe84c711b8faa44a3fa1e94c37daa2f18ced9
 V
 &src/test/java/Project/ProjectTest.java,9\4\94478f6e3c91b4c33e3406f8227a0277ec4fffde
-q
-Asrc/main/java/Constructor/Visitors/MethodAndAttributeVisitor.java,8\d\8d9b827c0bab8ef5646ec6dfae329112c2054258

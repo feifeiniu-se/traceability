@@ -24,6 +24,13 @@ public class Utils {
         }
         return null;
     }
+    public static String toRoot(String str){
+        if (!str.contains("...") && !str.contains("Map.Entry")){
+            str = str.substring(str.lastIndexOf(".")+1);
+        }
+        str = str.contains(", ")?str.replace(", ", ","):str;
+        return str;
+    }
     public static String defaultPackage(String classSignature){
         if(!classSignature.contains(".")){
             classSignature = "default.package." + classSignature;

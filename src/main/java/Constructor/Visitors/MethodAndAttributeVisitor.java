@@ -11,10 +11,9 @@ import com.github.javaparser.ast.body.TypeDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+
+import static Constructor.Utils.toRoot;
 
 public class MethodAndAttributeVisitor {
     public List<String> commonTypes = new ArrayList<>(Arrays.asList("boolean", "char", "byte", "short", "int", "long", "float", "double", "String"));
@@ -26,10 +25,19 @@ public class MethodAndAttributeVisitor {
         this.codeBlocks = codeBlocks;
         this.mappings = mappings;
         this.commitTime = codeChange.get(codeChange.size() - 1);
-
+//        System.out.println(fileContent);
         JavaParser javaParser = new JavaParser();
-        CompilationUnit cu = javaParser.parse(fileContent).getResult().get();
-        String pkgName = cu.getPackageDeclaration().get().getNameAsString();
+        Optional<CompilationUnit> tmp = javaParser.parse(fileContent).getResult();
+        if(!tmp.isPresent()){
+            return;
+        }
+        CompilationUnit cu = tmp.get();
+        String pkgName;
+        if (cu.getPackageDeclaration().isPresent()) {
+            pkgName = cu.getPackageDeclaration().get().getNameAsString();
+        } else {
+            pkgName = "default.package";
+        }
 
         for (TypeDeclaration type : cu.getTypes()) {
             // first give all this java doc member
@@ -51,11 +59,15 @@ public class MethodAndAttributeVisitor {
                 assert (member.asFieldDeclaration().getVariables().size() > 0);//todo 有时可能是不止已有一个属性，需要进一步的处理
                 for (int i = 0; i < member.asFieldDeclaration().getVariables().size(); i++) {
                     String attributeName = member.asFieldDeclaration().getElementType().toString() + "_" + member.asFieldDeclaration().getVariable(i).getNameAsString();
+                    if (attributeName.contains(".")) {
+                        attributeName = attributeName.substring(attributeName.lastIndexOf(".") + 1);
+                    }
                     String signature_attribute = signature + ":" + attributeName;
                     String returenType = member.asFieldDeclaration().getElementType().toString();
 //                    if (!commonTypes.contains(returenType)) {
 ////                        System.out.println("Uncommon types: "+returenType);//todo
 //                    }
+
                     if (!mappings.containsKey(signature_attribute)) {
                         CodeBlock codeBlock = new CodeBlock(codeBlocks.size() + 1, CodeBlockType.Attribute);
                         mappings.put(signature_attribute, codeBlock);
@@ -66,33 +78,57 @@ public class MethodAndAttributeVisitor {
             }
             if (member.isMethodDeclaration() || member.isConstructorDeclaration()) {//method
                 String methodName = null;
-                String parameters = null;
+                String parameters = "";
                 if (member.isMethodDeclaration()) {
-//
-                    String returnType = member.asMethodDeclaration().getType().toString().contains(".")?member.asMethodDeclaration().getType().asClassOrInterfaceType().getNameAsString():member.asMethodDeclaration().getType().toString();
-
-                    methodName = returnType + "_" + member.asMethodDeclaration().getSignature();
-                    parameters = member.asMethodDeclaration().getParameters().toString();
-                    //if the type of parameter is classorInterfaceType from another project(like ReplicatorInput(org.jgroups.Channel, Serializable)), modify it.
-                    if (methodName.contains(".")) {
-                        for (int i = 0; i < member.asMethodDeclaration().getParameters().size(); i++) {
-                            if (member.asMethodDeclaration().getParameters().get(i).getType().isClassOrInterfaceType()) {
-                                methodName = methodName.replace(member.asMethodDeclaration().getParameters().get(i).getType().toString(), member.asMethodDeclaration().getParameters().get(i).getType().asClassOrInterfaceType().getNameAsString());
-                            }
-                        }
+                    //之前写的 现在重新写了
+////                    String returnType = member.asMethodDeclaration().getType().toString().contains(".")?member.asMethodDeclaration().getType().asClassOrInterfaceType().getNameAsString():member.asMethodDeclaration().getType().toString();
+//                    String returnType = member.asMethodDeclaration().getTypeAsString();
+//                    returnType = returnType.substring(returnType.lastIndexOf(".") + 1);
+//                    methodName = returnType + "_" + member.asMethodDeclaration().getSignature();
+//                    parameters = member.asMethodDeclaration().getParameters().toString();
+//                    //if the type of parameter is classorInterfaceType from another project(like ReplicatorInput(org.jgroups.Channel, Serializable)), modify it.
+//                    if (methodName.contains(".")) {
+//                        for (int i = 0; i < member.asMethodDeclaration().getParameters().size(); i++) {
+////                            if (member.asMethodDeclaration().getParameters().get(i).getType().isClassOrInterfaceType()) {
+////                                methodName = methodName.replace(member.asMethodDeclaration().getParameters().get(i).getType().toString(), member.asMethodDeclaration().getParameters().get(i).getType().asClassOrInterfaceType().getNameAsString());
+////                            }
+//                            String param = member.asMethodDeclaration().getParameters().get(i).getType().toString();
+//                            if(param.contains(".")){
+//                                methodName = methodName.replace(param, param.substring(param.lastIndexOf(".")+1));
+//                            }
+//                        }
+//                    }
+                    //新版本
+                    methodName = toRoot(member.asMethodDeclaration().getTypeAsString()) + "_" + toRoot(member.asMethodDeclaration().getNameAsString());
+                    for(int i=0; i<member.asMethodDeclaration().getParameters().size(); i++){
+                        parameters = parameters + ", " + toRoot(member.asMethodDeclaration().getParameter(i).getType().toString());;
                     }
+                    parameters = parameters.length()>0?parameters.substring(2):parameters;
+                    methodName = methodName + "(" + parameters + ")";
+
 
                 } else if (member.isConstructorDeclaration()) {
-                    methodName = member.asConstructorDeclaration().getSignature().toString();
-                    parameters = member.asConstructorDeclaration().getParameters().toString();
-                    //if the type of parameter is classorInterfaceType from another project(like ReplicatorInput(org.jgroups.Channel, Serializable)), modify it.
-                    if (methodName.contains(".")) {
-                        for (int i = 0; i < member.asConstructorDeclaration().getParameters().size(); i++) {
-                            if (member.asConstructorDeclaration().getParameters().get(i).getType().isClassOrInterfaceType()) {
-                                methodName = methodName.replace(member.asConstructorDeclaration().getParameters().get(i).getType().toString(), member.asConstructorDeclaration().getParameters().get(i).getType().asClassOrInterfaceType().getNameAsString());
-                            }
-                        }
+//                    methodName = member.asConstructorDeclaration().getSignature().toString();
+//                    parameters = member.asConstructorDeclaration().getParameters().toString();
+//                    //if the type of parameter is classorInterfaceType from another project(like ReplicatorInput(org.jgroups.Channel, Serializable)), modify it.
+//                    if (methodName.contains(".")) {
+//                        for (int i = 0; i < member.asConstructorDeclaration().getParameters().size(); i++) {
+////                            if (member.asConstructorDeclaration().getParameters().get(i).getType().isClassOrInterfaceType()) {
+////                                methodName = methodName.replace(member.asConstructorDeclaration().getParameters().get(i).getType().toString(), member.asConstructorDeclaration().getParameters().get(i).getType().asClassOrInterfaceType().getNameAsString());
+////                            }
+//                            String param = member.asConstructorDeclaration().getParameters().get(i).getType().toString();
+//                            if(param.contains(".")){
+//                                String paramN = param.substring(param.lastIndexOf(".")+1);
+//                                methodName = methodName.replace(param, paramN);
+//                            }
+//                        }
+//                    }
+                    methodName = toRoot(member.asConstructorDeclaration().getNameAsString());
+                    for(int i=0; i<member.asConstructorDeclaration().getParameters().size(); i++){
+                        parameters = parameters + ", " + toRoot(member.asConstructorDeclaration().getParameter(i).getType().toString());
                     }
+                    parameters = parameters.length()>0?parameters.substring(2):parameters;
+                    methodName = methodName + "(" + parameters + ")";
 
                 } else {
                     System.out.println("Something wrong happend");
@@ -103,6 +139,9 @@ public class MethodAndAttributeVisitor {
                     CodeBlock codeBlock = new CodeBlock(codeBlocks.size() + 1, CodeBlockType.Method);
                     mappings.put(signature_method, codeBlock);
                     codeBlocks.add(codeBlock);
+//                    if (signature_method.contains("org.apache.derby.iapi.security.SecurityUtil")) {
+//                        System.out.println(signature_method);
+//                    }
                     MethodTime methodTime = new MethodTime(methodName, commitTime, Operator.Add_Method, codeBlock, classBlock, parameters);
                 }
             }
@@ -118,6 +157,9 @@ public class MethodAndAttributeVisitor {
                     innerClassBlock = new CodeBlock(codeBlocks.size() + 1, CodeBlockType.Class);
                     ClassTime classTime = new ClassTime(innerClassName, commitTime, Operator.Add_Class, innerClassBlock, classBlock);
                     mappings.put(signature_inner_class, innerClassBlock);
+//                    if (signature_inner_class.contains("org.apache.derby.iapi.security.SecurityUtil")) {
+//                        System.out.println(signature_inner_class);
+//                    }
                     codeBlocks.add(innerClassBlock);
                 } else {
                     innerClassBlock = mappings.get(signature_inner_class);
@@ -128,6 +170,10 @@ public class MethodAndAttributeVisitor {
                     innerMembers.add(innerMember.get(i));
                 }
                 classVisit(innerMembers, signature_inner_class, innerClassBlock);
+            } else if (member.isAnnotationDeclaration()) {
+                assert 1 == 2;
+            } else if (member.isEnumDeclaration()) {
+                assert 1 == 2;
             }
         }
     }

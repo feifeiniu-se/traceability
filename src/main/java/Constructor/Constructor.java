@@ -98,33 +98,33 @@ public class Constructor {
             }
             updateMappings(mappings, codeBlocks);
 //            //method and attribute level: firstly refactoring, then javaparser visitor
-//            if (refact != null && commitTime.getPreCommit() != null) {
-//                if (!refact.getRefactorings().isEmpty()) {
-//                    //method & attribute
-//                    List<Refactoring> methodAndAttributeLevelRefactorings = refact.filter("methodAndAttribute");
-//                    if (!methodAndAttributeLevelRefactorings.isEmpty()) {
-//                        for(Refactoring r: methodAndAttributeLevelRefactorings){
-//                            Operator.valueOf(r.getType().replace(" ", "_")).apply(codeBlocks, mappings, r, commitTime, null);
-//                        }
-//                    }
-//                    //parameters & return type
-//                    List<Refactoring> parameterLevelRefactorings = refact.filter("parameter");
-//                    if (!parameterLevelRefactorings.isEmpty()) {
-//                        for(Refactoring r: parameterLevelRefactorings){
-//                            Operator.valueOf(r.getType().replace(" ", "_")).apply(codeBlocks, mappings, r, commitTime, null);
-//                        }
-//                    }
-//
-//                }
-//            }
-//            if(!fileList.isEmpty()){
-//                for(Map.Entry<String, DiffFile> file: fileList.entrySet()){
-//                    String fileContent = file.getValue().getContent();
-//                    MethodAndAttributeVisitor methodAndAttributeVisitor = new MethodAndAttributeVisitor();//including inner class, method, attribute
-//                    methodAndAttributeVisitor.methodAAttributeVisitor(fileContent, codeBlocks, codeChange, mappings);
-//                }
-//            }
-//            updateMappings(mappings, codeBlocks);
+            if (refact != null && commitTime.getPreCommit() != null) {
+                if (!refact.getRefactorings().isEmpty()) {
+                    //method & attribute
+                    List<Refactoring> methodAndAttributeLevelRefactorings = refact.filter("methodAndAttribute");
+                    if (!methodAndAttributeLevelRefactorings.isEmpty()) {
+                        for(Refactoring r: methodAndAttributeLevelRefactorings){
+                            Operator.valueOf(r.getType().replace(" ", "_")).apply(codeBlocks, mappings, r, commitTime, null);
+                        }
+                    }
+                    //parameters & return type
+                    List<Refactoring> parameterLevelRefactorings = refact.filter("parameter");
+                    if (!parameterLevelRefactorings.isEmpty()) {
+                        for(Refactoring r: parameterLevelRefactorings){
+                            Operator.valueOf(r.getType().replace(" ", "_")).apply(codeBlocks, mappings, r, commitTime, null);
+                        }
+                    }
+
+                }
+            }
+            if(!fileList.isEmpty()){
+                for(Map.Entry<String, DiffFile> file: fileList.entrySet()){
+                    String fileContent = file.getValue().getContent();
+                    MethodAndAttributeVisitor methodAndAttributeVisitor = new MethodAndAttributeVisitor();//including inner class, method, attribute
+                    methodAndAttributeVisitor.methodAAttributeVisitor(fileContent, codeBlocks, codeChange, mappings);
+                }
+            }
+            updateMappings(mappings, codeBlocks);
         }
     }
 

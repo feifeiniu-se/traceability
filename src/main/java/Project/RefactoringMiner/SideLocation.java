@@ -21,6 +21,7 @@ public class SideLocation {
     private List<String> codeLines;  // [startLine, endLine] 对应的源代码
 
     public HashMap<String, String> parseMethodDeclaration(){
+//        System.out.println(codeElement);
         HashMap<String, String> res = new HashMap<>();
         String returnType;
 //        System.out.println(filePath);
@@ -31,7 +32,7 @@ public class SideLocation {
         }
         res.put("RT", returnType);
 
-        String[] parameterList = cutString(codeElement, "(", ")").replace(", ", ",").split(",");
+        String[] parameterList = cutString(codeElement, "(", ")").split(", ");
         String name = codeElement.substring(codeElement.substring(0, codeElement.indexOf("(")).lastIndexOf(" ")+1, codeElement.indexOf("("));
         String parameterTypes = "(";
         String parameters = "[";

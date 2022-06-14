@@ -103,7 +103,7 @@ public class Refactorings {//这是一个commit的内容
      */
     public void filter() {
         refactorings = refactorings.stream()
-                .filter(refactoring -> filterTypes.contains(refactoring.getType()))
+                .filter(refactoring -> filterTypes.contains(refactoring.getType()) && !refactoring.getDescription().contains("new "))
                 .collect(Collectors.toList());
     }
 
