@@ -2016,6 +2016,7 @@ public enum Operator {
             String newName = right.get(0).parseAttributeOrParameter();
             String returnType = newName.substring(0, newName.indexOf("_"));//todo 返回值类型
             System.out.println(r.getDescription());
+            System.out.println(className + ":" + oldName);
 //            mappings.get(className).getHistory().forEach(e->System.out.println("Class: "+e.getRefactorType()+":::"+e.getSignature()));
 //            mappings.get(className).getLastHistory().getAttributes().forEach(e->e.getHistory().forEach(x-> System.out.println("attribute: "+x.getRefactorType()+":::"+x.getSignature())));
             assert mappings.containsKey(className + ":" + oldName);

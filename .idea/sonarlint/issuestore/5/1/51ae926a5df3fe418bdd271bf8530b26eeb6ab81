@@ -1,0 +1,15 @@
+
+o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(–ÜİÅ
+P
+java:S1118":Add a private constructor to hide the implicit public one.(¥æ—“
+E
+java:S2093"*Change this "try" to a try-with-resources.(¡»¢üùÿÿÿÿ
+S
+java:S1128"=Remove this unused import 'Project.RefactoringMiner.Commits'.(¶Ğ
+G
+java:S1128"1Remove this unused import 'com.google.gson.Gson'.(–§
+F
+java:S1128
+"0Remove this unused import 'java.util.ArrayList'.(÷‰îƒ
+F
+java:S1128"+Remove this unused import 'java.util.List'.(Õë±Äøÿÿÿÿ

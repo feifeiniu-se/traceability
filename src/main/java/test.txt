@@ -1,167 +1,285 @@
 /*
 
-   Derby - Class org.apache.derby.iapi.security.SecurityUtil
+Derby - Class org.apache.derby.vti.XmlVTI
 
-   Licensed to the Apache Software Foundation (ASF) under one or more
-   contributor license agreements.  See the NOTICE file distributed with
-   this work for additional information regarding copyright ownership.
-   The ASF licenses this file to You under the Apache License, Version 2.0
-   (the "License"); you may not use this file except in compliance with
-   the License.  You may obtain a copy of the License at
+Licensed to the Apache Software Foundation (ASF) under one or more
+contributor license agreements.  See the NOTICE file distributed with
+this work for additional information regarding copyright ownership.
+The ASF licenses this file to You under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with
+the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
- */
+*/
 
-package org.apache.derby.iapi.security;
+package org.apache.derby.vti;
 
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Properties;
-import java.io.IOException;
-
-import java.security.PrivilegedAction;
-import java.security.AccessController;
-import java.security.AccessControlException;
-import java.security.AccessControlContext;
-import java.security.Permission;
-import javax.security.auth.Subject;
-
-import org.apache.derby.authentication.SystemPrincipal;
-import org.apache.derby.iapi.util.IdUtil;
-import org.apache.derby.iapi.error.StandardException;
-
+import java.io.*;
+import java.lang.reflect.*;
+import java.net.URL;
+import java.sql.*;
+import java.text.DateFormat;
+import java.text.ParseException;
+import javax.xml.parsers.*;
+import org.w3c.dom.*;
 
 /**
- * This class provides helper functions for security-related features.
+ * <p>
+ * This is a VTI designed to read XML files which are structured like row sets.
+ * This VTI takes the following arguments:
+ * </p>
+ *
+ * <ul>
+ * <li>xmlResourceName - An URL identifying an xml resource.</li>
+ * <li>rowTag - The tag of the element which contains the row-structured content.</li>
+ * <li>childTags - The attributes and descendant elements inside the row element which should be treated as columns.</li>
+ * </ul>
+ *
+ * <p>
+ * Here is a sample declaration:
+ * </p>
+ *
+ * <pre>
+ * create function findbugs( xmlResourceName varchar( 32672 ), rowTag varchar( 32672 ), childTags varchar( 32672 )... )
+ * returns table
+ * (
+ *      className   varchar( 32672 ),
+ *      bugCount    int
+ * )
+ * language java parameter style derby_jdbc_result_set no sql
+ * external name 'org.apache.derby.vti.XmlVTI.xmlVTI';
+ * </pre>
+ *
+ * <p>
+ * ...and here is a sample invocation:
+ * </p>
+ *
+ * <pre>
+ * create view findbugs as
+ * select *
+ * from table
+ * (
+ *      findbugs
+ *      (
+ *          'file:///Users/me/static-analysis/findbugs.xml',
+ *          'ClassStats',
+ *          'class', 'bugs'
+ *      )
+ *  ) v;
+ *
+ * select * from findbugs where bugCount != 0;
+ * </pre>
  */
-public class SecurityUtil {
+public  class   XmlVTI  extends StringColumnVTI
+{
+    ///////////////////////////////////////////////////////////////////////////////////
+    //
+    // CONSTANTS
+    //
+    ///////////////////////////////////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    //
+    // STATE
+    //
+    ///////////////////////////////////////////////////////////////////////////////////
+
+    private String      _rowTag;
+    private String      _xmlResourceName;
+
+    private int             _rowIdx = -1;
+    private int             _rowCount = -1;
+    private String[]    _currentRow;
+
+    private DocumentBuilder _builder;
+    private NodeList    _rawRows;
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    //
+    // CONSTRUCTORS
+    //
+    ///////////////////////////////////////////////////////////////////////////////////
 
     /**
-     * Creates a (read-only) Subject representing a given user
-     * as a System user within Derby.
-     *
-     * @param user the user name
-     * @return a Subject representing the user by its exact and normalized name
-     *
-     * @see <a href="http://wiki.apache.org/db-derby/UserIdentifiers">User Names & Authorization Identifiers in Derby</a>
+     * <p>
+     * Build a XmlVTI given the name of an xml resource, the  tag of the row
+     * element, and an array of attribute-names/element-tags underneath the row element
+     * </p>
      */
-    static public Subject createSystemPrincipalSubject(String user) {
-        final Set<SystemPrincipal> principals = new HashSet<SystemPrincipal>();
-        // add the authenticated user
-        if (user != null) {
-            // The Java security runtime checks whether a Subject falls
-            // under a Principal policy by looking for a literal match
-            // of the Principal name as exactly found in a policy file
-            // clause with any of the Subject's listed Principal names.
-            //
-            // To support Authorization Identifier as Principal names
-            // we add two Principals here: one with the given name and
-            // another one with the normalized name.  This way, a
-            // permission will be granted if the authenticated user name
-            // matches a Principal clause in the policy file with either
-            // the exact same name or the normalized name.
-            //
-            // An alternative approach of normalizing all names within
-            // SystemPrincipal has issues; see comments there.
-            principals.add(new SystemPrincipal(user));
-            principals.add(new SystemPrincipal(getAuthorizationId(user)));
-        }
-        final boolean readOnly = true;
-        final Set credentials = new HashSet();
-        return new Subject(readOnly, principals, credentials, credentials);
+    public  XmlVTI( String xmlResourceName, String rowTag, String... childTags )
+    {
+        super( childTags );
+
+        _xmlResourceName = xmlResourceName;
+        _rowTag = rowTag;
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////
+    //
+    // ENTRY POINT (SQL FUNCTION)
+    //
+    ///////////////////////////////////////////////////////////////////////////////////
+
+    /** This is the static method bound to the function */
+    public  static  XmlVTI  xmlVTI( String xmlResourceName, String rowTag, String... childTags )
+    {
+        return new XmlVTI( xmlResourceName, rowTag, childTags );
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    //
+    // StringColumnVTI BEHAVIOR TO BE IMPLEMENTED BY SUBCLASSES
+    //
+    ///////////////////////////////////////////////////////////////////////////////////
+
     /**
-     * Returns the Authorization Identifier for a principal name.
-     *
-     * @param name the name of the principal
-     * @return the authorization identifier for this principal
+     * <p>
+     * Get the string value of the column in the current row identified by the 1-based columnNumber.
+     * </p>
      */
-    static private String getAuthorizationId(String name) {
-        // RuntimeException messages not localized
-        if (name == null) {
-            throw new NullPointerException("name can't be null");
-        }
-        if (name.length() == 0) {
-            throw new IllegalArgumentException("name can't be empty");
-        }
+    protected  String  getRawColumn( int columnNumber ) throws SQLException
+    {
         try {
-            return IdUtil.getUserAuthorizationId(name);
-        } catch (StandardException se) {
-            throw new IllegalArgumentException(se.getMessage());
-		}
+            return  _currentRow[ columnNumber - 1 ];
+        } catch (Throwable t) { throw new SQLException( t.getMessage() ); }
     }
 
-    /**
-     * Checks that a Subject has a Permission under the SecurityManager.
-     * To perform this check the following policy grant is required
-     * <ul>
-     * <li> to run the encapsulated test:
-     *      permission javax.security.auth.AuthPermission "doAsPrivileged";
-     * </ul>
-     * or an AccessControlException will be raised detailing the cause.
-     * <p>
-     *
-     * @param subject the subject representing the SystemPrincipal(s)
-     * @param perm the permission to be checked
-     * @throws AccessControlException if permissions are missing
-     */
-    static public void checkSubjectHasPermission(final Subject subject,
-                                                 final Permission perm) {
-        // the checks
-        final PrivilegedAction<Void> runCheck
-            = new PrivilegedAction<Void>() {
-                    public Void run() {
-                        AccessController.checkPermission(perm);
-                        return null;
-                    }
-                };
-        final PrivilegedAction<Void> runCheckAsPrivilegedUser
-            = new PrivilegedAction<Void>() {
-                    public Void run() {
-                        // run check only using the the subject
-                        // (by using null as the AccessControlContext)
-                        final AccessControlContext acc = null;
-                        Subject.doAsPrivileged(subject, runCheck, acc);
-                        return null;
-                    }
-                };
+    ///////////////////////////////////////////////////////////////////////////////////
+    //
+    // ResultSet BEHAVIOR
+    //
+    ///////////////////////////////////////////////////////////////////////////////////
 
-        // run check as privileged action for narrow codebase permissions
-        AccessController.doPrivileged(runCheckAsPrivilegedUser);
+    public  void close() throws SQLException
+    {
+        _builder = null;
+        _rawRows = null;
     }
 
-    /**
-     * Checks that a User has a Permission under the SecurityManager.
-     * To perform this check the following policy grant is required
-     * <ul>
-     * <li> to run the encapsulated test:
-     *      permission javax.security.auth.AuthPermission "doAsPrivileged";
-     * </ul>
-     * or an AccessControlException will be raised detailing the cause.
-     * <p>
-     *
-     * @param user the user to be check for having the permission
-     * @param perm the permission to be checked
-     * @throws AccessControlException if permissions are missing
-     */
-    static public void checkUserHasPermission(String user,
-                                              Permission perm) {
-        // approve action if not running under a security manager
-        if (System.getSecurityManager() == null) {
-            return;
+    public  ResultSetMetaData   getMetaData() throws SQLException
+    {
+        throw new SQLException( "Not implemented." );
+    }
+
+    public  boolean next() throws SQLException
+    {
+        try {
+            if ( _rowIdx < 0 ) { readRows(); }
+
+            if ( ++_rowIdx < _rowCount )
+            {
+                parseRow( _rowIdx );
+                return true;
+            }
+            else { return false; }
+        } catch (Throwable t)
+        {
+            t.printStackTrace( System.out );
+            throw new SQLException( t.getMessage() );
         }
-
-        // check the subject for having the permission
-        final Subject subject = createSystemPrincipalSubject(user);
-        checkSubjectHasPermission(subject, perm);
     }
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    //
+    // MINIONS
+    //
+    ///////////////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////
+    //
+    // XML MINIONS
+    //
+    //////////////////////////
+
+    /**
+     * <p>
+     * Fault in the list of rows.
+     * </p>
+     */
+     private    void    readRows() throws Exception
+    {
+        DocumentBuilderFactory  factory = DocumentBuilderFactory.newInstance();
+
+        _builder = factory.newDocumentBuilder();
+
+        URL                 url = new URL( _xmlResourceName );
+        InputStream     is = url.openStream();
+        Document        doc = _builder.parse( is );
+        Element             root = doc.getDocumentElement();
+
+        _rawRows = root.getElementsByTagName( _rowTag );
+        _rowCount = _rawRows.getLength();
+
+        is.close();
+    }
+
+    /**
+     * <p>
+     * Parse a row into columns.
+     * </p>
+     */
+     private    void    parseRow( int rowNumber ) throws Exception
+    {
+        Element         rawRow = (Element) _rawRows.item( rowNumber );
+        int                 columnCount = getColumnCount();
+
+        _currentRow = new String[ columnCount ];
+
+        for ( int i = 0; i < columnCount; i++ )
+        {
+            // first look for an attribute by the column name
+            String      columnName = getColumnName( i + 1 );
+            String      contents = rawRow.getAttribute( columnName );
+
+            // if there is not attribute by that name, then look for descendent elements by
+            // that name. concatenate them all.
+            if ( (contents == null) ||  "".equals( contents ) )
+            {
+                NodeList    children = rawRow.getElementsByTagName( columnName );
+
+                if ( (children != null) && (children.getLength() > 0) )
+                {
+                    int                 childCount = children.getLength();
+                    StringBuffer    buffer = new StringBuffer();
+
+                    for ( int j = 0; j < childCount; j++ )
+                    {
+                        Element     child = (Element) children.item( j );
+                        // separate values with spaces.
+                        if (j != 0)
+                            buffer.append(" ");
+                        buffer.append( squeezeText( child ) );
+                    }
+                    contents = buffer.toString();
+                }
+            }
+
+            _currentRow[ i ] = contents;
+        }
+    }
+
+    /**
+     * <p>
+     * Squeeze the text out of an Element.
+     * </p>
+     */
+    private String squeezeText( Element node )
+        throws Exception
+    {
+        String      text = null;
+        Node        textChild = node.getFirstChild();
+
+        if ( textChild != null ) { text = textChild.getNodeValue(); }
+
+        return text;
+    }
+
+
 }

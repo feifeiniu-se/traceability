@@ -1,0 +1,20 @@
+
+J
+java:S1066<"/Merge this if statement with the enclosing one.(¼æ’Èùÿÿÿÿ
+J
+java:S1066Q"/Merge this if statement with the enclosing one.(¼æ’Èùÿÿÿÿ
+Q
+java:S1066f"/Merge this if statement with the enclosing one.(¼æ’Èùÿÿÿÿ8áú¾ÿ“0
+t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(«Û“ìùÿÿÿÿ
+g
+java:S3776 "RRefactor this method to reduce its Cognitive Complexity from 76 to the 15 allowed.(ú¡­,
+N	java:S106%"9Replace this use of System.out or System.err by a logger.(ñ­«ú
+W	java:S125#"<This block of commented-out lines of code should be removed.(ƒ˜°E8¹ìõÊ“0
+T
+java:S1155(">Use isEmpty() to check whether the collection is empty or not.(¤áúÔ
+U
+java:S16125":Replace this lambda with method reference 'Entry::getKey'.(ùİ·—úÿÿÿÿ
+W
+java:S16125"<Replace this lambda with method reference 'Entry::getValue'.(ùİ·—úÿÿÿÿ
+V	java:S125G"<This block of commented-out lines of code should be removed.(±µ§şÿÿÿÿÿ
+]	java:S125_"<This block of commented-out lines of code should be removed.(±µ§şÿÿÿÿÿ8²«ÙÕ’0

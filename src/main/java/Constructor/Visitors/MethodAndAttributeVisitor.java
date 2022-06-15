@@ -58,7 +58,7 @@ public class MethodAndAttributeVisitor {
             if (member.isFieldDeclaration()) {
                 assert (member.asFieldDeclaration().getVariables().size() > 0);//todo 有时可能是不止已有一个属性，需要进一步的处理
                 for (int i = 0; i < member.asFieldDeclaration().getVariables().size(); i++) {
-                    String attributeName = member.asFieldDeclaration().getElementType().toString() + "_" + member.asFieldDeclaration().getVariable(i).getNameAsString();
+                    String attributeName = toRoot(member.asFieldDeclaration().getElementType().toString()) + "_" + member.asFieldDeclaration().getVariable(i).getNameAsString();
                     if (attributeName.contains(".")) {
                         attributeName = attributeName.substring(attributeName.lastIndexOf(".") + 1);
                     }
@@ -71,6 +71,9 @@ public class MethodAndAttributeVisitor {
                     if (!mappings.containsKey(signature_attribute)) {
                         CodeBlock codeBlock = new CodeBlock(codeBlocks.size() + 1, CodeBlockType.Attribute);
                         mappings.put(signature_attribute, codeBlock);
+//                        if(signature_attribute.contains("GenericMode")){
+//                            System.out.println(signature_attribute);
+//                        }
                         codeBlocks.add(codeBlock);
                         AttributeTime attriTime = new AttributeTime(attributeName, commitTime, Operator.Add_Attribute, codeBlock, classBlock);
                     }
@@ -101,7 +104,11 @@ public class MethodAndAttributeVisitor {
                     //新版本
                     methodName = toRoot(member.asMethodDeclaration().getTypeAsString()) + "_" + toRoot(member.asMethodDeclaration().getNameAsString());
                     for(int i=0; i<member.asMethodDeclaration().getParameters().size(); i++){
-                        parameters = parameters + ", " + toRoot(member.asMethodDeclaration().getParameter(i).getType().toString());;
+                        parameters = parameters + ", " + toRoot(member.asMethodDeclaration().getParameter(i).getType().toString());
+                        if(signature.contains("org.apache.derby.vti.XmlVTI")){
+
+                            System.out.println(member.asMethodDeclaration().getParameter(i).getType().toString());
+                        }
                     }
                     parameters = parameters.length()>0?parameters.substring(2):parameters;
                     methodName = methodName + "(" + parameters + ")";
@@ -125,7 +132,11 @@ public class MethodAndAttributeVisitor {
 //                    }
                     methodName = toRoot(member.asConstructorDeclaration().getNameAsString());
                     for(int i=0; i<member.asConstructorDeclaration().getParameters().size(); i++){
-                        parameters = parameters + ", " + toRoot(member.asConstructorDeclaration().getParameter(i).getType().toString());
+                        if(signature.contains("org.apache.derbyPreBuild.PropertySetter")){
+
+                            System.out.println(member.asConstructorDeclaration().getParameter(i).getType().toString());
+                        }
+                        parameters = parameters + ", " + toRoot(member.asConstructorDeclaration().getParameter(i).getTypeAsString());
                     }
                     parameters = parameters.length()>0?parameters.substring(2):parameters;
                     methodName = methodName + "(" + parameters + ")";
@@ -139,9 +150,9 @@ public class MethodAndAttributeVisitor {
                     CodeBlock codeBlock = new CodeBlock(codeBlocks.size() + 1, CodeBlockType.Method);
                     mappings.put(signature_method, codeBlock);
                     codeBlocks.add(codeBlock);
-//                    if (signature_method.contains("org.apache.derby.iapi.security.SecurityUtil")) {
-//                        System.out.println(signature_method);
-//                    }
+                    if (signature_method.contains("org.apache.derbyPreBuild.PropertySetter")) {
+                        System.out.println(signature_method);
+                    }
                     MethodTime methodTime = new MethodTime(methodName, commitTime, Operator.Add_Method, codeBlock, classBlock, parameters);
                 }
             }
@@ -173,7 +184,7 @@ public class MethodAndAttributeVisitor {
             } else if (member.isAnnotationDeclaration()) {
                 assert 1 == 2;
             } else if (member.isEnumDeclaration()) {
-                assert 1 == 2;
+//                assert 1 == 2;
             }
         }
     }

@@ -1,0 +1,12 @@
+
+€
+java:S1319"eThe type of "mappings" should be an interface such as "Map" rather than the implementation "HashMap".(©à™´üÿÿÿÿ
+t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(Ñãðæùÿÿÿÿ
+Q	java:S125"<This block of commented-out lines of code should be removed.(ÃÐñŒ
+X	java:S1255"<This block of commented-out lines of code should be removed.(ì£ ½8Å¦ “0
+W
+java:S1128"<Remove this unused import 'Constructor.Enums.CodeBlockType'.(ÍÅà±úÿÿÿÿ
+E
+java:S1128"0Remove this unused import 'Constructor.Handler'.(ñÖi
+I
+java:S1128".Remove this unused import 'Model.PackageTime'.(˜¦›Ëþÿÿÿÿ

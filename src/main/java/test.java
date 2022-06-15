@@ -25,37 +25,38 @@ public class test {
     static boolean flag = false;
     static String pkgName;
     public static void main(String[] args) throws FileNotFoundException {
-        test1(1);
+//        test1(1);
+
 
         FileInputStream content = new FileInputStream("C:\\Users\\Feifei\\code\\TraceabilityModel\\src\\main\\java\\test.txt");
 //
-//        JavaParser javaParser = new JavaParser();
-//        Optional<CompilationUnit> tmp = javaParser.parse(content).getResult();
-//        if(!tmp.isPresent()){
-//            return;
-//        }
-//        CompilationUnit cu = tmp.get();
-//        if(cu.getPackageDeclaration().isPresent()){
-//            pkgName = cu.getPackageDeclaration().get().getNameAsString();
-//        }else{
-//            pkgName = "default.package";
-//        }
-//        System.out.println(pkgName);
-//        Visitor visitor = new Visitor();
-//        visitor.visit(cu, null);// 遍历完文件的AST树，初步获得信息
-//
-//        //前边是获得了第一层类的信息，接下来要遍历一下内部类
-//        if(flag){
-//            for (TypeDeclaration type : cu.getTypes()) {
-//                // first give all this java doc member
-//                String className = type.getNameAsString();
-//                String signature_class = pkgName + "." + className;
-////                System.out.println(signature_class);
-//                List<BodyDeclaration> members = type.getMembers();
-//                // check all member content： class, method, attribute
-//                nestedClassVisit(members, signature_class, null);
-//            }
-//        }
+        JavaParser javaParser = new JavaParser();
+        Optional<CompilationUnit> tmp = javaParser.parse(content).getResult();
+        if(!tmp.isPresent()){
+            return;
+        }
+        CompilationUnit cu = tmp.get();
+        if(cu.getPackageDeclaration().isPresent()){
+            pkgName = cu.getPackageDeclaration().get().getNameAsString();
+        }else{
+            pkgName = "default.package";
+        }
+        System.out.println(pkgName);
+        Visitor visitor = new Visitor();
+        visitor.visit(cu, null);// 遍历完文件的AST树，初步获得信息
+
+        //前边是获得了第一层类的信息，接下来要遍历一下内部类
+        if(flag){
+            for (TypeDeclaration type : cu.getTypes()) {
+                // first give all this java doc member
+                String className = type.getNameAsString();
+                String signature_class = pkgName + "." + className;
+//                System.out.println(signature_class);
+                List<BodyDeclaration> members = type.getMembers();
+                // check all member content： class, method, attribute
+                nestedClassVisit(members, signature_class, null);
+            }
+        }
 
 //        System.out.println("OK2");
     }
@@ -85,7 +86,8 @@ public class test {
         @Override
         public void visit(MethodDeclaration md, Void arg) {
             super.visit(md, arg);
-            System.out.println(md.getSignature());
+//            System.out.println(md.getSignature());
+            System.out.println(md.getParameters());
             String methodName = "";
             String returnType = md.getTypeAsString();
             returnType = returnType.substring(returnType.lastIndexOf(".")+1);
@@ -95,6 +97,7 @@ public class test {
             String paramaters = "";
             for(int i=0; i<md.getParameters().size(); i++){
                 String paramType = md.getParameter(i).getType().toString();
+                System.out.println(md.getParameter(i));
                 paramType = paramType.substring(paramType.lastIndexOf(".")+1);
                 paramaters = paramaters + ", " + paramType;
             }

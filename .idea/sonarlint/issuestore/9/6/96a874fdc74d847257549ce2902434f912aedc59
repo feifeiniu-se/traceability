@@ -1,0 +1,79 @@
+
+J
+java:S37407"/Provide the parametrized type for this generic.(§»½ßûÿÿÿÿ
+J
+java:S3740="/Provide the parametrized type for this generic.(ƒüÝ‹ýÿÿÿÿ
+J
+java:S3740{"/Provide the parametrized type for this generic.(Ö¶î‰øÿÿÿÿ
+J
+java:S3740|"/Provide the parametrized type for this generic.(´·‚†ÿÿÿÿÿ
+K
+java:S3740Ž"/Provide the parametrized type for this generic.(ðÒþéýÿÿÿÿ
+K
+java:S3740£"/Provide the parametrized type for this generic.(ðÒþéýÿÿÿÿ
+K
+java:S3740¶"/Provide the parametrized type for this generic.(ðÒþéýÿÿÿÿ
+€
+java:S1319"eThe type of "mappings" should be an interface such as "Map" rather than the implementation "HashMap".(ÞØÐ„ûÿÿÿÿ
+k	java:S117:"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(€ï¡Ãüÿÿÿÿ
+g	java:S117"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(—Ê¡Ô
+l	java:S117–"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(æÜ¹´þÿÿÿÿ
+l	java:S117«"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(åºœŒüÿÿÿÿ
+t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(Ñãðæùÿÿÿÿ
+k
+java:S3655+"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(Ïû»éûÿÿÿÿ
+^
+java:S3824r"HReplace this "Map.containsKey()" with a call to "Map.computeIfAbsent()".(ÄÔÜð
+^
+java:S3824Q"HReplace this "Map.containsKey()" with a call to "Map.computeIfAbsent()".(ÄÔÜð
+^
+java:S3824c"HReplace this "Map.containsKey()" with a call to "Map.computeIfAbsent()".(ÄÔÜð
+>
+java:S4274/"(Replace this assert with a proper check.(®–Éž
+>
+java:S4274;"(Replace this assert with a proper check.(™¿­Ì
+Q	java:S125!"<This block of commented-out lines of code should be removed.(ÃÐñŒ
+Q	java:S125)"<This block of commented-out lines of code should be removed.(ÃÐñŒ
+X
+java:S1854W"=Remove this useless assignment to local variable "classTime".(¬¨Ûþÿÿÿÿ
+B
+java:S1125J"'Remove the unnecessary boolean literal.(ºÈäíúÿÿÿÿ
+Q	java:S125P"<This block of commented-out lines of code should be removed.(Õ«Ð·
+Q	java:S125S"<This block of commented-out lines of code should be removed.(Õ«Ð·
+I
+java:S1481W".Remove this unused "classTime" local variable.(¬¨Ûþÿÿÿÿ
+X
+java:S1854g"=Remove this useless assignment to local variable "classTime".(¬¨Ûþÿÿÿÿ
+U
+java:S1161[":Add the "@Override" annotation above this method signature(Ÿ›ÂÝþÿÿÿÿ
+B
+java:S1125]"'Remove the unnecessary boolean literal.(ºÈäíúÿÿÿÿ
+I
+java:S1481g".Remove this unused "classTime" local variable.(¬¨Ûþÿÿÿÿ
+X
+java:S1854v"=Remove this useless assignment to local variable "classTime".(¬¨Ûþÿÿÿÿ
+U
+java:S1161j":Add the "@Override" annotation above this method signature(êäµ’ÿÿÿÿÿ
+B
+java:S1125l"'Remove the unnecessary boolean literal.(ºÈäíúÿÿÿÿ
+I
+java:S1481v".Remove this unused "classTime" local variable.(¬¨Ûþÿÿÿÿ
+m
+java:S3776{"RRefactor this method to reduce its Cognitive Complexity from 26 to the 15 allowed.(Ö¶î‰øÿÿÿÿ
+S
+java:S1854†"=Remove this useless assignment to local variable "classTime".(Ù»!
+Y
+java:S1854›"=Remove this useless assignment to local variable "classTime".(“ùë±ûÿÿÿÿ
+T
+java:S1854¯"=Remove this useless assignment to local variable "classTime".(¥¼à¿
+V	java:S125"<This block of commented-out lines of code should be removed.(Þ„îƒýÿÿÿÿ
+R	java:S125‚"<This block of commented-out lines of code should be removed.(ï†Äï
+D
+java:S1481†".Remove this unused "classTime" local variable.(Ù»!
+R	java:S125ˆ"<This block of commented-out lines of code should be removed.(ï†Äï
+R	java:S125—"<This block of commented-out lines of code should be removed.(·³Þ¸
+J
+java:S1481›".Remove this unused "classTime" local variable.(“ùë±ûÿÿÿÿ
+Y	java:S125"<This block of commented-out lines of code should be removed.(ï†Äï8÷÷ÝŸ“0
+E
+java:S1481¯".Remove this unused "classTime" local variable.(¥¼à¿

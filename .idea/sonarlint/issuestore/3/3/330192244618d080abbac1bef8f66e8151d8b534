@@ -1,0 +1,11 @@
+
+
+java:S1319"dThe type of "mapping" should be an interface such as "Map" rather than the implementation "HashMap".(òôœüÿÿÿÿ
+t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(‘¢€èúÿÿÿÿ
+O
+java:S2864"4Iterate over the "entrySet" instead of the "keySet".(ÉÊÄĞıÿÿÿÿ
+V	java:S125-"<This block of commented-out lines of code should be removed.(ıµ¸‹ÿÿÿÿÿ
+H
+java:S1135,"2Complete the task associated to this TODO comment.(¤™­Æ
+L
+java:S1128"*Remove this unused import 'java.util.Map'.(¼è½Òşÿÿÿÿ8ú–è’0
