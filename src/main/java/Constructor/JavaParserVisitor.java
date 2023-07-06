@@ -31,8 +31,6 @@
 //        CompilationUnit cu = javaParser.parse(fileContent).getResult().get();
 //        Visitor visitor = new Visitor();
 //        visitor.visit(cu, null);// 遍历完文件的AST树，初步获得信息
-//
-//
 //    }
 //
 //    private class Visitor extends VoidVisitorAdapter<Void> {

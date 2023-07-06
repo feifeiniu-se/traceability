@@ -16,6 +16,7 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.diff.RenameDetector;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectLoader;
 import org.eclipse.jgit.lib.ObjectReader;
@@ -48,10 +49,10 @@ public class Project {
         name = info[0];
         startHash = info[1];
         endHash = info[2];
-        startHash = "6555d3cebbc83c04e39eb2071f9f4912430e8c97";
+//        startHash = "6555d3cebbc83c04e39eb2071f9f4912430e8c97";
 //        endHash = "9ed57d1e21e9bb3795e02aaed6bc40696fa51de5";//TODO for test f65d3a05dfec17d851aed9f1b262ee64710b99a7
-        projectAddress = "C:\\Users\\Feifei\\dataset\\projects\\" + name;
-        refactoringMinerAddress = "C:\\Users\\Feifei\\dataset\\projects\\allRefactorings\\" + name + ".json";
+        projectAddress = "C:\\dataset\\jitfine\\" + name;
+        refactoringMinerAddress = "C:\\dataset\\jitfine\\A-refactorings\\" + name + ".json";
         commitList = getList();
         refactorings = readRefactoring();
     }
@@ -196,6 +197,16 @@ public class Project {
                 if (diffs.size() < 1) {
                     return null;
                 }
+//                RenameDetector  renameDetector = new RenameDetector(repository);
+//                renameDetector.addAll(diffs);
+//                List<DiffEntry> x = renameDetector.compute();
+//                for(DiffEntry dt: x){
+//                    if(dt.getChangeType().equals("RENAME")){
+//                        System.out.println("OK");
+//                    }
+//                }
+
+
 //                System.out.println("Found: " + diffs.size() + " differences");
                 for (DiffEntry diff : diffs) {
                     //newCode.containsKey()
